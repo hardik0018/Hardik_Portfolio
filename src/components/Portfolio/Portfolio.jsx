@@ -25,7 +25,9 @@ const Portfolio = () => {
           <img src={Sidebar} alt="" />
         </SwiperSlide>
         <SwiperSlide>
-          <img src={Ecommerce} alt="" />
+          <a href="https://www.shopwaale.online/" target="_blank">
+            <img src={Ecommerce} alt="" />
+          </a>
         </SwiperSlide>
         <SwiperSlide>
           <img src={MusicApp} alt="" />
