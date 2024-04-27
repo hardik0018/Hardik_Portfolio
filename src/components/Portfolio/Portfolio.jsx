@@ -2,10 +2,9 @@ import React, { useContext } from "react";
 import "./Portfolio.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import Sidebar from "../../img/sidebar.png";
+
 import Ecommerce from "../../img/shopwaale.png";
-import HOC from "../../img/hoc.png";
-import MusicApp from "../../img/musicapp.png";
+
 import { themeContext } from "../../Context";
 const Portfolio = () => {
   const theme = useContext(themeContext);
@@ -22,18 +21,9 @@ const Portfolio = () => {
         className="portfolio-slider"
       >
         <SwiperSlide>
-          <img src={Sidebar} alt="" />
-        </SwiperSlide>
-        <SwiperSlide>
           <a href="https://www.shopwaale.online/" target="_blank">
             <img src={Ecommerce} alt="" />
           </a>
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src={MusicApp} alt="" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src={HOC} alt="" />
         </SwiperSlide>
       </Swiper>
     </div>

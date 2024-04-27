@@ -2,7 +2,6 @@ import React from "react";
 import "./Footer.css";
 import Wave from "../../img/wave.png";
 import Insta from "@iconscout/react-unicons/icons/uil-instagram";
-import Facebook from "@iconscout/react-unicons/icons/uil-facebook";
 import Gitub from "@iconscout/react-unicons/icons/uil-github";
 
 const Footer = () => {
@@ -18,8 +17,10 @@ const Footer = () => {
           >
             <Insta color="white" size={"3rem"} />
           </a>
-          <Facebook color="white" size={"3rem"} />
-          <Gitub color="white" size={"3rem"} />
+
+          <a href="https://github.com/hardik0018" target="_black">
+            <Gitub color="white" size={"3rem"} />
+          </a>
         </div>
       </div>
     </div>
