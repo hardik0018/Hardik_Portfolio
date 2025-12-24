@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "next-themes";
-import { GoogleAnalytics } from "@/components/google-analytics";
 import { StructuredData } from "@/components/structured-data";
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://hardikvatukiya.vercel.app";
 const siteName = "Hardik Vatukiya - Portfolio";
@@ -113,7 +113,7 @@ export default function RootLayout({
       </head>
       <body>
         <StructuredData />
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID!} />
         <ThemeProvider attribute="class">
           {children}
           <Toaster />
