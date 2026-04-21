@@ -3,41 +3,7 @@ import type { NextRequest } from "next/server";
 import mongoose from "mongoose";
 import { connectDB } from "@/lib/MongoDb";
 
-// Mongoose Schema
-const ProjectSchema = new mongoose.Schema(
-  {
-    title: {
-      type: String,
-      required: true,
-    },
-    description: {
-      type: String,
-      required: true,
-    },
-    image: {
-      type: String,
-      default: "/placeholder.svg",
-    },
-    tags: {
-      type: [String],
-      default: [],
-    },
-    liveUrl: {
-      type: String,
-      default: "#",
-    },
-    githubUrl: {
-      type: String,
-      default: "#",
-    },
-    featured: { type: Boolean, default: false },
-  },
-  { timestamps: true }
-);
-
-// Model re-use check
-const Project =
-  mongoose.models.Project || mongoose.model("Project", ProjectSchema);
+import Project from "@/models/Project";
 
 // GET: fetch all projects
 export async function GET(req: NextRequest) {

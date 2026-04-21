@@ -1,81 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@200..800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Ceramic & Neon Vermilion Theme (2026 Trend) */
+  --bg:           #F5F4F0;   /* Ceramic Alabaster */
+  --bg-2:         #EBE8E1;   /* Deeper Clay */
+  --bg-light:     #121212;   /* Dark contrast for bento elements */
+  --accent:       #FF3300;   /* Electric Vermilion / Neon Orange */
+  --accent-dim:   rgba(255, 51, 0, 0.08);
+  --text-primary: #191918;   /* Deep Charcoal text */
+  --text-muted:   rgba(25, 25, 24, 0.45);
+  --text-dark:    #F5F4F0;   /* Light text for dark sections */
+  --border:       rgba(25, 25, 24, 0.06);
+  --border-md:    rgba(25, 25, 24, 0.12);
+
+  --font-fraunces: "Instrument Serif", serif;
+  --font-cabinet:  "Manrope", sans-serif;
+}
+
+/* CRITICAL: disable default cursor everywhere */
+*, *::before, *::after {
+  cursor: none !important;
+  box-sizing: border-box;
+}
+
+/* Re-enable on mobile where custom cursor doesn't apply */
+@media (pointer: coarse) {
+  *, *::before, *::after {
+    cursor: auto !important;
+  }
+}
+
 html {
-  scroll-behavior: smooth;
-}
-/* Scrollbar Track */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  scroll-behavior: auto; /* Lenis handles smooth scroll, not CSS */
 }
 
-/* Scrollbar Thumb */
-::-webkit-scrollbar-thumb {
-  background: rgba(100, 100, 255, 0.4); /* change color as needed */
-  border-radius: 9999px;
-  border: 2px solid transparent;
-  background-clip: content-box;
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-cabinet);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
-/* Scrollbar Track Background */
-::-webkit-scrollbar-track {
-  background: transparent;
+::selection {
+  background: var(--accent);
+  color: var(--bg);
 }
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 262.1 83.3% 57.8%;
-    --primary-foreground: 210 20% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 262.1 83.3% 57.8%;
-    --radius: 0.75rem;
-  }
+/* Hide scrollbar but keep functionality */
+::-webkit-scrollbar { display: none; }
+* { -ms-overflow-style: none; scrollbar-width: none; }
 
-  .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 263.4 70% 50.4%;
-    --primary-foreground: 210 20% 98%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 263.4 70% 50.4%;
-  }
+/* Grain texture overlay */
+.grain-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  content: "";
+  opacity: 0.04;
+  z-index: 100;
+  pointer-events: none;
+  background-image: url("https://res.cloudinary.com/dvwvru9at/image/upload/v1713695245/grain_nt4z0y.png");
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+/* Blueprint grid utility */
+.blueprint-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(240, 238, 232, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(240, 238, 232, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+/* Preloader covers everything */
+#preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.noise-bg {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  pointer-events: none;
+  opacity: .05;
+  background: url(https://res.cloudinary.com/dvwvru9at/image/upload/v1713695245/noise_yqxk2a.gif);
 }

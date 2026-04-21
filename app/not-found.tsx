@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/Button";
 import { AnimatedGradient } from "@/components/ui/animated-gradient";
 import { motion } from "framer-motion";
 import { ArrowLeft, Home } from "lucide-react";
@@ -45,16 +45,10 @@ export default function NotFound() {
             transition={{ duration: 0.4, delay: 0.6 }}
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <Link href="/">
-              <Button
-                size="lg"
-                variant="outline"
-                className="rounded-full border-primary/30"
-              >
-                <ArrowLeft className="mr-2 h-5 w-5" />
-                Go Back
-              </Button>
-            </Link>
+            <Button
+              text="Go Back"
+              href="/"
+            />
           </motion.div>
         </motion.div>
       </div>
