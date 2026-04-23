@@ -1,73 +1,66 @@
 "use client";
+
 import { useEffect, useRef } from "react";
-import gsap from "gsap";
+import { gsap } from "gsap";
+import CursorSVG from "./CursorSVG";
 
 export default function CustomCursor() {
-  const dotRef = useRef<HTMLDivElement>(null);
-  const ringRef = useRef<HTMLDivElement>(null);
+  const cursorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const dot = dotRef.current;
-    const ring = ringRef.current;
+    const el = cursorRef.current;
+    if (!el) return;
 
-    if (!dot || !ring) return;
+    const xTo = gsap.quickTo(el, "x", { duration: 0.32, ease: "power3.out" });
+    const yTo = gsap.quickTo(el, "y", { duration: 0.32, ease: "power3.out" });
 
-    const onMouseMove = (e: MouseEvent) => {
-      const { clientX: x, clientY: y } = e;
-      
-      // Dot - no lag
-      gsap.set(dot, { x, y });
-      
-      // Ring - follow with lag
-      gsap.to(ring, {
-        x,
-        y,
-        duration: 0.5,
-        ease: "power2.out"
-      });
+    gsap.set(el, { opacity: 0 });
+
+    const onMove = (e: MouseEvent) => {
+      xTo(e.clientX);
+      yTo(e.clientY);
+      gsap.to(el, { opacity: 1, duration: 0.25, overwrite: "auto" });
     };
 
-    const onMouseEnter = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const dataCursor = target.closest('[data-cursor]')?.getAttribute('data-cursor');
+    const onDown = () => gsap.to(el, { scale: 0.88, duration: 0.1, ease: "power2.out" });
+    const onUp = () => gsap.to(el, { scale: 1, duration: 0.18, ease: "power2.out" });
+    const onLeave = () => gsap.to(el, { opacity: 0, duration: 0.25 });
+    const onEnter = () => gsap.to(el, { opacity: 1, duration: 0.25 });
 
-      if (dataCursor === 'view') {
-        gsap.to(ring, { scale: 2, duration: 0.3 });
-        ring.innerHTML = '<span class="text-[8px] font-bold uppercase tracking-widest">VIEW</span>';
-      } else if (dataCursor === 'drag') {
-        gsap.to(ring, { scale: 2, duration: 0.3 });
-        ring.innerHTML = '<span class="text-[8px] font-bold uppercase tracking-widest">DRAG</span>';
-      } else if (dataCursor === 'link') {
-        gsap.to(ring, { scale: 0.5, backgroundColor: 'var(--accent)', duration: 0.3 });
-      }
-    };
-
-    const onMouseLeave = () => {
-      gsap.to(ring, { scale: 1, backgroundColor: 'transparent', duration: 0.3 });
-      ring.innerHTML = '';
-    };
-
-    window.addEventListener("mousemove", onMouseMove);
-    document.body.addEventListener("mouseover", onMouseEnter);
-    document.body.addEventListener("mouseout", onMouseLeave);
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mousedown", onDown);
+    window.addEventListener("mouseup", onUp);
+    document.documentElement.addEventListener("mouseleave", onLeave);
+    document.documentElement.addEventListener("mouseenter", onEnter);
 
     return () => {
-      window.removeEventListener("mousemove", onMouseMove);
-      document.body.removeEventListener("mouseover", onMouseEnter);
-      document.body.removeEventListener("mouseout", onMouseLeave);
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mousedown", onDown);
+      window.removeEventListener("mouseup", onUp);
+      document.documentElement.removeEventListener("mouseleave", onLeave);
+      document.documentElement.removeEventListener("mouseenter", onEnter);
     };
   }, []);
 
   return (
-    <>
-      <div
-        ref={dotRef}
-        className="fixed top-0 left-0 w-2.5 h-2.5 bg-[var(--accent)] rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2"
-      />
-      <div
-        ref={ringRef}
-        className="fixed top-0 left-0 w-[44px] h-[44px] border border-[var(--text-primary)]/30 rounded-full pointer-events-none z-[9998] flex items-center justify-center -translate-x-1/2 -translate-y-1/2 text-[var(--accent)]"
-      />
-    </>
+    <div
+      ref={cursorRef}
+      aria-hidden="true"
+      className="pointer-events-none fixed left-0 top-0 z-[9999] flex items-center will-change-transform"
+      style={{ opacity: 0 }}
+    >
+      {/* Arrow — matches reference exactly */}
+      {/* Arrow — blue variant for the USER cursor */}
+      <CursorSVG variant="you" size={20} />
+      {/* "You" label — matches selection blue theme */}
+      <span
+        className="ml-[5px] rounded-[5px] px-[9px] py-[4px] text-[11px] font-semibold leading-none whitespace-nowrap select-none bg-select-blue text-white shadow-[0_2px_10px_rgba(0,0,0,0.3)] tracking-tight"
+        style={{
+          fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif",
+        }}
+      >
+        You
+      </span>
+    </div>
   );
 }

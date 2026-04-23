@@ -1,105 +1,266 @@
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@200..800&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  /* Ceramic & Neon Vermilion Theme (2026 Trend) */
-  --bg:           #F5F4F0;   /* Ceramic Alabaster */
-  --bg-2:         #EBE8E1;   /* Deeper Clay */
-  --bg-light:     #121212;   /* Dark contrast for bento elements */
-  --accent:       #FF3300;   /* Electric Vermilion / Neon Orange */
-  --accent-dim:   rgba(255, 51, 0, 0.08);
-  --text-primary: #191918;   /* Deep Charcoal text */
-  --text-muted:   rgba(25, 25, 24, 0.45);
-  --text-dark:    #F5F4F0;   /* Light text for dark sections */
-  --border:       rgba(25, 25, 24, 0.06);
-  --border-md:    rgba(25, 25, 24, 0.12);
+/* =========================================================
+   Design System — "Hardik Vatukiya" hero, dark editor aesthetic
+   All colors HSL. All tokens semantic.
+   ========================================================= */
 
-  --font-fraunces: "Instrument Serif", serif;
-  --font-cabinet:  "Manrope", sans-serif;
-}
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+    --radius: 0.5rem;
 
-/* CRITICAL: disable default cursor everywhere */
-*, *::before, *::after {
-  cursor: none !important;
-  box-sizing: border-box;
-}
+    /* Design tool tokens */
+    --select: 220 90% 62%;
+    --label-violet: 258 88% 70%;
+    --label-pink: 338 88% 62%;
+    --label-lime: 75 85% 65%;
 
-/* Re-enable on mobile where custom cursor doesn't apply */
-@media (pointer: coarse) {
-  *, *::before, *::after {
-    cursor: auto !important;
+    /* Specific section tokens */
+    --tag-purple: 258 88% 70%;
+    --tag-purple-bg: 258 88% 70% / 0.15;
+    --highlight: 75 85% 65%;
+    --cursor-hardik: 258 88% 70%;
+    --cursor-you: 220 90% 62%;
+  }
+
+  .dark {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+
+    /* Design tool tokens - adapt for dark */
+    --select: 220 90% 62%;
+    --label-violet: 258 88% 70%;
+    --label-pink: 338 88% 62%;
+    --label-lime: 75 85% 65%;
+
+    /* Specific section tokens */
+    --tag-purple: 258 88% 70%;
+    --tag-purple-bg: 258 88% 70% / 0.15;
+    --highlight: 75 85% 65%;
+    --cursor-hardik: 258 88% 70%;
+    --cursor-you: 220 90% 62%;
   }
 }
 
-html {
-  scroll-behavior: auto; /* Lenis handles smooth scroll, not CSS */
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
+    cursor: none !important;
+  }
+
+  /* ── Wordmark display type ── */
+  .word {
+    @apply font-display font-black leading-[0.9] tracking-[-0.04em] select-none text-foreground;
+    font-size: clamp(72px, 16vw, 240px);
+  }
+  .word--outline {
+    -webkit-text-stroke: 1.5px hsl(var(--foreground) / 0.45);
+    @apply text-transparent;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
 }
 
-body {
-  background: var(--bg);
-  color: var(--text-primary);
-  font-family: var(--font-cabinet);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+@layer components {
+  /* Selection bounding box */
+  .select-frame {
+    @apply absolute -inset-x-3.5 -inset-y-2.5 border border-select-blue pointer-events-none;
+  }
+  .select-frame::before,
+  .select-frame::after,
+  .select-frame > span::before,
+  .select-frame > span::after {
+    content: "";
+    @apply absolute w-[7px] h-[7px] bg-background border-[1.5px] border-select-blue;
+  }
+  .select-frame::before {
+    top: -4px;
+    left: -4px;
+  }
+  .select-frame::after {
+    top: -4px;
+    right: -4px;
+  }
+  .select-frame > span::before {
+    bottom: -4px;
+    left: -4px;
+  }
+  .select-frame > span::after {
+    bottom: -4px;
+    right: -4px;
+  }
+
+  /* Floating chip labels */
+  .chip {
+    @apply inline-flex items-center gap-1 px-2 py-[3px] text-[10px] font-mono leading-none whitespace-nowrap rounded-[3px];
+  }
+  .chip-violet {
+    @apply bg-label-violet text-white;
+  }
+  .chip-pink {
+    @apply bg-label-pink text-white;
+  }
+  .chip-lime {
+    @apply bg-label-lime text-black;
+  }
+  .chip-outline {
+    @apply bg-background text-foreground border border-border;
+  }
+
+  .caret {
+    @apply inline-block w-[2px] h-[0.9em] bg-foreground ml-1 translate-y-[2px] animate-pulse;
+  }
 }
 
-::selection {
-  background: var(--accent);
-  color: var(--bg);
+/* =========================================================
+   Editor chrome utilities
+   ========================================================= */
+@layer components {
+  /* Selection bounding box (animated dashed corners) */
+  .select-frame {
+    position: absolute;
+    inset: -10px -14px;
+    border: 1px solid hsl(var(--select));
+    pointer-events: none;
+  }
+  .select-frame::before,
+  .select-frame::after,
+  .select-frame > span::before,
+  .select-frame > span::after {
+    content: "";
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    background: hsl(var(--background));
+    border: 1.5px solid hsl(var(--select));
+  }
+  .select-frame::before {
+    top: -4px;
+    left: -4px;
+  }
+  .select-frame::after {
+    top: -4px;
+    right: -4px;
+  }
+  .select-frame > span::before {
+    bottom: -4px;
+    left: -4px;
+  }
+  .select-frame > span::after {
+    bottom: -4px;
+    right: -4px;
+  }
+
+  /* Floating chip labels */
+  .chip {
+    @apply inline-flex items-center gap-1 px-2 py-[3px] text-[10px] font-mono leading-none whitespace-nowrap rounded-[3px];
+  }
+  .chip-violet {
+    background: hsl(var(--label-violet));
+    color: hsl(var(--label-violet-fg));
+  }
+  .chip-pink {
+    background: hsl(var(--label-pink));
+    color: hsl(var(--label-pink-fg));
+  }
+  .chip-lime {
+    background: hsl(var(--label-lime));
+    color: hsl(var(--label-lime-fg));
+  }
+  .chip-outline {
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    border: 1px solid hsl(var(--border));
+  }
+
+  /* Cursor SVG arrow */
+  .cursor-arrow {
+    width: 14px;
+    height: 14px;
+    filter: drop-shadow(0 1px 2px hsl(0 0% 0% / 0.5));
+  }
+
+  /* Outlined display text (REFF) */
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1.5px hsl(0 0% 78%);
+  }
 }
 
-/* Hide scrollbar but keep functionality */
-::-webkit-scrollbar { display: none; }
-* { -ms-overflow-style: none; scrollbar-width: none; }
-
-/* Grain texture overlay */
-.grain-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  content: "";
-  opacity: 0.04;
-  z-index: 100;
-  pointer-events: none;
-  background-image: url("https://res.cloudinary.com/dvwvru9at/image/upload/v1713695245/grain_nt4z0y.png");
+/* =========================================================
+   Keyframes
+   ========================================================= */
+@keyframes blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+.caret {
+  display: inline-block;
+  width: 2px;
+  height: 0.9em;
+  background: hsl(var(--foreground));
+  margin-left: 4px;
+  transform: translateY(2px);
+  animation: blink 1s steps(1) infinite;
 }
 
-/* Blueprint grid utility */
-.blueprint-grid {
-  position: absolute;
-  inset: 0;
-  background-image: 
-    linear-gradient(to right, rgba(240, 238, 232, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(240, 238, 232, 0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
-  pointer-events: none;
-}
-
-/* Preloader covers everything */
-#preloader {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: var(--bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.noise-bg {
-  height: 100%;
-  width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 10000;
-  pointer-events: none;
-  opacity: .05;
-  background: url(https://res.cloudinary.com/dvwvru9at/image/upload/v1713695245/noise_yqxk2a.gif);
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }

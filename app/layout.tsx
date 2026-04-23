@@ -1,50 +1,27 @@
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
+import { Inter, Roboto_Slab, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Fraunces } from 'next/font/google';
-import PagesWrapper from "@/components/PagesWrapper";
-import SmoothScrolling from "@/components/SmoothScrolling";
+import CustomCursor from "@/components/CustomCursor";
+import Nav from "@/components/Nav";
+import { cn } from "@/lib/utils";
 
-const fraunces = Fraunces({
-  subsets: ['latin'],
-  variable: '--font-fraunces',
-  display: 'swap',
-});
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://hardikvatukiya.vercel.app";
-const siteName = "Hardik Vatukiya | Creative Developer";
-const siteDescription = "Creative Developer & MERN Stack Engineer based in Ahmedabad, India. Specialized in building premium digital experiences.";
+const sans = Inter({ subsets: ["latin"], variable: "--font-sans", weight: ["400", "500"] });
+const display = Roboto_Slab({ subsets: ["latin"], variable: "--font-display", weight: ["700", "900"] });
+const mono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono", weight: ["400"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
-  title: {
-    default: siteName,
-    template: `%s | ${siteName}`,
-  },
-  description: siteDescription,
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: siteUrl,
-    siteName: siteName,
-    title: siteName,
-    description: siteDescription,
-  },
+  title: "Hardik Vatukiya — Designer & Developer",
+  description: "Navigating the unknown, pixel by pixel. Portfolio of Hardik Vatukiya.",
 };
 
-export const viewport: Viewport = {
-  themeColor: "#06060A",
-  width: "device-width",
-  initialScale: 1,
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <PagesWrapper>
-      <SmoothScrolling>{children}</SmoothScrolling>
-    </PagesWrapper>
+    <html lang="en" className={cn("dark", sans.variable, display.variable, mono.variable)}>
+      <body>
+        <Nav />
+        {children}
+        <CustomCursor />
+      </body>
+    </html>
   );
 }
