@@ -1,39 +1,27 @@
 "use client";
 
-import { useRef, useState, useCallback, useMemo } from "react";
-import Nav from "../Nav";
-import Loader from "../Loader";
-import FakeCursor from "../FakeCursor";
+import { useCallback, useMemo, useRef, useState } from "react";
+import Sculpture from "../Sculpture";
 import CommentBubble, { type CommentBubbleHandle } from "../CommentBubble";
+import FakeCursor from "../FakeCursor";
 import Typewriter, { type TypewriterHandle } from "../Typewriter";
-import { useReducedMotion } from "@/lib/useReducedMotion";
-
-// Sub-components
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import HeroEyebrow from "./Hero/components/HeroEyebrow";
 import HeroWords from "./Hero/components/HeroWords";
-import HeroCTA from "./Hero/components/HeroCTA";
-
-// Hooks
+import { HERO_COPY } from "./Hero/constants";
 import { useHeroAnimations } from "./Hero/hooks/useHeroAnimations";
 import { useHeroDraggable } from "./Hero/hooks/useHeroDraggable";
 import { useMouseParallax } from "./Hero/hooks/useMouseParallax";
 
-// Constants
-import { HERO_COPY } from "./Hero/constants";
-
-/**
- * Hero component refactored for performance, reusability, and clean architecture.
- * Uses atomic components, custom hooks for GSAP logic, and 2025 best practices.
- */
 export default function Hero() {
   const reduced = useReducedMotion();
+  const isDesktop = useMediaQuery("(min-width: 768px)");
   const [isEntranceFinished, setIsEntranceFinished] = useState(false);
 
-  // Refs for animation and interaction
   const rootRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const loaderRef = useRef<HTMLDivElement>(null);
   const eyebrowRef = useRef<HTMLParagraphElement>(null);
   const wordTopRef = useRef<HTMLDivElement>(null);
   const wordBottomRef = useRef<HTMLDivElement>(null);
@@ -48,31 +36,28 @@ export default function Hero() {
   const hoverBoxTopRef = useRef<HTMLDivElement>(null);
   const hoverBoxBottomRef = useRef<HTMLDivElement>(null);
 
-  // Memoize refs object to prevent unnecessary hook re-runs
-  const animationRefs = useMemo(() => ({
-    root: rootRef,
-    canvas: canvasRef,
-    content: contentRef,
-    loader: loaderRef,
-    eyebrow: eyebrowRef,
-    wordTop: wordTopRef,
-    wordBottom: wordBottomRef,
-    tagline: taglineRef,
-    cta: ctaRef,
-    typewriter: typewriterRef,
-  }), []);
+  const animationRefs = useMemo(
+    () => ({
+      root: rootRef,
+      canvas: canvasRef,
+      content: contentRef,
+      eyebrow: eyebrowRef,
+      wordTop: wordTopRef,
+      wordBottom: wordBottomRef,
+      tagline: taglineRef,
+      cta: ctaRef,
+      typewriter: typewriterRef,
+    }),
+    []
+  );
 
   const handleEntranceComplete = useCallback(() => {
     setIsEntranceFinished(true);
   }, []);
 
-  // GSAP Animations (Entrance + Scroll)
   useHeroAnimations(animationRefs, handleEntranceComplete, reduced);
+  useMouseParallax(contentRef, isEntranceFinished && isDesktop && !reduced);
 
-  // Mouse Parallax Effect
-  useMouseParallax(contentRef, isEntranceFinished);
-
-  // Draggable Interaction
   useHeroDraggable(
     wordTopRef,
     wordBottomRef,
@@ -80,27 +65,38 @@ export default function Hero() {
     selectionOtherRef,
     hoverBoxTopRef,
     hoverBoxBottomRef,
-    isEntranceFinished
+    cursorOtherRef,
+    commentRef,
+    commentElRef,
+    isEntranceFinished && isDesktop && !reduced
   );
 
   return (
     <div
       ref={rootRef}
-      className="relative w-full bg-background selection:bg-primary selection:text-primary-foreground overflow-x-hidden"
-      style={{ minHeight: "200vh" }}
+      className="relative w-full overflow-x-hidden selection:bg-accent selection:text-accent-foreground"
+      style={{ minHeight: "100svh" }}
       role="banner"
     >
       <div
         ref={canvasRef}
-        className="sticky top-0 h-screen w-full overflow-hidden bg-background border border-border/5 will-change-transform"
+        className="sticky top-0 h-[100svh] w-full overflow-hidden will-change-transform"
         style={{ transformOrigin: "center center" }}
       >
+        <div className="absolute inset-0 z-0">
+          <Sculpture />
+        </div>
+
         <main
           ref={contentRef}
-          className="absolute inset-0 flex flex-col items-center justify-center z-10"
+          className="absolute inset-0 z-10 flex flex-col items-center justify-center mix-blend-difference"
         >
-          <div className="flex flex-col items-center px-4 text-center">
-            <HeroEyebrow ref={eyebrowRef} />
+          <div className="flex w-full max-w-[1600px] flex-col items-center px-4 pb-12 pt-24 text-center sm:px-6 md:px-8 md:pb-16 md:pt-28">
+            <div className="mb-4 overflow-hidden">
+              <HeroEyebrow ref={eyebrowRef}>
+                CREATIVE TECHNOLOGIST. DESIGNER. VISIONARY.
+              </HeroEyebrow>
+            </div>
 
             <HeroWords
               wordTopRef={wordTopRef}
@@ -111,31 +107,40 @@ export default function Hero() {
               hoverBoxBottomRef={hoverBoxBottomRef}
             />
 
-            <div className="mt-20 max-w-2xl">
+            <div className="mt-12 max-w-2xl px-4 sm:px-6 md:mt-16">
               <p
                 ref={taglineRef}
-                className="text-lg text-muted-foreground md:text-xl font-medium tracking-tight"
+                className="font-mono text-[10px] uppercase tracking-[0.5em] text-accent/60 sm:text-xs"
               >
-                <Typewriter ref={typewriterRef} />
+                SCROLL TO ENTER
               </p>
+              <div className="mt-4 h-12">
+                <Typewriter ref={typewriterRef} />
+              </div>
             </div>
           </div>
         </main>
 
-        <HeroCTA ref={ctaRef} />
+        <FakeCursor
+          ref={cursorOtherRef}
+          label={HERO_COPY.cursorOther}
+          variant="other"
+        />
 
-        <FakeCursor ref={cursorOtherRef} label={HERO_COPY.cursorOther} variant="other" />
+        <div
+          data-global-drag-line
+          className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-px w-0 -translate-x-1/2 -translate-y-1/2 border-t border-dashed border-foreground/20 opacity-0"
+          aria-hidden="true"
+        />
 
         <div
           ref={commentElRef}
           className="pointer-events-none absolute z-[100] opacity-0"
           aria-hidden="true"
         >
-          <CommentBubble ref={commentRef} author={HERO_COPY.cursorOther} />
+          <CommentBubble ref={commentRef} />
         </div>
       </div>
-
-      <Loader ref={loaderRef} />
     </div>
   );
 }

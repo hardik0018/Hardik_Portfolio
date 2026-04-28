@@ -1,6 +1,7 @@
 "use client";
 import { forwardRef } from "react";
 import { cn } from "@/lib/utils";
+import CursorSVG from "./CursorSVG";
 
 type Props = {
   label: string;
@@ -21,21 +22,7 @@ const FakeCursor = forwardRef<HTMLDivElement, Props>(function FakeCursor(
       style={{ opacity: 0 }}
     >
       {/* SVG cursor arrow */}
-      <svg
-        width="14"
-        height="18"
-        viewBox="0 0 14 18"
-        fill="none"
-        className="drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]"
-      >
-        <path
-          d="M1 1L1 14.5L5 10.5L7.5 16.5L9.5 15.5L7 9.5L12.5 9.5Z"
-          fill={isYou ? "white" : "hsl(var(--label-violet))"}
-          stroke={isYou ? "rgba(0,0,0,0.4)" : "rgba(0,0,0,0.3)"}
-          strokeWidth="0.8"
-          strokeLinejoin="round"
-        />
-      </svg>
+      <CursorSVG variant={variant == "you" ? "you" : "violet"} size={20} />
 
       {/* Label pill */}
       <span
