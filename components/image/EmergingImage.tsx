@@ -125,6 +125,14 @@ export default function EmergingImage({
     function startAnimation() {
       if (isAnimating) return;
       isAnimating = true;
+
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduced) {
+        material.uProgress = 1;
+        renderFrame();
+        return;
+      }
+
       gsapTween = gsap.to(material, {
         uProgress: 1,
         duration: 1.5,

@@ -6,19 +6,19 @@ import { cn } from "@/lib/utils";
 export type CommentBubbleHandle = {
   /** Type new text into the bubble body with a typewriter effect */
   typeText: (text: string, duration?: number) => void;
+  /** Set text immediately without animation */
+  setText: (text: string) => void;
   /** Clear the typed text */
   clear: () => void;
 };
-
-type Props = { author: string };
 
 /**
  * Figma-style comment bubble.
  * Author label: uses theme foreground/background tokens.
  * Body: uses label-violet semantic token.
  */
-const CommentBubble = forwardRef<CommentBubbleHandle, Props>(
-  function CommentBubble({ author }, ref) {
+const CommentBubble = forwardRef<CommentBubbleHandle>(
+  function CommentBubble({ }, ref) {
     const bodyRef = useRef<HTMLSpanElement>(null);
     const caretRef = useRef<HTMLSpanElement>(null);
 
@@ -35,6 +35,9 @@ const CommentBubble = forwardRef<CommentBubbleHandle, Props>(
           },
         });
       },
+      setText(text) {
+        if (bodyRef.current) bodyRef.current.textContent = text;
+      },
       clear() {
         if (bodyRef.current) bodyRef.current.textContent = "";
       },
@@ -43,32 +46,19 @@ const CommentBubble = forwardRef<CommentBubbleHandle, Props>(
     return (
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute left-0 top-0 z-40 origin-top-left"
-        style={{ opacity: 0, transform: "scale(0.85)" }}
+        className="pointer-events-none absolute left-0 top-0 z-40 origin-top-left flex flex-col items-start"
       >
-        {/* Author chip */}
         <div
           className={cn(
-            "-mb-[2px] inline-block rounded-t-[4px] px-2 py-[3px] text-[10px] font-mono font-bold leading-none",
-            "bg-foreground text-background"
+            "rounded-[24px] rounded-tl-[0px] px-4 py-2 text-[15px] font-medium leading-snug shadow-2xl",
+            "bg-label-violet text-white whitespace-nowrap min-w-[10px]"
           )}
         >
-          {author}
-        </div>
-
-        {/* Body bubble */}
-        <div
-          className={cn(
-            "rounded-b-[6px] rounded-tr-[6px] px-3 py-2 text-[12px] font-medium leading-snug shadow-xl min-w-[180px] max-w-[280px]",
-            "bg-label-violet text-white"
-          )}
-        >
-          <span ref={bodyRef} />
-          {/* blinking caret */}
+          <span ref={bodyRef} className="" />
           <span
             ref={caretRef}
             aria-hidden="true"
-            className="inline-block w-[2px] h-[12px] bg-white/80 ml-[2px] -mb-[2px] align-middle animate-pulse"
+            className="inline-block w-[1.5px] h-[16px] bg-black/70 ml-[2px] -mb-[3px] align-middle animate-pulse"
           />
         </div>
       </div>

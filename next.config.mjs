@@ -1,4 +1,3 @@
-import withPWA from "next-pwa";
 // let userConfig = undefined
 // try {
 //   userConfig = await import('./v0-user-next.config')
@@ -13,21 +12,13 @@ const nextConfig = {
   },
   turbopack: {},
   images: {
-    unoptimized: true,
+    formats: ["image/avif", "image/webp"],
   },
-  experimental: {
-    webpackBuildWorker: true,
-    parallelServerBuildTraces: true,
-    parallelServerCompiles: true,
-  },
+  allowedDevOrigins: [
+    "hope-apicultural-cleta.ngrok-free.dev",
+    "10.150.162.105",
+  ],
 };
-
-// Wrap with PWA
-export default withPWA({
-  dest: "public",
-  register: true,
-  skipWaiting: true,
-})(nextConfig);
 
 // mergeConfig(nextConfig, userConfig)
 

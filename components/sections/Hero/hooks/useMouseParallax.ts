@@ -8,7 +8,13 @@ export function useMouseParallax(
   isEnabled: boolean
 ) {
   const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (!contentRef.current || window.scrollY > 100) return;
+    if (
+      !contentRef.current ||
+      window.scrollY > 100 ||
+      window.matchMedia("(pointer: coarse)").matches
+    ) {
+      return;
+    }
     
     const { clientX, clientY } = e;
     const strength = HERO_ANIMATION_CONFIG.parallaxStrength;

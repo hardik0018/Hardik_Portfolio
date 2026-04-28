@@ -1,4 +1,3 @@
-import { forwardRef } from "react";
 import { HERO_COPY } from "../constants";
 import SelectionBox from "@/components/SelectionBox";
 import HoverBox from "./HoverBox";
@@ -12,26 +11,26 @@ interface HeroWordsProps {
   hoverBoxBottomRef: React.RefObject<HTMLDivElement | null>;
 }
 
-const HeroWords = ({
+export default function HeroWords({
   wordTopRef,
   wordBottomRef,
   selectionRef,
   selectionOtherRef,
   hoverBoxTopRef,
   hoverBoxBottomRef,
-}: HeroWordsProps) => {
+}: HeroWordsProps) {
   return (
-    <div className="relative mt-14 inline-flex flex-col items-center select-none">
+    <div className="relative mt-10 inline-flex max-w-full flex-col items-center px-2 select-none sm:mt-12 md:mt-14">
       <div
         ref={wordTopRef}
-        className="word"
+        className="hero-word"
         style={{ transformOrigin: "center bottom" }}
       >
         {HERO_COPY.wordTop}
       </div>
       <div
         ref={wordBottomRef}
-        className="word word--outline -mt-3 md:-mt-2"
+        className="hero-word -mt-2 text-stroke sm:-mt-3 md:-mt-2"
       >
         {HERO_COPY.wordBottom}
       </div>
@@ -42,6 +41,4 @@ const HeroWords = ({
       <HoverBox ref={hoverBoxBottomRef} />
     </div>
   );
-};
-
-export default HeroWords;
+}

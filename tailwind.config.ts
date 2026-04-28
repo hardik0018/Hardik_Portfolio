@@ -20,9 +20,10 @@ const config = {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-inter)", "Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-        display: ["var(--font-display)", "Archivo", "sans-serif"],
+        sans: ["var(--font-sans)", "Inter", "sans-serif"],
+        display: ["var(--font-display)", "Cormorant Garamond", "serif"],
         mono: ["var(--font-mono)", "JetBrains Mono", "monospace"],
+        serif: ["var(--font-serif)", "Cormorant Garamond", "serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -58,11 +59,6 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Custom branding tokens
-        "select-blue": "hsl(var(--select))",
-        "label-violet": "hsl(var(--label-violet))",
-        "label-pink": "hsl(var(--label-pink))",
-        "label-lime": "hsl(var(--label-lime))",
       },
       borderRadius: {
         lg: "var(--radius)",
