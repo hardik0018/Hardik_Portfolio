@@ -92,6 +92,8 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
   const [projectType, setProjectType] = useState("");
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const data = initialData || {
     heading: "Interested in working together?",
@@ -161,10 +163,41 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
     { scope: sectionRef }
   );
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    window.location.href = mailtoHref;
-    setSent(true);
+    setLoading(true);
+    setError(null);
+    setSent(false);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          projectType,
+          message,
+        }),
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to send message.");
+      }
+
+      setSent(true);
+      setName("");
+      setEmail("");
+      setProjectType("");
+      setMessage("");
+    } catch (err: any) {
+      setError(err.message || "Failed to send message.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -285,11 +318,27 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
             <Button
               type="submit"
               variant="primary"
-              className="group mt-2 inline-flex h-14 w-full items-center justify-center gap-3 rounded-[12px] font-sans text-sm font-bold uppercase "
+              disabled={loading}
+              className="group mt-2 inline-flex h-14 w-full items-center justify-center gap-3 rounded-[12px] font-sans text-sm font-bold uppercase disabled:opacity-50"
             >
-              <Send className="h-4 w-4 text-background transition-colors group-hover:text-background" />
-              {sent ? "Email Draft Ready" : "Send Message"}
+              {loading ? (
+                <div className="h-5 w-5 animate-spin rounded-full border-2 border-background border-t-transparent" />
+              ) : (
+                <Send className="h-4 w-4 text-background transition-colors group-hover:text-background" />
+              )}
+              {loading ? "Sending..." : sent ? "Message Sent!" : "Send Message"}
             </Button>
+
+            {error && (
+              <p className="mt-3 text-center font-sans text-xs font-semibold text-red-500">
+                {error}
+              </p>
+            )}
+            {sent && (
+              <p className="mt-3 text-center font-sans text-xs font-semibold text-emerald-500">
+                Thank you! Your message has been sent successfully.
+              </p>
+            )}
 
             <p className="mt-5 flex items-center justify-center gap-2 font-sans text-sm text-text-muted">
               <LockKeyhole className="h-4 w-4" />

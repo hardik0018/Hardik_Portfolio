@@ -22,6 +22,7 @@ export const aboutQuery = groq`*[_type == "about"][0]{
 export const projectsQuery = groq`*[_type == "project"] | order(year desc) {
   _id,
   title,
+  "slug": slug.current,
   description,
   year,
   tags,
@@ -83,3 +84,22 @@ export const navigationQuery = groq`*[_type == "navigation"][0]{
     url
   }
 }`;
+
+export const projectBySlugQuery = groq`*[_type == "project" && slug.current == $slug][0] {
+  _id,
+  _updatedAt,
+  title,
+  "slug": slug.current,
+  description,
+  year,
+  tags,
+  src,
+  github,
+  url,
+  color
+}`;
+
+export const projectSlugsQuery = groq`*[_type == "project" && defined(slug.current)] {
+  "slug": slug.current
+}`;
+

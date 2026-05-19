@@ -3,7 +3,12 @@
 import { useRef } from "react";
 import { Globe2, Sparkles } from "lucide-react";
 import { gsap, useGSAP } from "@/lib/gsap";
-import { GlobePolaroids } from "@/components/ui/cobe-globe-polaroids";
+import dynamic from "next/dynamic";
+
+const GlobePolaroids = dynamic(
+  () => import("@/components/ui/cobe-globe-polaroids").then((mod) => mod.GlobePolaroids),
+  { ssr: false, loading: () => <div className="h-full w-full rounded-full bg-background/5 animate-pulse" /> }
+);
 
 export interface AboutData {
   tagline: string;

@@ -2,6 +2,7 @@
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { motion, AnimatePresence } from "motion/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useRef, useState, memo, forwardRef } from "react";
 import { ExternalLink } from "lucide-react";
 import { urlFor } from "@/lib/sanity.image";
@@ -11,10 +12,11 @@ import { SectionHeader } from "../ui/SectionHeader";
 export interface SanityProject {
   _id: string;
   title: string;
+  slug?: string;
   description: string;
   year: string;
   tags: string[];
-  src: Parameters<typeof urlFor>[0];
+  src: Parameters<typeof urlFor>[0] & { alt?: string };
   github: string;
   url: string;
   color?: {
@@ -42,6 +44,7 @@ const ProjectRow = memo(
     onMouseLeave: () => void;
   }>(
     ({ project, index, isActive, onMouseEnter, onMouseLeave }, ref) => {
+      const router = useRouter();
       const imageUrl = project.src ? urlFor(project.src).width(1200).height(675).fit('crop').auto('format').url() : "";
 
       return (
@@ -49,6 +52,12 @@ const ProjectRow = memo(
           ref={ref}
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
+          onClick={(e) => {
+            if ((e.target as HTMLElement).closest("a")) return;
+            if (project.slug) {
+              router.push(`/projects/${project.slug}`);
+            }
+          }}
           className={cn(
             "group relative w-full border-t border-border transition-all duration-300 overflow-hidden cursor-pointer",
             isActive ? "text-background" : "text-foreground"

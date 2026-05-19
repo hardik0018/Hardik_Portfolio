@@ -1,4 +1,5 @@
 import { sanityFetch } from './sanity.live'
+import { client } from './sanity.client'
 import * as queries from './sanity.queries'
 import { NavigationData } from '@/components/Header'
 import { HeroData } from '@/components/sections/Hero'
@@ -7,6 +8,7 @@ import { SanityProject } from '@/components/sections/Projects'
 import { SkillItem } from '@/components/sections/Skill'
 import { JourneyStage } from '@/components/sections/Journey'
 import { ContactData } from '@/components/sections/Contact'
+
 
 export async function getHero(): Promise<HeroData | undefined> {
   const { data } = await sanityFetch({ query: queries.heroQuery })
@@ -42,3 +44,22 @@ export async function getNavigation(): Promise<NavigationData | undefined> {
   const { data } = await sanityFetch({ query: queries.navigationQuery })
   return data as NavigationData | undefined
 }
+
+export interface DetailedSanityProject extends SanityProject {
+  _updatedAt: string;
+  slug: string;
+}
+
+export async function getProjectBySlug(slug: string): Promise<DetailedSanityProject | undefined> {
+  const { data } = await sanityFetch({
+    query: queries.projectBySlugQuery,
+    params: { slug },
+  })
+  return data as DetailedSanityProject | undefined
+}
+
+export async function getProjectSlugs(): Promise<{ slug: string }[] | undefined> {
+  return await client.fetch(queries.projectSlugsQuery)
+}
+
+

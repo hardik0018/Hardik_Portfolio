@@ -78,12 +78,8 @@ export default function WorkListing({ initialData }: { initialData?: SanityProje
             const isEven = index % 2 === 0;
             const number = String(index + 1).padStart(2, "0");
             const variant = variants[index % variants.length];
-            
-            // Resolve image URL
+
             const imageUrl = item.src ? urlFor(item.src).width(1200).height(675).fit('crop').auto('format').url() : "";
-            // Use live URL or github as fallback
-            const projectUrl = item.url || item.github || "#";
-            // Combine tags or category
             const category = item.tags && item.tags.length > 0 ? item.tags.join(" / ") : "Development";
 
             return (
@@ -105,24 +101,20 @@ export default function WorkListing({ initialData }: { initialData?: SanityProje
                       <p className="reveal-text mt-4 max-w-[320px] font-sans text-sm md:text-base leading-relaxed text-[#393936]">
                         {item.description}
                       </p>
-                      <Link
-                        href={projectUrl}
-                        target={projectUrl !== "#" ? "_blank" : undefined}
-                        rel={projectUrl !== "#" ? "noopener noreferrer" : undefined}
+                      {item.github && <Link
+                        href={item.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="reveal-text mt-8 inline-flex items-center gap-3 font-sans text-xs md:text-sm font-bold uppercase transition-all duration-300 hover:text-[#00994a] hover:translate-x-1"
                       >
                         View Project
                         <ArrowRight className="h-4 w-4" />
-                      </Link>
+                      </Link>}
                     </div>
                   </div>
                 </div>
 
-                <Link
-                  href={projectUrl}
-                  target={projectUrl !== "#" ? "_blank" : undefined}
-                  rel={projectUrl !== "#" ? "noopener noreferrer" : undefined}
-                  className={`group relative h-[300px] lg:h-[300px] overflow-hidden rounded-[12px] bg-[#111] shadow-[0_30px_80px_rgba(0,0,0,0.12)] lg:col-span-7 xl:col-span-8 ${isEven ? "lg:order-2" : "lg:order-1"}`}
+                <div className={`group relative h-[300px] lg:h-[300px] overflow-hidden rounded-[12px] bg-[#111] shadow-[0_30px_80px_rgba(0,0,0,0.12)] lg:col-span-7 xl:col-span-8 ${isEven ? "lg:order-2" : "lg:order-1"}`}
                 >
                   {imageUrl && <RevealImage
                     src={imageUrl}
@@ -135,7 +127,7 @@ export default function WorkListing({ initialData }: { initialData?: SanityProje
                     wrapperClassName="w-full h-full"
                   />}
                   <div className="absolute inset-0 bg-linear-to-r from-black/40 via-black/5 to-black/30 mix-blend-multiply pointer-events-none transition-opacity duration-700 group-hover:opacity-40" />
-                </Link>
+                </div>
               </article>
             );
           })}
