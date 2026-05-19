@@ -1,0 +1,251 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-card-bg: var(--card-bg);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-tertiary: var(--bg-tertiary);
+  --color-text-muted: var(--text-muted);
+  --color-border: var(--border);
+  --color-focus: var(--focus);
+
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+  --font-display: var(--font-fraunces), serif;
+  --font-hero: var(--font-shadows-into-light), cursive;
+  --font-body: var(--font-marcellus), serif;
+
+  --animate-instant: instant 200ms ease-in-out;
+
+  --breakpoint-xs: 420px;
+}
+
+:root {
+  --background: #fdfdfd;
+  --foreground: #0a0a0a;
+  --accent-primary: #008f51;
+  --accent-secondary: #0000dd;
+  --accent-lime: #c1ff4a;
+  --card-bg: #ffffff;
+  --bg-secondary: #f4f4f4;
+  --bg-tertiary: #e9e9e9;
+  --text-muted: #555555;
+  --text-dim: #a1a1aa;
+  --text-faint: #71717a;
+  --border: #e2e2e2;
+  --card-border: rgba(255, 255, 255, 0.08);
+  --card-border-hover: rgba(193, 255, 74, 0.4);
+  --focus: #008f51;
+}
+
+@keyframes instant {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body);
+  font-size: 16.37px;
+  font-weight: 400;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* Lenis Recommended CSS - Essential for smooth scroll performance */
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+.card-shadow {
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06);
+}
+
+.dotted-line {
+  border-bottom: 2px dotted #cbd5e1;
+  width: 60px;
+}
+
+
+
+
+
+
+
+/* Admin */
+.admin-shell {
+  min-height: 100vh;
+  background: #060607;
+  color: #f5f5f5;
+  padding: 4rem 1.5rem;
+}
+.admin-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.admin-card {
+  background: rgba(20, 20, 22, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 18px;
+  padding: 1.5rem;
+  backdrop-filter: blur(14px);
+}
+.admin-input,
+.admin-select {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #f5f5f5;
+  padding: 0.65rem 0.9rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.admin-input:focus,
+.admin-select:focus {
+  border-color: var(--accent-lime);
+}
+.admin-input::placeholder {
+  color: #666;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: rgba(255, 255, 255, 0.06);
+  color: #f5f5f5;
+}
+.btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+.btn-primary {
+  background: var(--accent-lime);
+  color: #0a0a0a;
+}
+.btn-primary:hover {
+  background: #d4ff6c;
+}
+.btn-danger {
+  background: rgba(244, 63, 94, 0.15);
+  color: #fda4af;
+  border-color: rgba(244, 63, 94, 0.3);
+}
+.btn-danger:hover {
+  background: rgba(244, 63, 94, 0.25);
+}
+
+.row-skill {
+  display: grid;
+  grid-template-columns: 1.5fr 1.2fr 0.6fr 0.8fr 1fr auto;
+  gap: 0.6rem;
+  align-items: center;
+  padding: 0.6rem 0.4rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.row-skill:last-child {
+  border-bottom: none;
+}
+
+.nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: rgba(5, 5, 5, 0.6);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.nav-brand {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.4rem;
+  letter-spacing: -0.02em;
+}
+.nav-link {
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.2s;
+}
+.nav-link:hover {
+  color: var(--accent-lime);
+}
+
+/* hide scrollbar but allow scroll */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Section Layering for Pinning Animations */
+.hero-container {
+  position: relative;
+  z-index: 10;
+  background-color: var(--background);
+}
+
+.about-container {
+  position: relative;
+  z-index: 20;
+  background-color: var(--foreground); /* About is dark */
+}
+
+#projects {
+  position: relative;
+  z-index: 30;
+  background-color: var(--background);
+}
+
+#journey {
+  position: relative;
+  z-index: 40;
+  background-color: var(--background);
+}
+
+#skill {
+  position: relative;
+  z-index: 50;
+  background-color: var(--foreground); /* Skill is dark */
+}
+
+.contact-container {
+  position: relative;
+  z-index: 5; /* Lower than skill to allow reveal effect from behind */
+  background-color: var(--background);
+}

@@ -1,0 +1,24 @@
+# Hardik Vatukiya — Full-Stack Developer
+
+MERN Stack & Full-Stack Developer from Rajkot, India. Specialized in building seamless, accessible, and high-performance digital solutions at the intersection of design, performance, and engineering.
+
+## Contact & Links
+- Website: https://hardikvatukiya.vercel.app
+- Email: hello@hardikvatukiya.dev
+- GitHub: https://github.com/hardikvatukiya
+- LinkedIn: https://linkedin.com/in/hardikvatukiya
+- Availability: Open for freelance work & contract projects worldwide
+
+## Core Expertise
+- **Frontend**: React, Next.js, TypeScript, TailwindCSS, GSAP, Responsive UI
+- **Backend & Database**: Node.js, Express, MongoDB, RESTful APIs, Sanity CMS
+- **Practices**: SEO optimization, accessibility, performance tuning, animations
+
+## Featured Projects
+1. **Trionn®**: Creative Agency Website integration using high-fidelity GSAP animations.
+2. **Campus Suite**: Academic management dashboard system.
+3. **Baat Cheet**: Real-time MERN chat application with Socket.io.
+
+## Professional Experience
+- **Freelance Developer (2024 - Present)**: Full-Stack development for clients worldwide.
+- **Full Stack Developer at Trionn (2023 - 2024)**: Rich, interactive web app development.
