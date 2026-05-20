@@ -103,7 +103,9 @@ export default async function ProjectDetailPage({ params }: PageProps) {
     <main className="min-h-screen bg-background px-6 pb-24 pt-32 text-foreground md:px-12">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(schema).replace(/</g, "\\u003c").replace(/>/g, "\\u003e"),
+        }}
       />
       <article className="mx-auto max-w-6xl">
         <Link href="/projects" className="text-xs font-bold uppercase tracking-widest text-text-muted transition-colors hover:text-foreground">

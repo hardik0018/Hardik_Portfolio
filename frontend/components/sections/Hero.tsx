@@ -1,9 +1,5 @@
-"use client";
-
-import { useEffect, useRef } from 'react';
 import { Card } from "@/components/ui/Card";
 import { RevealImage } from "@/components/ui/RevealImage";
-import { gsap } from '@/lib/gsap';
 import { urlFor } from '@/lib/sanity.image';
 
 export interface HeroData {
@@ -28,33 +24,16 @@ const MarqueeItem = ({ text, isPrimary }: { text: string; isPrimary?: boolean })
 );
 
 const HeroSection = ({ initialData }: { initialData?: HeroData }) => {
-  const marqueeRef = useRef<HTMLDivElement>(null);
   const name = initialData?.name || "Hardik Vatukiya";
   const portraitUrl = initialData?.portraitImage ? urlFor(initialData.portraitImage).url() : "/hero-portrait.webp";
   const backgroundUrl = initialData?.backgroundImage ? urlFor(initialData.backgroundImage).url() : "./hero_bg.svg";
   const copyright = initialData?.copyrightText || "©2026";
 
-  useEffect(() => {
-    const marquee = marqueeRef.current;
-    if (!marquee) return;
-
-    const ctx = gsap.context(() => {
-      gsap.to(marquee, {
-        xPercent: -50,
-        repeat: -1,
-        duration: 8,
-        ease: "none",
-      });
-    }, marqueeRef);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
     <section className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-background"
       style={{ backgroundImage: `url(${backgroundUrl})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center" }}>
       <div className="absolute inset-0 flex items-center pointer-events-none select-none overflow-hidden">
-        <div ref={marqueeRef} className="flex whitespace-nowrap will-change-transform">
+        <div className="flex whitespace-nowrap will-change-transform animate-marquee">
           <MarqueeItem text={name} isPrimary />
           <MarqueeItem text={name} />
         </div>
@@ -68,8 +47,8 @@ const HeroSection = ({ initialData }: { initialData?: HeroData }) => {
           sizes="(max-width: 768px) 100vw, 58vw"
           transition="bottom-up"
           trigger="load"
-          delay={0.3}
-          duration={1.4}
+          delay={0}
+          duration={0.8}
           wrapperClassName="relative w-full md:w-[58%] h-full"
           className="object-contain object-bottom select-none"
           priority

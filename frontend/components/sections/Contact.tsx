@@ -89,6 +89,7 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
   const sectionRef = useRef<HTMLElement>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [website, setWebsite] = useState("");
   const [projectType, setProjectType] = useState("");
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState(false);
@@ -180,6 +181,7 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
           email,
           projectType,
           message,
+          website,
         }),
       });
 
@@ -191,6 +193,7 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
       setSent(true);
       setName("");
       setEmail("");
+      setWebsite("");
       setProjectType("");
       setMessage("");
     } catch (err: any) {
@@ -276,6 +279,19 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
             onSubmit={handleSubmit}
             className="contact-rise rounded-[10px] border border-border bg-background/90 p-7 shadow-[0_24px_90px_rgba(0,0,0,0.08)] backdrop-blur-xl sm:p-4"
           >
+            {/* Honeypot field for spam prevention */}
+            <div className="absolute opacity-0 -z-50 pointer-events-none" aria-hidden="true">
+              <input
+                type="text"
+                name="website"
+                value={website}
+                onChange={(event) => setWebsite(event.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+                placeholder="Leave this empty if you are a human"
+              />
+            </div>
+
             <div className="mb-6 flex items-center gap-4">
               <span className="h-2.5 w-2.5 rounded-full bg-accent-primary" />
               <p className="font-sans text-xs font-semibold uppercase tracking-[0.08em] text-text-muted">Send a message</p>

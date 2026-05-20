@@ -26,13 +26,9 @@ export default function DeferredHomeSections({
       <div className="about-container">
         <AboutSection initialData={aboutData} />
       </div>
-
       <Projects initialData={projectsData} />
-
       <Journey initialData={journeyData} />
-
       <Skill initialData={skillsData} />
-
       <div className="contact-container">
         <Contact initialData={contactData} />
       </div>

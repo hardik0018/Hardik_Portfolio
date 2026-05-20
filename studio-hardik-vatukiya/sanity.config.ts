@@ -23,6 +23,10 @@ export default defineConfig({
               .id('navigation')
               .child(S.document().schemaType('navigation').documentId('navigation')),
             S.listItem()
+              .title("Gallery")
+              .id("gallery")
+              .child(S.document().schemaType("gallery").documentId("gallery")),
+            S.listItem()
               .title('Hero Section')
               .id('hero')
               .child(S.document().schemaType('hero').documentId('hero')),

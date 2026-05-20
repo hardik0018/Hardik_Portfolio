@@ -263,17 +263,30 @@ export default function Projects({ initialData }: { initialData?: SanityProject[
         pinSpacing: false,
       });
 
-      // Mouse Move Tracking for Modal
-      const moveModal = (e: MouseEvent) => {
-        if (!modalRef.current) return;
+      // Mouse Move Tracking for Modal using quickTo for high performance
+      let activeModalEl: HTMLDivElement | null = null;
+      let xTo: Function | null = null;
+      let yTo: Function | null = null;
 
-        gsap.to(modalRef.current, {
-          x: e.clientX,
-          y: e.clientY,
-          duration: 0.6,
-          ease: "power3.out",
-          overwrite: "auto",
-        });
+      const moveModal = (e: MouseEvent) => {
+        const el = modalRef.current;
+        if (!el) {
+          activeModalEl = null;
+          xTo = null;
+          yTo = null;
+          return;
+        }
+
+        if (el !== activeModalEl) {
+          activeModalEl = el;
+          xTo = gsap.quickTo(el, "x", { duration: 0.6, ease: "power3.out" });
+          yTo = gsap.quickTo(el, "y", { duration: 0.6, ease: "power3.out" });
+        }
+
+        if (xTo && yTo) {
+          xTo(e.clientX);
+          yTo(e.clientY);
+        }
       };
 
       window.addEventListener("mousemove", moveModal);

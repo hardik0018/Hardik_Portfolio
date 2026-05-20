@@ -64,6 +64,7 @@ import HeroHeader from "@/components/Header";
 import { SanityLive } from "@/lib/sanity.live";
 import { getNavigation } from "@/lib/sanity.loader";
 import { GoogleAnalytics } from "@/components/google-analytics";
+import { draftMode } from "next/headers";
 
 export default async function RootLayout({
   children,
@@ -71,6 +72,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const navigation = await getNavigation();
+  const { isEnabled: isDraftMode } = await draftMode();
 
   return (
     <html
@@ -78,6 +80,20 @@ export default async function RootLayout({
       className={`${shadowsIntoLight.variable} ${marcellus.variable} ${fraunces.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
+        {process.env.NEXT_PUBLIC_SANITY_PROJECT_ID && (
+          <>
+            <link
+              rel="preconnect"
+              href={`https://${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}.api.sanity.io`}
+              crossOrigin="anonymous"
+            />
+            <link
+              rel="preconnect"
+              href="https://cdn.sanity.io"
+              crossOrigin="anonymous"
+            />
+          </>
+        )}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -125,7 +141,9 @@ export default async function RootLayout({
           <HeroHeader initialData={navigation} />
           {children}
         </SmoothScroll>
-        <SanityLive refreshOnFocus={false} refreshOnReconnect={false} refreshOnMount={false} />
+        {isDraftMode && (
+          <SanityLive refreshOnFocus={false} refreshOnReconnect={false} refreshOnMount={false} />
+        )}
       </body>
     </html>
   );

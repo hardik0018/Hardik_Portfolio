@@ -19,6 +19,7 @@
   --font-body: var(--font-marcellus), serif;
 
   --animate-instant: instant 200ms ease-in-out;
+  --animate-marquee: marquee 8s linear infinite;
 
   --breakpoint-xs: 420px;
 }
@@ -47,6 +48,15 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
@@ -227,6 +237,12 @@ html.lenis {
 }
 
 #projects {
+  position: relative;
+  z-index: 35;
+  background-color: var(--background);
+}
+
+#gallery {
   position: relative;
   z-index: 30;
   background-color: var(--background);

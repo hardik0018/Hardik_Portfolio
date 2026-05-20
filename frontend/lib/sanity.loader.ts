@@ -1,13 +1,14 @@
 import { sanityFetch } from './sanity.live'
 import { client } from './sanity.client'
 import * as queries from './sanity.queries'
-import { NavigationData } from '@/components/Header'
-import { HeroData } from '@/components/sections/Hero'
-import { AboutData } from '@/components/sections/About'
-import { SanityProject } from '@/components/sections/Projects'
-import { SkillItem } from '@/components/sections/Skill'
-import { JourneyStage } from '@/components/sections/Journey'
-import { ContactData } from '@/components/sections/Contact'
+import type { NavigationData } from '@/components/Header'
+import type { HeroData } from '@/components/sections/Hero'
+import type { AboutData } from '@/components/sections/About'
+import type { SanityProject } from '@/components/sections/Projects'
+import type { GalleryData } from '@/components/sections/Gallery'
+import type { SkillItem } from '@/components/sections/Skill'
+import type { JourneyStage } from '@/components/sections/Journey'
+import type { ContactData } from '@/components/sections/Contact'
 
 
 export async function getHero(): Promise<HeroData | undefined> {
@@ -23,6 +24,11 @@ export async function getAbout(): Promise<AboutData | undefined> {
 export async function getProjects(): Promise<SanityProject[] | undefined> {
   const { data } = await sanityFetch({ query: queries.projectsQuery })
   return data as SanityProject[] | undefined
+}
+
+export async function getGallery(): Promise<GalleryData | undefined> {
+  const { data } = await sanityFetch({ query: queries.galleryQuery })
+  return data as GalleryData | undefined
 }
 
 export async function getSkills(): Promise<SkillItem[] | undefined> {

@@ -5,8 +5,14 @@ const allowedTags = new Set(["hero", "about", "projects", "skills", "journey", "
 
 export async function POST(request: Request) {
   const secret = request.headers.get("x-revalidate-secret");
+  const expectedSecret = process.env.SANITY_REVALIDATE_SECRET;
 
-  if (process.env.SANITY_REVALIDATE_SECRET && secret !== process.env.SANITY_REVALIDATE_SECRET) {
+  if (!expectedSecret) {
+    console.error("SANITY_REVALIDATE_SECRET is not configured in environment variables.");
+    return NextResponse.json({ error: "Revalidation service not configured" }, { status: 500 });
+  }
+
+  if (secret !== expectedSecret) {
     return NextResponse.json({ error: "Invalid revalidation secret" }, { status: 401 });
   }
 

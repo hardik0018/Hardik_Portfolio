@@ -125,6 +125,23 @@ const RevealImage = React.forwardRef<HTMLDivElement, RevealImageProps>(
         },
         outerRef
     ) => {
+        const EASE_MAP: Record<string, string> = {
+            "power1.in": "cubic-bezier(0.55, 0.085, 0.68, 0.53)",
+            "power1.out": "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+            "power1.inOut": "cubic-bezier(0.455, 0.03, 0.515, 0.955)",
+            "power2.in": "cubic-bezier(0.55, 0.055, 0.675, 0.19)",
+            "power2.out": "cubic-bezier(0.215, 0.61, 0.355, 1)",
+            "power2.inOut": "cubic-bezier(0.7, 0, 0.3, 1)",
+            "power3.in": "cubic-bezier(0.895, 0.03, 0.685, 0.22)",
+            "power3.out": "cubic-bezier(0.165, 0.84, 0.44, 1)",
+            "power3.inOut": "cubic-bezier(0.645, 0.045, 0.355, 1)",
+            "power4.in": "cubic-bezier(0.895, 0.03, 0.685, 0.22)",
+            "power4.out": "cubic-bezier(0.165, 0.84, 0.44, 1)",
+            "power4.inOut": "cubic-bezier(0.77, 0, 0.175, 1)",
+            "none": "linear",
+            "linear": "linear"
+        };
+
         const wrapperRef = useRef<HTMLDivElement>(null);
         const { from, to } = TRANSITIONS[transition];
 
@@ -137,49 +154,69 @@ const RevealImage = React.forwardRef<HTMLDivElement, RevealImageProps>(
 
         useGSAP(
             () => {
+                if (trigger !== "scroll") return;
                 const el = wrapperRef.current;
                 if (!el) return;
 
                 const animProps = {
                     clipPath: to,
                     duration,
-                    delay: trigger === "load" ? delay : 0,
                     ease,
                     clearProps: "clipPath,willChange",
                 };
 
-                if (trigger === "scroll") {
-                    gsap.to(el, {
-                        ...animProps,
-                        scrollTrigger: {
-                            trigger: el,
-                            start: scrollStart,
-                            toggleActions: "play none none reverse",
-                        },
-                    });
-                } else {
-                    gsap.to(el, animProps);
-                }
+                gsap.to(el, {
+                    ...animProps,
+                    scrollTrigger: {
+                        trigger: el,
+                        start: scrollStart,
+                        toggleActions: "play none none reverse",
+                    },
+                });
             },
             { scope: wrapperRef }
         );
 
-            const { alt, ...restProps } = imageProps;
+        const { alt, ...restProps } = imageProps;
+        const isLoad = trigger === "load";
+        const cssEase = EASE_MAP[ease] || "ease-in-out";
+        const animName = `reveal-${transition}`;
 
-            return (
-                <div
-                    ref={setRef}
-                    className={cn("overflow-hidden", wrapperClassName)}
-                    // ↓ Applied via SSR inline style — hides image before first paint (no flash)
-                    style={{ clipPath: from, willChange: "clip-path" }}
-                >
-                    <Image
-                        className={cn("w-full h-full", className)}
-                        alt={alt || ""}
-                        {...restProps}
-                    />
-                </div>
-            );
+        return (
+            <div
+                ref={setRef}
+                className={cn("overflow-hidden", wrapperClassName)}
+                style={
+                    isLoad
+                        ? {
+                              clipPath: to,
+                              animationName: animName,
+                              animationDuration: `${duration}s`,
+                              animationDelay: `${delay}s`,
+                              animationTimingFunction: cssEase,
+                              animationFillMode: "both",
+                              willChange: "clip-path",
+                          }
+                        : { clipPath: from, willChange: "clip-path" }
+                }
+            >
+                {isLoad && (
+                    <style dangerouslySetInnerHTML={{
+                        __html: `
+                            @keyframes ${animName} {
+                                from { clip-path: ${from}; }
+                                to { clip-path: ${to}; }
+                            }
+                        `
+                    }} />
+                )}
+                <Image
+                    className={cn("w-full h-full", className)}
+                    alt={alt || ""}
+                    {...restProps}
+                />
+            </div>
+        );
     }
 );
 

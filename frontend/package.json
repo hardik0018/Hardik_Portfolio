@@ -46,5 +46,12 @@
     "edge 111",
     "firefox 111",
     "safari 16.4"
-  ]
+  ],
+  "pnpm": {
+    "overrides": {
+      "js-yaml": "^3.14.2",
+      "postcss": "^8.5.10"
+    }
+  }
 }
+

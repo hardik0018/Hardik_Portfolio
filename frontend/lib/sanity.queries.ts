@@ -32,6 +32,21 @@ export const projectsQuery = groq`*[_type == "project"] | order(year desc) {
   color
 }`;
 
+export const galleryQuery = groq`*[_type == "gallery" && enabled != false][0]{
+  enabled,
+  placement,
+  eyebrow,
+  title,
+  description,
+  items[] | order(order asc){
+    _key,
+    image,
+    caption,
+    size,
+    order
+  }
+}`;
+
 export const skillsQuery = groq`*[_type == "skill"] | order(order asc) {
   _id,
   name,

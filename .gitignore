@@ -27,3 +27,5 @@ yarn-error.log*
 next-env.d.ts
 /.agent
 studio-hardik-vatukiya/pnpm-lock.yaml
+
+.unlighthouse

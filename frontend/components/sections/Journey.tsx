@@ -540,19 +540,26 @@ export default function Journey({ initialData }: { initialData?: JourneyStage[] 
                     frame = requestAnimationFrame(tick);
                 }
 
-                gsap.to(shape1El, {
-                    rotate: 360,
-                    duration: isDesktop ? 80 : 120,
-                    repeat: -1,
-                    ease: "none",
-                });
+                const shape1Rotate = sectionRef.current?.querySelector(".js-bg-shape-1-rotate") as HTMLElement | null;
+                const shape2Rotate = sectionRef.current?.querySelector(".js-bg-shape-2-rotate") as HTMLElement | null;
 
-                gsap.to(shape2El, {
-                    rotate: -360,
-                    duration: isDesktop ? 55 : 80,
-                    repeat: -1,
-                    ease: "none",
-                });
+                if (shape1Rotate) {
+                    gsap.to(shape1Rotate, {
+                        rotate: 360,
+                        duration: isDesktop ? 80 : 120,
+                        repeat: -1,
+                        ease: "none",
+                    });
+                }
+
+                if (shape2Rotate) {
+                    gsap.to(shape2Rotate, {
+                        rotate: -360,
+                        duration: isDesktop ? 55 : 80,
+                        repeat: -1,
+                        ease: "none",
+                    });
+                }
 
                 return () => {
                     window.removeEventListener("resize", throttledUpdate);
@@ -590,29 +597,33 @@ export default function Journey({ initialData }: { initialData?: JourneyStage[] 
 
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <div className="js-bg-shape-1-wrap absolute top-[5%] left-[2%] pointer-events-none opacity-0 will-change-transform">
-                        <Image
-                            src="/flavor_1.svg"
-                            alt=""
-                            loading="eager"
-                            aria-hidden="true"
-                            className="js-bg-shape-1 will-change-transform"
-                            style={{ transformStyle: "preserve-3d" }}
-                            width={500}
-                            height={500}
-                        />
+                        <div className="js-bg-shape-1-rotate inline-block will-change-transform">
+                            <Image
+                                src="/flavor_1.svg"
+                                alt=""
+                                loading="eager"
+                                aria-hidden="true"
+                                className="js-bg-shape-1 will-change-transform"
+                                style={{ transformStyle: "preserve-3d" }}
+                                width={500}
+                                height={500}
+                            />
+                        </div>
                     </div>
 
                     <div className="js-bg-shape-2-wrap absolute bottom-[5%] right-[2%] pointer-events-none opacity-0 will-change-transform">
-                        <Image
-                            src="/flavor.svg"
-                            loading="eager"
-                            alt=""
-                            aria-hidden="true"
-                            className="js-bg-shape-2 will-change-transform"
-                            style={{ transformStyle: "preserve-3d" }}
-                            width={260}
-                            height={260}
-                        />
+                        <div className="js-bg-shape-2-rotate inline-block will-change-transform">
+                            <Image
+                                src="/flavor.svg"
+                                loading="eager"
+                                alt=""
+                                aria-hidden="true"
+                                className="js-bg-shape-2 will-change-transform"
+                                style={{ transformStyle: "preserve-3d" }}
+                                width={260}
+                                height={260}
+                            />
+                        </div>
                     </div>
                 </div>
 
