@@ -49,9 +49,11 @@ export function LazySection({
 
   useEffect(() => {
     if (hasIntersected) {
+      // refresh(true) recalculates trigger positions WITHOUT adjusting the
+      // current scroll position — prevents snap-to-top when lazy sections load
       const timer = setTimeout(() => {
-        ScrollTrigger.refresh();
-      }, 100);
+        ScrollTrigger.refresh(true);
+      }, 150);
       return () => clearTimeout(timer);
     }
   }, [hasIntersected]);

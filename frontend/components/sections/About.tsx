@@ -183,25 +183,27 @@ export default function AboutSection({ initialData }: { initialData?: AboutData 
           ease: "sine.inOut"
         });
 
-        // Parallax
+        // Parallax — scoped to the About section's pin window.
+        // Since About is pinned (top top → bottom+=100% top), we use
+        // start:"top top" so the parallax is active while About is in view.
         gsap.to(".about-left", {
-          yPercent: -4,
+          yPercent: -3,
           ease: "none",
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top bottom",
-            end: "bottom top",
+            start: "top top",
+            end: "bottom+=80% top",
             scrub: 1.4,
           },
         });
 
         gsap.to(".about-right", {
-          yPercent: 3,
+          yPercent: 2,
           ease: "none",
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top bottom",
-            end: "bottom top",
+            start: "top top",
+            end: "bottom+=80% top",
             scrub: 1.4,
           },
         });
@@ -254,7 +256,11 @@ export default function AboutSection({ initialData }: { initialData?: AboutData 
         </div>
 
         {/* ── RIGHT PANEL ── */}
-        <div className="about-right about-details no-scrollbar relative px-6 pt-10 pb-14 sm:px-10 sm:pt-14 lg:h-screen lg:overflow-y-auto lg:px-[5vw] lg:pt-[6vh] lg:pb-[5vh] xl:px-[4.8vw]">
+        {/* data-lenis-prevent: Lenis allows native scroll on this element so
+            all content is reachable. lg:overflow-y-auto removed so the panel
+            grows with its content (no clipping) — section height controlled
+            by the outer lg:min-h-screen wrapper. */}
+        <div data-lenis-prevent className="about-right about-details no-scrollbar relative px-6 pt-10 pb-14 sm:px-10 sm:pt-14 lg:px-[5vw] lg:pt-[6vh] lg:pb-[5vh] xl:px-[4.8vw]">
           <div className="mx-auto w-full max-w-[900px]">
 
             {/* Name */}

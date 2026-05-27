@@ -323,7 +323,8 @@ export default function Journey({ initialData }: { initialData?: JourneyStage[] 
                         pathEl.style.strokeDashoffset = String(length);
                     });
 
-                    ScrollTrigger.refresh();
+                    // refresh(true) does NOT adjust scroll position — safe to call mid-scroll
+                    ScrollTrigger.refresh(true);
                 };
 
                 let resizeTimer: number;

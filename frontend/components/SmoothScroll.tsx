@@ -43,10 +43,10 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     window.scrollTo(0, 0);
     lenis.scrollTo(0, { immediate: true });
 
-    // 4. Force a ScrollTrigger refresh after a short delay once hydration/layout stabilizes
+    // 4. Full refresh after layout stabilizes — safe at scroll=0 since we just reset it
     const timer = setTimeout(() => {
       ScrollTrigger.refresh();
-    }, 250);
+    }, 400);
 
     return () => {
       lenis.destroy();
@@ -61,10 +61,11 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     if (lenisRef.current) {
       window.scrollTo(0, 0);
       lenisRef.current.scrollTo(0, { immediate: true });
-      
+
+      // After scroll reset, do a full refresh — position is already 0 so no snap
       const timer = setTimeout(() => {
         ScrollTrigger.refresh();
-      }, 100);
+      }, 150);
       return () => clearTimeout(timer);
     }
   }, [pathname]);

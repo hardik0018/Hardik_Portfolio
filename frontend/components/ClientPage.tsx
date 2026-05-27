@@ -27,6 +27,7 @@ export default function ClientPage({ children }: ClientPageProps) {
             end: "bottom+=100% top",
             pin: true,
             pinSpacing: false,
+            invalidateOnRefresh: true,
           });
         }
 
@@ -37,6 +38,7 @@ export default function ClientPage({ children }: ClientPageProps) {
             end: "bottom+=100% top",
             pin: true,
             pinSpacing: false,
+            invalidateOnRefresh: true,
           });
         }
 

@@ -14,6 +14,8 @@ import type { ContactData } from "@/components/sections/Contact";
 import type { FAQData } from "@/lib/sanity.loader";
 
 // Dynamic imports for heavy animation sections with ssr: false
+// About is NOT lazy-gated — it's the 2nd section and must be in DOM before
+// any scrolling occurs so GSAP pin + animation positions are always correct.
 const AboutSection = dynamic(() => import("@/components/sections/About"), { ssr: false });
 const Projects = dynamic(() => import("@/components/sections/Projects"), { ssr: false });
 const Journey = dynamic(() => import("@/components/sections/Journey"), { ssr: false });
@@ -48,20 +50,29 @@ export default function ClientHome({
         </Suspense>
       </div>
 
-      <LazySection
-        fallback={<div className="h-screen w-full bg-background animate-pulse" />}
-        className="about-container"
-        minHeight="100vh"
-        rootMargin="-10px"
-      >
-        <Suspense fallback={<div className="h-screen w-full bg-background animate-pulse" />}>
+      {/*
+        About is eagerly rendered — NO LazySection gate.
+        Reason: About is pinned by GSAP (ClientPage.tsx). If it lazy-loads
+        mid-scroll, its internal animations fire at already-past trigger
+        positions (invisible content), and the pin spacer recalculates
+        while the user is in motion, causing the scroll-jump bug.
+      */}
+      <div className="about-container">
+        <Suspense fallback={<div className="h-screen w-full bg-foreground animate-pulse" />}>
           <AboutSection initialData={aboutData} />
         </Suspense>
-      </LazySection>
+      </div>
 
+      {/*
+        rootMargin="500px" preloads sections 500px before they enter the
+        viewport — gives enough time for heavy GSAP sections to fully mount
+        and measure heights BEFORE the user arrives, preventing mid-scroll
+        layout recalculations and the associated scroll jank.
+      */}
       <LazySection
         fallback={<div className="h-screen w-full bg-background animate-pulse" />}
         minHeight="100vh"
+        rootMargin="500px"
       >
         <Suspense fallback={<div className="h-screen w-full bg-background animate-pulse" />}>
           <Projects initialData={projectsData} />
@@ -71,6 +82,7 @@ export default function ClientHome({
       <LazySection
         fallback={<div className="h-screen w-full bg-background animate-pulse" />}
         minHeight="100vh"
+        rootMargin="500px"
       >
         <Suspense fallback={<div className="h-screen w-full bg-background animate-pulse" />}>
           <Journey initialData={journeyData} />
@@ -80,6 +92,7 @@ export default function ClientHome({
       <LazySection
         fallback={<div className="h-screen w-full bg-foreground animate-pulse" />}
         minHeight="100vh"
+        rootMargin="300px"
       >
         <Suspense fallback={<div className="h-screen w-full bg-foreground animate-pulse" />}>
           <Skill initialData={skillsData} />
@@ -90,6 +103,7 @@ export default function ClientHome({
         fallback={<div className="h-screen w-full bg-background animate-pulse" />}
         className="faq-container"
         minHeight="100vh"
+        rootMargin="300px"
       >
         <Suspense fallback={<div className="w-full bg-background animate-pulse" />}>
           <FAQ initialData={faqData} />
@@ -100,6 +114,7 @@ export default function ClientHome({
         fallback={<div className="h-screen w-full bg-background animate-pulse" />}
         className="contact-container"
         minHeight="100vh"
+        rootMargin="300px"
       >
         <Suspense fallback={<div className="h-screen w-full bg-background animate-pulse" />}>
           <Contact initialData={contactData} />

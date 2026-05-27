@@ -47,7 +47,8 @@ export default function FAQ({ initialData }: FAQProps) {
   const toggleAccordion = (index: number) => {
     setActiveIndex(activeIndex === index ? null : index);
     setTimeout(() => {
-      ScrollTrigger.refresh();
+      // refresh(true) recalculates heights without snapping scroll position
+      ScrollTrigger.refresh(true);
     }, 400); // Wait for accordion height transitions to finish
   };
 
@@ -148,7 +149,8 @@ export default function FAQ({ initialData }: FAQProps) {
 
   // Auto refresh GSAP triggers when elements are filtered
   useEffect(() => {
-    ScrollTrigger.refresh();
+    // refresh(true) recalculates trigger positions WITHOUT adjusting scroll position
+    ScrollTrigger.refresh(true);
   }, [filteredItems.length]);
 
   return (

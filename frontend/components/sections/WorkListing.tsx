@@ -16,9 +16,9 @@ export default function WorkListing({ initialData }: { initialData?: SanityProje
 
   useGSAP(
     () => {
-      // Force refresh for Next.js route changes
-      ScrollTrigger.refresh();
-      const timeoutId = setTimeout(() => ScrollTrigger.refresh(), 100);
+      // refresh(true) does NOT adjust scroll position — prevents snap on mount
+      ScrollTrigger.refresh(true);
+      const timeoutId = setTimeout(() => ScrollTrigger.refresh(true), 150);
 
       const items = gsap.utils.toArray<HTMLElement>(".work-item");
 
