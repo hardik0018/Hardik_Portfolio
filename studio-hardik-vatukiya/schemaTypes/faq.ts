@@ -15,7 +15,6 @@ export default defineType({
       name: 'subtitle',
       title: 'Subtitle',
       type: 'string',
-      initialValue: 'Quick facts and detailed answers about Hardik, his technology stack, and availability.'
     }),
     defineField({
       name: 'items',

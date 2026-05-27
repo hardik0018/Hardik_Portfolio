@@ -358,7 +358,7 @@ export default function Projects({ initialData }: { initialData?: SanityProject[
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             exit={{ opacity: 0, scale: 0.5, rotate: 5 }}
             transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-            className="fixed top-0 left-0 w-[300px] h-[400px] pointer-events-none overflow-hidden rounded-xl shadow-[0_60px_120px_rgba(0,0,0,0.4)] z-[100] hidden lg:block -translate-x-1/2 -translate-y-1/2"
+            className="fixed top-0 left-0 w-[300px] h-[400px] pointer-events-none overflow-hidden rounded-xl shadow-[0_60px_120px_rgba(0,0,0,0.4)] z-100 hidden lg:block -translate-x-1/2 -translate-y-1/2"
             style={{
               boxShadow: `0 60px 120px ${activeProject.color?.hex || '#000000'}55`,
             }}
