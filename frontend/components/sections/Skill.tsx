@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
+import { gsap, useGSAP } from "@/lib/gsap";
 import { SkillIcon } from "../SkillIcons";
 import { SectionHeader } from "../ui/SectionHeader";
 import { urlFor } from "@/lib/sanity.image";
@@ -34,8 +34,6 @@ const getHexColor = (color: string | SanityColor | null | undefined): string => 
     if (color && typeof color === "object" && 'hex' in color && color.hex) return color.hex;
     return "";
 };
-
-
 
 function useCardTilt(ref: React.RefObject<HTMLDivElement | null>) {
     const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -401,58 +399,11 @@ function XLCard({ skill, delay, className = "" }: { skill: SkillItem; delay: num
 
 /* ─────────────────────────────── Section ─────────────────────────────────── */
 
-function getGridStyles(skill: SkillItem, index: number): { className: string; Component: React.ComponentType<{ skill: SkillItem; delay: number; className?: string }> } {
-    let Component: React.ComponentType<{ skill: SkillItem; delay: number; className?: string }> = WideCard;
-    if (skill.size === "mini") Component = MiniCard;
-    else if (skill.size === "tall") Component = TallCard;
-    else if (skill.size === "xl") Component = XLCard;
-
-    let gridClasses = "col-span-12";
-    switch (index) {
-        case 0:
-            gridClasses = "sm:col-start-1 sm:col-span-4 sm:row-start-1";
-            break;
-        case 1:
-            gridClasses = "sm:col-start-5 sm:col-span-4 sm:row-start-1";
-            break;
-        case 2:
-            gridClasses = "sm:col-start-9 sm:col-span-4 sm:row-start-1";
-            break;
-        case 3:
-            gridClasses = "sm:col-start-1 sm:col-span-3 sm:row-start-2 sm:row-span-2";
-            break;
-        case 4:
-            gridClasses = "sm:col-start-4 sm:col-span-3 sm:row-start-2";
-            break;
-        case 5:
-            gridClasses = "sm:col-start-7 sm:col-span-3 sm:row-start-2";
-            break;
-        case 6:
-            gridClasses = "sm:col-start-4 sm:col-span-3 sm:row-start-3";
-            break;
-        case 7:
-            gridClasses = "sm:col-start-7 sm:col-span-3 sm:row-start-3";
-            break;
-        case 8:
-            gridClasses = "sm:col-start-10 sm:col-span-3 sm:row-start-2 sm:row-span-2";
-            break;
-        case 9:
-            gridClasses = "sm:col-start-1 sm:col-span-3 sm:row-start-4";
-            break;
-        case 10:
-            gridClasses = "sm:col-start-4 sm:col-span-3 sm:row-start-4";
-            break;
-        case 11:
-            gridClasses = "sm:col-start-7 sm:col-span-3 sm:row-start-4";
-            break;
-        case 12:
-            gridClasses = "sm:col-start-10 sm:col-span-3 sm:row-start-4";
-            break;
-        default:
-            gridClasses = "sm:col-span-3";
-    }
-
-    return { className: gridClasses, Component };
+function getCardComponent(size: string): React.ComponentType<{ skill: SkillItem; delay: number; className?: string }> {
+    if (size === "mini") return MiniCard;
+    if (size === "tall") return TallCard;
+    if (size === "xl") return XLCard;
+    return WideCard;
 }
 
 export default function Skill({ initialData }: { initialData?: SkillItem[] }) {
@@ -461,19 +412,106 @@ export default function Skill({ initialData }: { initialData?: SkillItem[] }) {
 
     const skills = initialData || [];
 
-    const sorted = [...skills].sort((a, b) => {
-        const numA = parseInt(a.order.replace(/[^\d]/g, ""), 10) || 0;
-        const numB = parseInt(b.order.replace(/[^\d]/g, ""), 10) || 0;
-        return numA - numB;
-    });
-
-    const blobColorA = getHexColor(sorted[0]?.accentColor) || "transparent";
-    const blobColorB = getHexColor(sorted[sorted.length - 1]?.accentColor) || "transparent";
+    const blobColorA = getHexColor(skills[0]?.accentColor) || "transparent";
+    const blobColorB = getHexColor(skills[skills.length - 1]?.accentColor) || "transparent";
 
     useGSAP(() => {
         gsap.to(limeRef.current, { x: 70, y: -46, duration: 15, ease: "sine.inOut", repeat: -1, yoyo: true });
         gsap.to(blueRef.current, { x: -70, y: 48, duration: 18, ease: "sine.inOut", repeat: -1, yoyo: true });
     }, []);
+
+    // Group skills by dimensions to build a robust staggered layout
+    const tallSkills = skills.filter((s) => s.size === "tall" || s.size === "xl");
+    const normalSkills = skills.filter((s) => s.size !== "tall" && s.size !== "xl");
+
+    const layoutSkills: {
+        skill: SkillItem;
+        gridClass: string;
+        Component: React.ComponentType<{ skill: SkillItem; delay: number; className?: string }>;
+    }[] = [];
+
+    // Row 1 (Slots 0, 1, 2) - col-span-4
+    for (let i = 0; i < 3; i++) {
+        if (normalSkills.length > 0) {
+            const skill = normalSkills.shift()!;
+            layoutSkills.push({
+                skill,
+                gridClass: `sm:col-start-${1 + i * 4} sm:col-span-4 sm:row-start-1`,
+                Component: getCardComponent(skill.size),
+            });
+        }
+    }
+
+    // Left Tall Slot (Slot 3)
+    if (tallSkills.length > 0) {
+        const skill = tallSkills.shift()!;
+        layoutSkills.push({
+            skill,
+            gridClass: "sm:col-start-1 sm:col-span-3 sm:row-start-2 sm:row-span-2",
+            Component: getCardComponent(skill.size),
+        });
+    }
+
+    // Row 2 Middle Slots (Slots 4, 5)
+    for (let i = 0; i < 2; i++) {
+        if (normalSkills.length > 0) {
+            const skill = normalSkills.shift()!;
+            layoutSkills.push({
+                skill,
+                gridClass: `sm:col-start-${4 + i * 3} sm:col-span-3 sm:row-start-2`,
+                Component: getCardComponent(skill.size),
+            });
+        }
+    }
+
+    // Row 3 Middle Slots (Slots 6, 7)
+    for (let i = 0; i < 2; i++) {
+        if (normalSkills.length > 0) {
+            const skill = normalSkills.shift()!;
+            layoutSkills.push({
+                skill,
+                gridClass: `sm:col-start-${4 + i * 3} sm:col-span-3 sm:row-start-3`,
+                Component: getCardComponent(skill.size),
+            });
+        }
+    }
+
+    // Right Tall Slot (Slot 8)
+    if (tallSkills.length > 0) {
+        const skill = tallSkills.shift()!;
+        layoutSkills.push({
+            skill,
+            gridClass: "sm:col-start-10 sm:col-span-3 sm:row-start-2 sm:row-span-2",
+            Component: getCardComponent(skill.size),
+        });
+    }
+
+    // Remaining Tall skills if any (fallback)
+    while (tallSkills.length > 0) {
+        const skill = tallSkills.shift()!;
+        layoutSkills.push({
+            skill,
+            gridClass: "sm:col-span-3 sm:row-span-2",
+            Component: getCardComponent(skill.size),
+        });
+    }
+
+    // Row 4 and beyond (Slots 9+)
+    let colIndex = 0;
+    let rowIndex = 4;
+    while (normalSkills.length > 0) {
+        const skill = normalSkills.shift()!;
+        layoutSkills.push({
+            skill,
+            gridClass: `sm:col-start-${1 + colIndex * 3} sm:col-span-3 sm:row-start-${rowIndex}`,
+            Component: getCardComponent(skill.size),
+        });
+        colIndex++;
+        if (colIndex >= 4) {
+            colIndex = 0;
+            rowIndex++;
+        }
+    }
 
     return (
         <section
@@ -498,17 +536,14 @@ export default function Skill({ initialData }: { initialData?: SkillItem[] }) {
             />
 
             <div className="relative z-10 mx-auto w-full max-w-7xl grid grid-cols-1 sm:grid-cols-12 gap-4 lg:gap-5">
-                {sorted.map((skill, index) => {
-                    const { className, Component } = getGridStyles(skill, index);
-                    return (
-                        <Component
-                            key={skill._id}
-                            skill={skill}
-                            delay={index * 0.05}
-                            className={className}
-                        />
-                    );
-                })}
+                {layoutSkills.map(({ skill, gridClass, Component }, index) => (
+                    <Component
+                        key={skill._id}
+                        skill={skill}
+                        delay={index * 0.05}
+                        className={gridClass}
+                    />
+                ))}
             </div>
         </section>
     );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import {
@@ -106,20 +106,7 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
     services: []
   };
 
-  const mailtoHref = useMemo(() => {
-    const subject = encodeURIComponent(`Project inquiry from ${name || "Portfolio visitor"}`);
-    const body = encodeURIComponent(
-      [
-        `Name: ${name}`,
-        `Email: ${email}`,
-        `Project type: ${projectType || "Not selected"}`,
-        "",
-        "Message:",
-        message,
-      ].join("\n")
-    );
-    return `mailto:${data.email}?subject=${subject}&body=${body}`;
-  }, [email, message, name, projectType, data.email]);
+
 
   useGSAP(
     () => {
@@ -196,8 +183,9 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
       setWebsite("");
       setProjectType("");
       setMessage("");
-    } catch (err: any) {
-      setError(err.message || "Failed to send message.");
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to send message.";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -233,8 +221,8 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
         </div>
 
         <div className="grid gap-3 lg:grid-cols-[0.72fr_1.42fr_0.72fr] lg:items-start">
-          <aside className="contact-rise rounded-[10px] border border-border bg-background/86 px-6 py-5 shadow-[0_24px_90px_rgba(0,0,0,0.07)] backdrop-blur-xl">
-            <div className="mb-5 flex items-center gap-4">
+          <aside className="contact-rise rounded-[10px] border border-border bg-background/86 px-6 py-4 shadow-[0_24px_90px_rgba(0,0,0,0.07)] backdrop-blur-xl">
+            <div className="mb-4 flex items-center gap-4">
               <span className="h-2.5 w-2.5 rounded-full bg-accent-primary" />
               <p className="font-sans text-xs font-semibold uppercase tracking-[0.08em] text-text-muted">Availability</p>
             </div>
@@ -277,7 +265,7 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
 
           <form
             onSubmit={handleSubmit}
-            className="contact-rise rounded-[10px] border border-border bg-background/90 p-7 shadow-[0_24px_90px_rgba(0,0,0,0.08)] backdrop-blur-xl sm:p-4"
+            className="contact-rise rounded-[10px] border border-border bg-background/90 px-6 py-4 shadow-[0_24px_90px_rgba(0,0,0,0.08)] backdrop-blur-xl sm:p-4"
           >
             {/* Honeypot field for spam prevention */}
             <div className="absolute opacity-0 -z-50 pointer-events-none" aria-hidden="true">
@@ -356,13 +344,13 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
               </p>
             )}
 
-            <p className="mt-5 flex items-center justify-center gap-2 font-sans text-sm text-text-muted">
+            <p className="mt-2 flex items-center justify-center gap-2 font-sans text-sm text-text-muted">
               <LockKeyhole className="h-4 w-4" />
               Your information is safe with me. No spam, ever.
             </p>
           </form>
 
-          {data?.services && <aside className="contact-rise rounded-[10px] border border-border bg-background/86 px-6 py-5 shadow-[0_24px_90px_rgba(0,0,0,0.07)] backdrop-blur-xl">
+          {data?.services && <aside className="contact-rise rounded-[10px] border border-border bg-background/86 px-6 py-4 shadow-[0_24px_90px_rgba(0,0,0,0.07)] backdrop-blur-xl">
             <div className="mb-6 flex items-center gap-4">
               <span className="h-2.5 w-2.5 rounded-full bg-accent-primary" />
               <p className="font-sans text-xs font-semibold uppercase tracking-[0.08em] text-text-muted">How I can help</p>
@@ -396,8 +384,26 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
           </aside>}
         </div>
 
-        <div className="contact-rise flex flex-col items-center gap-4 font-sans text-sm font-medium uppercase text-text-muted sm:flex-row sm:items-center sm:justify-between">
+        <div className="contact-rise flex flex-col items-center gap-4 font-sans text-sm font-medium uppercase text-text-muted sm:flex-row sm:items-center sm:justify-between border-t border-border/40">
           <Logo />
+          <div className="flex gap-6 items-center">
+            <a
+              href="https://github.com/hardikvatukiya"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-foreground transition-colors duration-200"
+            >
+              GitHub
+            </a>
+            <a
+              href="https://linkedin.com/in/hardikvatukiya"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-foreground transition-colors duration-200"
+            >
+              LinkedIn
+            </a>
+          </div>
           <p>© 2026 Hardik Vatukiya</p>
         </div>
       </div>

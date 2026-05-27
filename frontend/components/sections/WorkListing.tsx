@@ -118,7 +118,7 @@ export default function WorkListing({ initialData }: { initialData?: SanityProje
                 >
                   {imageUrl && <RevealImage
                     src={imageUrl}
-                    alt={item.title}
+                    alt={`${item.title} — Full Stack Web Application by Hardik Vatukiya`}
                     fill
                     sizes="(max-width: 1024px) 100vw, 1200px"
                     transition={variant}

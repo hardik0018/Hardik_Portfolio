@@ -1,18 +1,38 @@
 import { MetadataRoute } from "next";
+import { getProjectSlugs } from "@/lib/sanity.loader";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  return [
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = "https://hardikvatukiya.vercel.app";
+
+  const staticRoutes: MetadataRoute.Sitemap = [
     {
-      url: "https://hardikvatukiya.vercel.app",
+      url: baseUrl,
       lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 1,
+      changeFrequency: "weekly",
+      priority: 1.0,
     },
     {
-      url: "https://hardikvatukiya.vercel.app/projects",
+      url: `${baseUrl}/projects`,
       lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
+      changeFrequency: "weekly",
+      priority: 0.9,
     },
   ];
+
+  try {
+    const projectSlugs = await getProjectSlugs();
+    if (projectSlugs && projectSlugs.length > 0) {
+      const dynamicRoutes = projectSlugs.map((p) => ({
+        url: `${baseUrl}/projects/${p.slug}`,
+        lastModified: new Date(),
+        changeFrequency: "weekly" as const,
+        priority: 0.8,
+      }));
+      return [...staticRoutes, ...dynamicRoutes];
+    }
+  } catch (error) {
+    console.error("Error fetching project slugs for sitemap:", error);
+  }
+
+  return staticRoutes;
 }

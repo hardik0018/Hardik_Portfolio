@@ -180,7 +180,7 @@ const ProjectRow = memo(
                     <div className="relative aspect-video w-full rounded-xl overflow-hidden shadow-2xl mb-6">
                       <Image
                         src={imageUrl}
-                        alt={project.title}
+                        alt={`${project.title} project showcase — developed by Hardik Vatukiya`}
                         fill
                         className="object-cover"
                         sizes="(max-width: 1024px) 100vw, 400px"
@@ -265,8 +265,8 @@ export default function Projects({ initialData }: { initialData?: SanityProject[
 
       // Mouse Move Tracking for Modal using quickTo for high performance
       let activeModalEl: HTMLDivElement | null = null;
-      let xTo: Function | null = null;
-      let yTo: Function | null = null;
+      let xTo: ((val: number) => void) | null = null;
+      let yTo: ((val: number) => void) | null = null;
 
       const moveModal = (e: MouseEvent) => {
         const el = modalRef.current;
@@ -374,7 +374,7 @@ export default function Projects({ initialData }: { initialData?: SanityProject[
               >
                 <Image
                   src={urlFor(activeProject.src).width(600).height(800).fit('crop').auto('format').url()}
-                  alt={activeProject.title}
+                  alt={`${activeProject.title} project preview — developed by Hardik Vatukiya`}
                   fill
                   className="object-cover"
                   sizes="400px"

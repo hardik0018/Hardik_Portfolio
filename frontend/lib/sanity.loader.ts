@@ -5,10 +5,24 @@ import type { NavigationData } from '@/components/Header'
 import type { HeroData } from '@/components/sections/Hero'
 import type { AboutData } from '@/components/sections/About'
 import type { SanityProject } from '@/components/sections/Projects'
-import type { GalleryData } from '@/components/sections/Gallery'
 import type { SkillItem } from '@/components/sections/Skill'
 import type { JourneyStage } from '@/components/sections/Journey'
 import type { ContactData } from '@/components/sections/Contact'
+
+export interface GalleryData {
+  enabled?: boolean;
+  placement?: string;
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+  items?: Array<{
+    _key: string;
+    image: unknown;
+    caption?: string;
+    size?: string;
+    order?: number;
+  }>;
+}
 
 
 export async function getHero(): Promise<HeroData | undefined> {
@@ -44,6 +58,20 @@ export async function getJourney(): Promise<JourneyStage[] | undefined> {
 export async function getContact(): Promise<ContactData | undefined> {
   const { data } = await sanityFetch({ query: queries.contactQuery })
   return data as ContactData | undefined
+}
+
+export interface FAQData {
+  title?: string;
+  subtitle?: string;
+  items?: Array<{
+    question: string;
+    answer: string;
+  }>;
+}
+
+export async function getFAQ(): Promise<FAQData | undefined> {
+  const { data } = await sanityFetch({ query: queries.faqQuery })
+  return data as FAQData | undefined
 }
 
 export async function getNavigation(): Promise<NavigationData | undefined> {

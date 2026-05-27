@@ -1,14 +1,15 @@
 import ClientHome from "@/components/ClientHome";
-import { getHero, getAbout, getProjects, getJourney, getSkills, getContact } from "@/lib/sanity.loader";
+import { getHero, getAbout, getProjects, getJourney, getSkills, getContact, getFAQ } from "@/lib/sanity.loader";
 
 export default async function Home() {
-  const [heroData, aboutData, projectsData, journeyData, skillsData, contactData] = await Promise.all([
+  const [heroData, aboutData, projectsData, journeyData, skillsData, contactData, faqData] = await Promise.all([
     getHero(),
     getAbout(),
     getProjects(),
     getJourney(),
     getSkills(),
-    getContact()
+    getContact(),
+    getFAQ()
   ]);
 
   return (
@@ -19,6 +20,7 @@ export default async function Home() {
       journeyData={journeyData}
       skillsData={skillsData}
       contactData={contactData}
+      faqData={faqData}
     />
   );
 }

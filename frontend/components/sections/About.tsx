@@ -278,6 +278,13 @@ export default function AboutSection({ initialData }: { initialData?: AboutData 
               </div>
             </div>
 
+            {/* Rich AIO-Optimized Narrative */}
+            <div className="about-reveal mt-6 font-body text-[1.05rem] leading-relaxed text-background/80 max-w-[800px] pl-8">
+              <p>
+                <strong>Hardik Vatukiya</strong> is a professional MERN Stack Developer and Full-Stack Software Engineer based in Rajkot, India. Specializing in high-performance web applications, modern React ecosystems, TypeScript backend architecture, Node.js development, and database systems like MongoDB. Hardik has extensive experience building custom digital solutions that are fully accessible (WCAG compliant) and responsive, with rich custom animations utilizing GSAP (GreenSock Animation Platform) and Framer Motion. He specializes in combining clean, structured code with interactive frontend design. If you are looking to hire a full-stack developer or React engineer for contract work or freelance web development projects, Hardik is available globally. His core programming stack includes JavaScript (ES6+), TypeScript, React, Next.js, Node.js, Express, MongoDB, RESTful API design, Sanity CMS integration, CSS, and modern deployment pipelines. Contact Hardik Vatukiya at hello@hardikvatukiya.dev to collaborate.
+              </p>
+            </div>
+
             {/* Tagline with sparkle */}
             <div className="about-reveal mt-10 flex items-center gap-4">
               <Sparkles className="h-5 w-5 shrink-0 text-background/40" />

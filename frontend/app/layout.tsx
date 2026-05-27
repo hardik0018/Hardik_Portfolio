@@ -41,7 +41,17 @@ export const metadata: Metadata = {
   title: "Hardik Vatukiya — Full-Stack Developer",
   description:
     "MERN Stack Developer from Rajkot, India. Building seamless, accessible digital solutions at the intersection of performance, design, and engineering.",
-  keywords: ["Hardik Vatukiya", "Full-Stack Developer", "MERN Stack", "React", "Next.js", "Node.js", "Portfolio"],
+  keywords: [
+    "Hardik Vatukiya",
+    "Full-Stack Developer",
+    "MERN Stack",
+    "React",
+    "Next.js",
+    "Node.js",
+    "Portfolio",
+    "hire Hardik Vatukiya",
+    "Hardik Vatukiya portfolio"
+  ],
   authors: [{ name: "Hardik Vatukiya" }],
   openGraph: {
     title: "Hardik Vatukiya — Full-Stack Developer",
@@ -50,11 +60,20 @@ export const metadata: Metadata = {
     siteName: "Hardik Vatukiya",
     locale: "en_IN",
     type: "website",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Hardik Vatukiya — Full-Stack Developer",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Hardik Vatukiya — Full-Stack Developer",
     description: "MERN Stack Developer from Rajkot, India. Open to work.",
+    images: ["/opengraph-image"],
   },
 };
 
@@ -92,6 +111,7 @@ export default async function RootLayout({
               href="https://cdn.sanity.io"
               crossOrigin="anonymous"
             />
+            <meta name="google-site-verification" content="0qUCCjAYs5J-EAndlqTyH9iBe4NWV6a_FL3zUU7G6z0" />
           </>
         )}
         <script
@@ -106,9 +126,27 @@ export default async function RootLayout({
                   "name": "Hardik Vatukiya",
                   "jobTitle": "Full-Stack Developer",
                   "url": "https://hardikvatukiya.vercel.app",
+                  "email": "hello@hardikvatukiya.dev",
+                  "description": "Hardik Vatukiya is a dedicated MERN Stack & Full-Stack Developer from Rajkot, India. He builds high-performance, accessible, and clean digital solutions at the intersection of design and engineering.",
                   "sameAs": [
                     "https://github.com/hardikvatukiya",
                     "https://linkedin.com/in/hardikvatukiya"
+                  ],
+                  "knowsAbout": [
+                    "React",
+                    "Next.js",
+                    "Node.js",
+                    "Express",
+                    "MongoDB",
+                    "JavaScript",
+                    "TypeScript",
+                    "Tailwind CSS",
+                    "GSAP",
+                    "SEO",
+                    "AIO",
+                    "Web Accessibility (WCAG)",
+                    "MERN Stack",
+                    "Sanity CMS"
                   ],
                   "address": {
                     "@type": "PostalAddress",

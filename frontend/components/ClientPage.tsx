@@ -41,15 +41,15 @@ export default function ClientPage({ children }: ClientPageProps) {
         }
 
         // Contact section "Reveal" from behind
-        const skillElement = containerRef.current?.querySelector("#skill");
-        if (contactElement && skillElement) {
+        const faqContainerElement = containerRef.current?.querySelector(".faq-container");
+        if (contactElement && faqContainerElement) {
           gsap.set(contactElement, { yPercent: -100 });
 
           gsap.to(contactElement, {
             yPercent: 0,
             ease: "none",
             scrollTrigger: {
-              trigger: skillElement,
+              trigger: faqContainerElement,
               start: "bottom bottom",
               end: () => `+=${(contactElement as HTMLElement).offsetHeight}`,
               scrub: true,

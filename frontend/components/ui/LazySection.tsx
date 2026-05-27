@@ -24,8 +24,10 @@ export function LazySection({
   useEffect(() => {
     // If the browser doesn't support IntersectionObserver (rare), load immediately
     if (typeof window === "undefined" || !("IntersectionObserver" in window)) {
-      setHasIntersected(true);
-      return;
+      const timer = setTimeout(() => {
+        setHasIntersected(true);
+      }, 0);
+      return () => clearTimeout(timer);
     }
 
     const el = containerRef.current;

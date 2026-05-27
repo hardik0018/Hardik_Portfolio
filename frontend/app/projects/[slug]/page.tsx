@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  const title = `${project.title} - Project`;
+  const title = `${project.title} | Hardik Vatukiya — Full-Stack Developer`;
   const description = project.description || `A project by ${siteName}.`;
   const image = projectImageUrl(project);
   const canonical = `/projects/${slug}`;
@@ -46,12 +46,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       canonical,
     },
     openGraph: {
-      title: `${project.title} | ${siteName}`,
+      title,
       description,
       url: `${siteUrl}${canonical}`,
       siteName,
       locale: "en_IN",
-      type: "website",
+      type: "article",
       images: [
         {
           url: image,
@@ -64,7 +64,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     twitter: {
       card: "summary_large_image",
       creator: twitterCreator,
-      title: `${project.title} | ${siteName}`,
+      title,
       description,
       images: [image],
     },

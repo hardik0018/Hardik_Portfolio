@@ -34,10 +34,14 @@ export default defineConfig({
               .title('About Section')
               .id('about')
               .child(S.document().schemaType('about').documentId('about')),
-            S.listItem()
-              .title('Contact Section')
-              .id('contact')
-              .child(S.document().schemaType('contact').documentId('contact')),
+              S.listItem()
+                .title(`Faq's Section`)
+                .id('faq')
+                .child(S.document().schemaType('faq').documentId('faq')),
+              S.listItem()
+                .title('Contact Section')
+                .id('contact')
+                .child(S.document().schemaType('contact').documentId('contact')),
             S.divider(),
             // Collections
             S.documentTypeListItem('skill').title('Skills'),

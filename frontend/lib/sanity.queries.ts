@@ -118,3 +118,12 @@ export const projectSlugsQuery = groq`*[_type == "project" && defined(slug.curre
   "slug": slug.current
 }`;
 
+export const faqQuery = groq`*[_type == "faq"][0]{
+  title,
+  subtitle,
+  items[]{
+    question,
+    answer
+  }
+}`;
+

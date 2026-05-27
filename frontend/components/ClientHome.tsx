@@ -5,18 +5,20 @@ import { Suspense } from "react";
 import ClientPage from "@/components/ClientPage";
 import HeroSection from "@/components/sections/Hero";
 import { LazySection } from "@/components/ui/LazySection";
-import type { AboutData } from "@/components/sections/About";
 import type { HeroData } from "@/components/sections/Hero";
-import type { JourneyStage } from "@/components/sections/Journey";
+import type { AboutData } from "@/components/sections/About";
 import type { SanityProject } from "@/components/sections/Projects";
+import type { JourneyStage } from "@/components/sections/Journey";
 import type { SkillItem } from "@/components/sections/Skill";
 import type { ContactData } from "@/components/sections/Contact";
+import type { FAQData } from "@/lib/sanity.loader";
 
 // Dynamic imports for heavy animation sections with ssr: false
 const AboutSection = dynamic(() => import("@/components/sections/About"), { ssr: false });
 const Projects = dynamic(() => import("@/components/sections/Projects"), { ssr: false });
 const Journey = dynamic(() => import("@/components/sections/Journey"), { ssr: false });
 const Skill = dynamic(() => import("@/components/sections/Skill"), { ssr: false });
+const FAQ = dynamic(() => import("@/components/sections/FAQ"), { ssr: true });
 const Contact = dynamic(() => import("@/components/sections/Contact"), { ssr: false });
 
 interface ClientHomeProps {
@@ -26,6 +28,7 @@ interface ClientHomeProps {
   journeyData?: JourneyStage[];
   skillsData?: SkillItem[];
   contactData?: ContactData;
+  faqData?: FAQData;
 }
 
 export default function ClientHome({
@@ -35,6 +38,7 @@ export default function ClientHome({
   journeyData,
   skillsData,
   contactData,
+  faqData,
 }: ClientHomeProps) {
   return (
     <ClientPage>
@@ -79,6 +83,16 @@ export default function ClientHome({
       >
         <Suspense fallback={<div className="h-screen w-full bg-foreground animate-pulse" />}>
           <Skill initialData={skillsData} />
+        </Suspense>
+      </LazySection>
+
+      <LazySection
+        fallback={<div className="h-screen w-full bg-background animate-pulse" />}
+        className="faq-container"
+        minHeight="100vh"
+      >
+        <Suspense fallback={<div className="w-full bg-background animate-pulse" />}>
+          <FAQ initialData={faqData} />
         </Suspense>
       </LazySection>
 

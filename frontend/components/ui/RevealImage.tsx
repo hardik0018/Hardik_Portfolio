@@ -24,7 +24,7 @@
 
 import React, { useRef } from "react";
 import Image, { ImageProps } from "next/image";
-import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
+import { gsap, useGSAP } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
 
 // ── Transition catalogue ───────────────────────────────────────────────────────
