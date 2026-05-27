@@ -159,6 +159,24 @@ export default function FAQ({ initialData }: FAQProps) {
       id="faq"
       className="relative z-30 bg-background text-foreground px-6 py-10 sm:py-8 md:py-10 border-t border-border overflow-hidden min-h-screen flex flex-col justify-center faq-container"
     >
+      {/* FAQPage JSON-LD Schema — enables Google rich results and AI answer extraction */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": items.map((item) => ({
+              "@type": "Question",
+              "name": item.question,
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": item.answer,
+              },
+            })),
+          }),
+        }}
+      />
       <SectionHeader
         title={title}
         subtitle={subtitle}

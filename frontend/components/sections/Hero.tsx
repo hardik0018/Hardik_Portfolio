@@ -13,7 +13,10 @@ const MarqueeItem = ({ text, isPrimary }: { text: string; isPrimary?: boolean })
   <div className="flex shrink-0 items-center font-bold">
     {isPrimary ? (
       <h1 className="text-foreground px-8 text-[200px] md:text-[350px] font-hero leading-[0.8] tracking-[0.08em]">
-        {text}
+        {/* Visually hidden full title for SEO & screen readers */}
+        <span className="sr-only">{text} — Full-Stack Developer</span>
+        {/* Visible decorative display of name only */}
+        <span aria-hidden="true">{text}</span>
       </h1>
     ) : (
       <div aria-hidden="true" className="text-foreground px-8 text-[200px] md:text-[350px] font-hero leading-[0.8] tracking-[0.08em]">

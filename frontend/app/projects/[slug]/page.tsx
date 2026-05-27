@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const title = `${project.title} | Hardik Vatukiya — Full-Stack Developer`;
-  const description = project.description || `A project by ${siteName}.`;
+  const description = project.description || `Explore ${project.title}, a project built by ${siteName} specializing in MERN stack, React, and modern web development.`;
   const image = projectImageUrl(project);
   const canonical = `/projects/${slug}`;
 
@@ -57,7 +57,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
           url: image,
           width: 1200,
           height: 630,
-          alt: project.src?.alt || `${project.title} project screenshot`,
+          alt: project.src?.alt || `${project.title} project screenshot by Hardik Vatukiya — Full-Stack Developer`,
         },
       ],
     },
@@ -143,7 +143,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           <div className="relative mt-12 aspect-video overflow-hidden rounded-[12px] border border-border bg-bg-secondary">
             <Image
               src={image}
-              alt={project.src.alt || `${project.title} project screenshot`}
+              alt={project.src.alt || `${project.title} project screenshot by Hardik Vatukiya — Full-Stack Developer`}
               fill
               priority
               sizes="(max-width: 1200px) 100vw, 1200px"

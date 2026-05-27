@@ -72,6 +72,8 @@ export default function WorkListing({ initialData }: { initialData?: SanityProje
       className="min-h-screen overflow-hidden bg-background px-6 py-12 md:px-10 lg:px-12 pt-20 md:pt-32"
     >
       <div className="mx-auto max-w-[1400px]">
+        {/* Screen-reader and SEO h1 — visually hidden; visual section title is the h2 below */}
+        <h1 className="sr-only">All Projects by Hardik Vatukiya — Full-Stack Developer</h1>
         <SectionHeader title="All Projects" />
         <section className="py-12 md:py-20">
           {projects.map((item, index) => {
