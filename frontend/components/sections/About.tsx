@@ -256,11 +256,9 @@ export default function AboutSection({ initialData }: { initialData?: AboutData 
         </div>
 
         {/* ── RIGHT PANEL ── */}
-        {/* data-lenis-prevent: Lenis allows native scroll on this element so
-            all content is reachable. lg:overflow-y-auto removed so the panel
-            grows with its content (no clipping) — section height controlled
-            by the outer lg:min-h-screen wrapper. */}
-        <div data-lenis-prevent className="about-right about-details no-scrollbar relative px-6 pt-10 pb-14 sm:px-10 sm:pt-14 lg:px-[5vw] lg:pt-[6vh] lg:pb-[5vh] xl:px-[4.8vw]">
+        {/* Right panel grows with its content (no clipping) — section height
+            controlled by the outer lg:min-h-screen wrapper. */}
+        <div className="about-right about-details no-scrollbar relative px-6 pt-10 pb-14 sm:px-10 sm:pt-14 lg:px-[5vw] lg:pt-[6vh] lg:pb-[5vh] xl:px-[4.8vw]">
           <div className="mx-auto w-full max-w-[900px]">
 
             {/* Name */}
@@ -282,13 +280,6 @@ export default function AboutSection({ initialData }: { initialData?: AboutData 
               <div className="about-copy font-body text-[1.5rem] leading-[1.3] text-background sm:text-[1.8rem] xl:text-[2rem]">
                 <SplitLine key={bio} text={bio} />
               </div>
-            </div>
-
-            {/* Rich AIO-Optimized Narrative */}
-            <div className="about-reveal mt-6 font-body text-[1.05rem] leading-relaxed text-background/80 max-w-[800px] pl-8">
-              <p>
-                <strong>Hardik Vatukiya</strong> is a professional MERN Stack Developer and Full-Stack Software Engineer based in Rajkot, India. Specializing in high-performance web applications, modern React ecosystems, TypeScript backend architecture, Node.js development, and database systems like MongoDB. Hardik has extensive experience building custom digital solutions that are fully accessible (WCAG compliant) and responsive, with rich custom animations utilizing GSAP (GreenSock Animation Platform) and Framer Motion. He specializes in combining clean, structured code with interactive frontend design. If you are looking to hire a full-stack developer or React engineer for contract work or freelance web development projects, Hardik is available globally. His core programming stack includes JavaScript (ES6+), TypeScript, React, Next.js, Node.js, Express, MongoDB, RESTful API design, Sanity CMS integration, CSS, and modern deployment pipelines. Contact Hardik Vatukiya at hello@hardikvatukiya.dev to collaborate.
-              </p>
             </div>
 
             {/* Tagline with sparkle */}

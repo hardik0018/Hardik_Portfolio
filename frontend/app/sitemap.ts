@@ -1,8 +1,9 @@
 import { MetadataRoute } from "next";
 import { getProjectSlugs } from "@/lib/sanity.loader";
+import { siteUrl } from "@/lib/seo";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://hardikvatukiya.vercel.app";
+  const baseUrl = siteUrl;
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -24,7 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     if (projectSlugs && projectSlugs.length > 0) {
       const dynamicRoutes = projectSlugs.map((p) => ({
         url: `${baseUrl}/projects/${p.slug}`,
-        lastModified: new Date(),
+        lastModified: p._updatedAt ? new Date(p._updatedAt) : new Date(),
         changeFrequency: "weekly" as const,
         priority: 0.8,
       }));

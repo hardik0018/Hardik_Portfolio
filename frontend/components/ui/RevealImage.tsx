@@ -92,8 +92,8 @@ const TRANSITIONS: Record<TransitionType, ClipSet> = {
 export interface RevealImageProps extends Omit<ImageProps, "className"> {
     /** Clip-path animation style. Default: "top-down" */
     transition?: TransitionType;
-    /** "load" = plays on mount. "scroll" = plays when element enters viewport. Default: "load" */
-    trigger?: "load" | "scroll";
+    /** "load" = plays on mount. "scroll" = plays when element enters viewport. "manual" = controlled by parent. Default: "load" */
+    trigger?: "load" | "scroll" | "manual";
     /** Delay in seconds before animation starts. Default: 0 */
     delay?: number;
     /** Animation duration in seconds. Default: 1.3 */

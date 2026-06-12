@@ -2,6 +2,7 @@
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { motion, AnimatePresence } from "motion/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState, memo, forwardRef } from "react";
 import { ExternalLink } from "lucide-react";
@@ -48,7 +49,7 @@ const ProjectRow = memo(
       const imageUrl = project.src ? urlFor(project.src).width(1200).height(675).fit('crop').auto('format').url() : "";
 
       return (
-        <div
+        <article
           ref={ref}
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
@@ -93,7 +94,13 @@ const ProjectRow = memo(
                 <div className="flex flex-col gap-1 md:gap-2 flex-1 min-w-0">
                   <div className="flex flex-col md:flex-row md:items-baseline md:gap-6">
                     <h3 className="text-[1.4rem] md:text-[2.8rem] font-normal tracking-tighter font-display uppercase leading-tight md:leading-none">
-                      {project.title}
+                      {project.slug ? (
+                        <Link href={`/projects/${project.slug}`} className="hover:underline">
+                          {project.title}
+                        </Link>
+                      ) : (
+                        project.title
+                      )}
                     </h3>
                     <span className="text-xs md:text-xl font-normal opacity-60 italic truncate">
                       {project.description}
@@ -235,7 +242,7 @@ const ProjectRow = memo(
               ))}
             </div>
           </div>
-        </div>
+        </article>
       );
     }
   )

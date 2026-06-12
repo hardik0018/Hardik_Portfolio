@@ -115,7 +115,8 @@ export const projectBySlugQuery = groq`*[_type == "project" && slug.current == $
 }`;
 
 export const projectSlugsQuery = groq`*[_type == "project" && defined(slug.current)] {
-  "slug": slug.current
+  "slug": slug.current,
+  _updatedAt
 }`;
 
 export const faqQuery = groq`*[_type == "faq"][0]{

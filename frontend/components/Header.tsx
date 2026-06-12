@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/Button";
 import Logo from "./ui/Logo";
+import Magnetic from "./ui/Magnetic";
 
 import { useState, useEffect } from "react";
 
@@ -144,9 +145,11 @@ const HeroHeader = ({ initialData }: { initialData?: NavigationData }) => {
       <nav className="flex items-center justify-between bg-background backdrop-blur-sm border border-foreground/30 rounded-full shadow-[0_20px_50px] shadow-foreground/5 ring-1 ring-foreground/5">
         {/* Logo Section */}
         <div className="flex items-center pl-4 pr-6">
-          <Link href="/" className="transition-all duration-300 hover:scale-110 active:scale-95 group">
-            <Logo text={initialData?.title || "HV"} />
-          </Link>
+          <Magnetic range={40} strength={0.3}>
+            <Link href="/" className="transition-all duration-300 hover:scale-110 active:scale-95 group">
+              <Logo text={initialData?.title || "HV"} />
+            </Link>
+          </Magnetic>
         </div>
         {/* Navigation Links */}
         <div className="hidden lg:flex items-center gap-1.5 px-4 min-h-[40px]">
@@ -166,34 +169,37 @@ const HeroHeader = ({ initialData }: { initialData?: NavigationData }) => {
             }
 
             return (
-              <NavLink
-                key={index}
-                href={url}
-                isActive={isActive}
-                hasDot={hasDot}
-                onClick={() => {
-                  if (url.startsWith("/#")) {
-                    setActiveHash(url.substring(1));
-                  } else if (url === "/") {
-                    setActiveHash("");
-                  }
-                }}
-              >
-                {item.title}
-              </NavLink>
+              <Magnetic key={index} range={45} strength={0.35}>
+                <NavLink
+                  href={url}
+                  isActive={isActive}
+                  hasDot={hasDot}
+                  onClick={() => {
+                    if (url.startsWith("/#")) {
+                      setActiveHash(url.substring(1));
+                    } else if (url === "/") {
+                      setActiveHash("");
+                    }
+                  }}
+                >
+                  {item.title}
+                </NavLink>
+              </Magnetic>
             );
           })}
         </div>
         {/* Action Button */}
         <div className="pr-2">
-          <Link href={actionButton.url} onClick={handleActionClick}>
-            <Button className="flex items-center gap-3 px-4 py-1 rounded-full bg-accent-primary text-background text-[10px] font-bold uppercase tracking-[0.15em] transition-all duration-500 hover:opacity-90 hover:shadow-[0_12px_24px] hover:shadow-accent-primary/30 hover:-translate-y-0.5 active:scale-95 group/btn">
-              {actionButton.title}
-              <div className="relative flex items-center justify-center">
-                <ArrowUpRight className="w-4 h-4 transition-transform duration-500 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-              </div>
-            </Button>
-          </Link>
+          <Magnetic range={50} strength={0.35}>
+            <Link href={actionButton.url} onClick={handleActionClick}>
+              <Button className="flex items-center gap-3 px-4 py-1 rounded-full bg-accent-primary text-background text-[10px] font-bold uppercase tracking-[0.15em] transition-all duration-500 hover:opacity-90 hover:shadow-[0_12px_24px] hover:shadow-accent-primary/30 hover:-translate-y-0.5 active:scale-95 group/btn">
+                {actionButton.title}
+                <div className="relative flex items-center justify-center">
+                  <ArrowUpRight className="w-4 h-4 transition-transform duration-500 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+                </div>
+              </Button>
+            </Link>
+          </Magnetic>
         </div>
       </nav>
     </header>

@@ -2,10 +2,12 @@
 
 import { useRef, useState, useEffect } from "react";
 import { HelpCircle, Search, Sparkles, ChevronLeft, ChevronRight, Send, MessageSquareCode, Compass, Info } from "lucide-react";
-import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
+import { gsap, useGSAP } from "@/lib/gsap";
 import type { FAQData } from "@/lib/sanity.loader";
 import { SectionHeader } from "../ui/SectionHeader";
 import { motion, AnimatePresence } from "motion/react";
+import JsonLd from "@/components/JsonLd";
+import { getFaqSchema } from "@/lib/schema";
 
 interface FAQProps {
   initialData?: FAQData;
@@ -19,231 +21,37 @@ const defaultFAQ: FAQData = {
       answer: "Hardik Vatukiya is a dedicated MERN Stack and Full-Stack Software Engineer from Rajkot, Gujarat, India. He specializes in designing and implementing robust, responsive, and fully accessible web applications at the intersection of design, performance, and engineering."
     },
     {
-      question: "What technologies does Hardik Vatukiya work with?",
-      answer: "Hardik specializes in the MERN Stack. His core programming toolkit includes React, Next.js, TypeScript, Node.js, Express, MongoDB, Tailwind CSS, GSAP (for premium high-performance animations), Framer Motion, and headless architectures utilizing Sanity CMS."
+      question: "What is Hardik Vatukiya's tech stack?",
+      answer: "Hardik specializes in the MERN Stack. His core programming toolkit includes React, Next.js, TypeScript, Node.js, Express.js, MongoDB, Tailwind CSS, GSAP (for premium high-performance animations), Framer Motion, and headless architectures utilizing Sanity CMS."
     },
     {
-      question: "Is Hardik Vatukiya available for freelance or contract work?",
-      answer: "Yes, Hardik is available globally for freelance development, contract roles, and full-time remote opportunities. He specializes in building fast, accessible web solutions, performance upgrades, and modern interactive portfolios."
+      question: "Is Hardik Vatukiya a full-stack developer?",
+      answer: "Yes, Hardik is a Full-Stack MERN Stack developer with expertise in both frontend engineering (React, Next.js, responsive layouts) and backend architectures (Node.js, Express.js, MongoDB, RESTful APIs, headless CMS like Sanity)."
     },
     {
-      question: "Where is Hardik Vatukiya located?",
-      answer: "Hardik is based in Rajkot, Gujarat, India, and works remotely with clients worldwide. He is comfortable collaborating across multiple time zones including EST, PST, GMT, and IST."
+      question: "What type of projects does Hardik Vatukiya build?",
+      answer: "Hardik builds highly responsive full-stack applications, custom business dashboards, premium animated portfolio websites, dynamic UI libraries, headless CMS sites, and interactive web tools."
+    },
+    {
+      question: "How can I contact Hardik Vatukiya?",
+      answer: "You can reach Hardik via email at hello@hardikvatukiya.dev or book a project call via the Book a Call CTA. You can also connect with him on GitHub (github.com/hardikvatukiya) and LinkedIn (linkedin.com/in/hardikvatukiya)."
+    },
+    {
+      question: "Does Hardik work with React and Next.js?",
+      answer: "Yes, React and Next.js (including App Router features like Server Components, dynamic page generation, and optimized image processing) form the foundation of his frontend web development stack."
+    },
+    {
+      question: "Does Hardik build animated portfolio websites?",
+      answer: "Yes, he specializes in creating high-performance motion designs and animation effects using GSAP (GreenSock), Framer Motion, and Three.js while ensuring layout performance and accessibility."
+    },
+    {
+      question: "What makes Hardik's portfolio unique?",
+      answer: "His portfolio combines premium, high-fidelity visual aesthetics (such as custom 3D orbit displays, interactive terminals, and motion layouts) with strict Core Web Vitals performance benchmarks and clean WCAG-compliant accessibility."
     }
   ]
 };
 
-/* ───────────────────────────────── Floating 3D Cube ─────────────────────────────── */
 
-function FloatingCube({
-  className,
-  size = 50,
-  delay = 0,
-  speed = 20,
-}: {
-  className?: string;
-  size?: number;
-  delay?: number;
-  speed?: number;
-}) {
-  return (
-    <div
-      className={`pointer-events-none absolute opacity-2 sm:opacity-[0.04] ${className}`}
-      style={{ width: size, height: size, perspective: 800 }}
-    >
-      <div
-        className="w-full h-full relative preserve-3d"
-        style={{
-          animation: `spin3d ${speed}s linear infinite`,
-          animationDelay: `${delay}s`,
-        }}
-      >
-        <div
-          className="absolute inset-0 border border-accent-primary/20 bg-accent-primary/1"
-          style={{ transform: `translateZ(${size / 2}px)` }}
-        />
-        <div
-          className="absolute inset-0 border border-accent-primary/20 bg-accent-primary/1"
-          style={{ transform: `rotateY(180deg) translateZ(${size / 2}px)` }}
-        />
-        <div
-          className="absolute inset-0 border border-accent-primary/20 bg-accent-primary/1"
-          style={{ transform: `rotateY(-90deg) translateZ(${size / 2}px)` }}
-        />
-        <div
-          className="absolute inset-0 border border-accent-primary/20 bg-accent-primary/1"
-          style={{ transform: `rotateY(90deg) translateZ(${size / 2}px)` }}
-        />
-        <div
-          className="absolute inset-0 border border-accent-primary/20 bg-accent-primary/1"
-          style={{ transform: `rotateX(90deg) translateZ(${size / 2}px)` }}
-        />
-        <div
-          className="absolute inset-0 border border-accent-primary/20 bg-accent-primary/1"
-          style={{ transform: `rotateX(-90deg) translateZ(${size / 2}px)` }}
-        />
-      </div>
-    </div>
-  );
-}
-
-/* ─────────────────────────────── Interactive 3D Stack ───────────────────────────── */
-
-function ThreeDStack({
-  categories,
-  selectedCategory,
-  setSelectedCategory,
-}: {
-  categories: string[];
-  selectedCategory: string;
-  setSelectedCategory: (cat: string) => void;
-}) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [rotate, setRotate] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const el = containerRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    setRotate({
-      x: -(y / (rect.height / 2)) * 10,
-      y: (x / (rect.width / 2)) * 10,
-    });
-  };
-
-  const handleMouseLeave = () => {
-    setRotate({ x: 0, y: 0 });
-  };
-
-  const stackCategories = categories.filter((c) => c !== "All");
-
-  return (
-    <div
-      ref={containerRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="relative w-full h-[320px] flex items-center justify-center perspective-1000 cursor-pointer select-none"
-    >
-      <div
-        className="relative w-[230px] h-[280px] preserve-3d transition-transform duration-300 ease-out"
-        style={{
-          transform: `rotateX(${rotate.x}deg) rotateY(${rotate.y}deg) rotateZ(-3deg)`,
-        }}
-      >
-        {stackCategories.map((cat, idx) => {
-          const isSelected = selectedCategory === cat;
-          const isAll = selectedCategory === "All";
-          const isActive = isSelected || isAll;
-
-          let translateZ = idx * -25;
-          let translateY = idx * -12;
-          let rotateX = -10;
-          let scale = 1 - (stackCategories.length - 1 - idx) * 0.04;
-
-          if (isSelected) {
-            translateZ = 35;
-            translateY = -22;
-            rotateX = -5;
-            scale = 1.06;
-          } else if (!isAll) {
-            translateZ -= 50;
-            scale = 0.82;
-            translateY += 8;
-          }
-
-          const colors = {
-            General: {
-              border: "rgba(0, 143, 81, 0.15)",
-              borderActive: "rgba(0, 143, 81, 0.5)",
-              glow: "rgba(0, 143, 81, 0.05)",
-              bg: "linear-gradient(135deg, rgba(0, 143, 81, 0.03) 0%, var(--card-bg) 100%)",
-              text: "text-accent-primary",
-              badge: "bg-accent-primary/10 text-accent-primary border-accent-primary/20",
-            },
-            Skills: {
-              border: "rgba(193, 255, 74, 0.25)",
-              borderActive: "rgba(193, 255, 74, 0.65)",
-              glow: "rgba(193, 255, 74, 0.06)",
-              bg: "linear-gradient(135deg, rgba(193, 255, 74, 0.04) 0%, var(--card-bg) 100%)",
-              text: "text-accent-primary",
-              badge: "bg-accent-lime/15 text-foreground border-accent-lime/35",
-            },
-            Availability: {
-              border: "rgba(0, 0, 221, 0.15)",
-              borderActive: "rgba(0, 0, 221, 0.5)",
-              glow: "rgba(0, 0, 221, 0.05)",
-              bg: "linear-gradient(135deg, rgba(0, 0, 221, 0.03) 0%, var(--card-bg) 100%)",
-              text: "text-accent-secondary",
-              badge: "bg-accent-secondary/10 text-accent-secondary border-accent-secondary/20",
-            },
-          }[cat as "General" | "Skills" | "Availability"] || {
-            border: "rgba(255, 255, 255, 0.15)",
-            borderActive: "rgba(255, 255, 255, 0.6)",
-            glow: "rgba(255, 255, 255, 0.05)",
-            bg: "linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, var(--card-bg) 100%)",
-            text: "text-foreground",
-            badge: "bg-white/5 text-foreground border-white/10",
-          };
-
-          return (
-            <motion.div
-              key={cat}
-              onClick={() => setSelectedCategory(isSelected ? "All" : cat)}
-              className={`absolute inset-0 rounded-[24px] border backdrop-blur-xl p-6 flex flex-col justify-between transition-all duration-500 cursor-pointer ${isActive ? "opacity-100" : "opacity-35"
-                }`}
-              style={{
-                background: colors.bg,
-                borderColor: isSelected ? colors.borderActive : colors.border,
-                boxShadow: isSelected
-                  ? `0 15px 30px -8px rgba(0, 0, 0, 0.06), 0 0 20px ${colors.glow}`
-                  : `0 6px 12px -6px rgba(0, 0, 0, 0.04)`,
-                transform: `translate3d(0px, ${translateY}px, ${translateZ}px) rotateX(${rotateX}deg) scale(${scale})`,
-                transformStyle: "preserve-3d",
-              }}
-            >
-              <div className="absolute inset-0 rounded-[22px] pointer-events-none border border-white/40" />
-
-              <div className="flex justify-between items-start">
-                <span className={`font-sans text-[0.58rem] tracking-[0.18em] font-bold uppercase shrink-0 border rounded-full px-3 py-0.5 ${colors.badge}`}>
-                  {cat}
-                </span>
-                <div
-                  className={`w-5.5 h-5.5 rounded-full flex items-center justify-center border border-border/80 bg-foreground/1 transition-all duration-300 ${isSelected ? "scale-110 border-accent-primary/30 bg-accent-primary/5" : ""
-                    }`}
-                  style={{ transform: "translateZ(8px)" }}
-                >
-                  <Sparkles className={`w-3 h-3 ${isSelected ? colors.text : "text-text-muted"}`} />
-                </div>
-              </div>
-
-              <div className="space-y-2 transform-gpu" style={{ transform: "translateZ(20px)" }}>
-                <h4 className="font-display text-lg font-bold text-foreground leading-tight">
-                  {cat === "General" && "Who is Hardik?"}
-                  {cat === "Skills" && "Toolkits & Tech"}
-                  {cat === "Availability" && "Hiring & Work"}
-                </h4>
-                <p className="font-sans text-[0.78rem] text-text-muted/90 leading-relaxed">
-                  {cat === "General" && "Basic profile details, origins, locations, and personal background facts."}
-                  {cat === "Skills" && "Development stack, framework details, databases, and library expertise."}
-                  {cat === "Availability" && "Information on freelance contracts, full-time availability, and timezones."}
-                </p>
-              </div>
-
-              <div
-                className="absolute bottom-5 right-6 font-mono text-4xl font-black text-foreground/3 select-none"
-                style={{ transform: "translateZ(10px)" }}
-              >
-                0{idx + 1}
-              </div>
-            </motion.div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
 
 /* ────────────────────────────── Main FAQ Component ────────────────────────────── */
 
@@ -254,7 +62,7 @@ export default function FAQ({ initialData }: FAQProps) {
   const [viewMode, setViewMode] = useState<"matrix" | "convo">("matrix");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [gridRotate, setGridRotate] = useState({ x: 8, y: -8 });
+  const msgIdRef = useRef(0);
 
   // 3D Coverflow Carousel States
   const [activeIndex, setActiveIndex] = useState(0);
@@ -286,6 +94,7 @@ export default function FAQ({ initialData }: FAQProps) {
   });
 
   useEffect(() => {
+    let resizeTimer: number;
     const handleResize = () => {
       if (window.innerWidth < 640) {
         setDimensions({
@@ -316,9 +125,18 @@ export default function FAQ({ initialData }: FAQProps) {
         });
       }
     };
+
+    const throttledResize = () => {
+      cancelAnimationFrame(resizeTimer);
+      resizeTimer = requestAnimationFrame(handleResize);
+    };
+
     handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    window.addEventListener("resize", throttledResize);
+    return () => {
+      window.removeEventListener("resize", throttledResize);
+      cancelAnimationFrame(resizeTimer);
+    };
   }, []);
 
   const title = initialData?.title || defaultFAQ.title || "FAQ";
@@ -355,17 +173,6 @@ export default function FAQ({ initialData }: FAQProps) {
     return categorizedItems.filter((item) => item.category === cat).length;
   };
 
-  // Section Mouse Tilt
-  const handleSectionMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const el = e.currentTarget;
-    const rect = el.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    setGridRotate({
-      x: 8 - (y / rect.height) * 12,
-      y: -8 + (x / rect.width) * 12,
-    });
-  };
 
   /* ─────────────────────────────── Coverflow 3D Math ───────────────────────────── */
 
@@ -378,7 +185,7 @@ export default function FAQ({ initialData }: FAQProps) {
     let translateZVal = 0;
     let scale = 1;
     let opacity = 1;
-    let zIndex = 10 - Math.abs(diff);
+    const zIndex = 10 - Math.abs(diff);
 
     if (diff === 0) {
       // Focused Center Card
@@ -477,23 +284,31 @@ export default function FAQ({ initialData }: FAQProps) {
     }
   };
 
-  // Reset index when filters change to prevent index-out-of-bounds bugs
-  useEffect(() => {
+  const handleCategoryChange = (cat: string) => {
+    setSelectedCategory(cat);
     setActiveIndex(0);
     setFlippedCardIndex(null);
-  }, [selectedCategory, searchQuery]);
+  };
+
+  const handleSearchChange = (val: string) => {
+    setSearchQuery(val);
+    setActiveIndex(0);
+    setFlippedCardIndex(null);
+  };
 
   /* ────────────────────────────── Chatbot Simulator ────────────────────────────── */
 
   const handleSendChat = (messageText: string) => {
     if (!messageText.trim()) return;
 
-    const userMsgId = Date.now().toString();
+    msgIdRef.current += 1;
+    const userMsgId = `user-${msgIdRef.current}`;
     const userMsg = { id: userMsgId, sender: "user" as const, text: messageText };
     setChatHistory((prev) => [...prev, userMsg]);
     setChatInput("");
 
-    const botMsgId = (Date.now() + 1).toString();
+    msgIdRef.current += 1;
+    const botMsgId = `bot-${msgIdRef.current}`;
     const typingMsg = { id: botMsgId, sender: "bot" as const, text: "", isTyping: true };
     setChatHistory((prev) => [...prev, typingMsg]);
 
@@ -568,27 +383,10 @@ export default function FAQ({ initialData }: FAQProps) {
   return (
     <section
       ref={sectionRef}
-      onMouseMove={handleSectionMouseMove}
       id="faq"
       className="relative z-30 bg-background text-foreground px-6 py-10 sm:py-12 border-t border-border overflow-hidden min-h-[60vh] flex flex-col justify-center faq-container font-sans"
     >
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "mainEntity": items.map((item) => ({
-              "@type": "Question",
-              "name": item.question,
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": item.answer,
-              },
-            })),
-          }),
-        }}
-      />
+      <JsonLd schema={getFaqSchema(items)} />
       <SectionHeader title={title} subtitle={subtitle} />
 
       {/* Main Container */}
@@ -647,7 +445,7 @@ export default function FAQ({ initialData }: FAQProps) {
                   <input
                     type="text"
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={(e) => handleSearchChange(e.target.value)}
                     placeholder="Search query..."
                     className="w-full pl-9 pr-3.5 py-1.5 bg-foreground/1.5 hover:bg-foreground/2.5 border border-border/80 rounded-lg text-xs text-foreground outline-none transition-all placeholder:text-text-muted/50 focus:border-accent-primary/70 focus:bg-background focus:shadow-[0_0_0_3px_rgba(0,143,81,0.04)]"
                   />
@@ -661,7 +459,7 @@ export default function FAQ({ initialData }: FAQProps) {
                     return (
                       <button
                         key={cat}
-                        onClick={() => setSelectedCategory(cat)}
+                        onClick={() => handleCategoryChange(cat)}
                         className={`px-3.5 py-1.5 rounded-lg text-[0.68rem] font-bold transition-all duration-300 cursor-pointer shrink-0 border ${isActive
                           ? "bg-accent-primary/10 border-accent-primary/40 text-accent-primary shadow-[0_2px_6px_rgba(0,143,81,0.03)]"
                           : "bg-transparent border-border/60 hover:bg-foreground/2 text-text-muted"
@@ -835,7 +633,7 @@ export default function FAQ({ initialData }: FAQProps) {
                   <button
                     onClick={() => {
                       setSearchQuery("");
-                      setSelectedCategory("All");
+                      handleCategoryChange("All");
                     }}
                     className="mt-1 text-[0.68rem] font-bold text-accent-primary hover:underline cursor-pointer"
                   >

@@ -6,6 +6,8 @@ import { Code2, ExternalLink } from "lucide-react";
 import { getProjectBySlug, getProjectSlugs } from "@/lib/sanity.loader";
 import { urlFor } from "@/lib/sanity.image";
 import { projectsOgImage, siteName, siteUrl, twitterCreator } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
+import { getProjectSchema, getBreadcrumbSchema } from "@/lib/schema";
 
 export const revalidate = 60;
 
@@ -78,35 +80,32 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   if (!project) notFound();
 
   const image = projectImageUrl(project, 1600, 900);
-  const projectUrl = `${siteUrl}/projects/${slug}`;
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "CreativeWork",
-    "@id": `${projectUrl}#creativework`,
-    name: project.title,
-    headline: project.title,
+  const projectSchema = getProjectSchema({
+    title: project.title,
+    slug: slug,
     description: project.description,
-    url: projectUrl,
+    year: project.year,
+    tags: project.tags,
+    github: project.github,
+    url: project.url,
     image,
-    datePublished: project.year,
     dateModified: project._updatedAt,
-    creator: {
-      "@type": "Person",
-      "@id": `${siteUrl}/#person`,
-      name: siteName,
-    },
-    keywords: project.tags?.join(", "),
-    sameAs: [project.url, project.github].filter(Boolean),
+  });
+
+  const breadcrumbsSchema = getBreadcrumbSchema([
+    { name: "Home", item: "/" },
+    { name: "Projects", item: "/projects" },
+    { name: project.title, item: `/projects/${slug}` },
+  ]);
+
+  const schemaGraph = {
+    "@context": "https://schema.org",
+    "@graph": [projectSchema, breadcrumbsSchema],
   };
 
   return (
     <main className="min-h-screen bg-background px-6 pb-24 pt-32 text-foreground md:px-12">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(schema).replace(/</g, "\\u003c").replace(/>/g, "\\u003e"),
-        }}
-      />
+      <JsonLd schema={schemaGraph} />
       <article className="mx-auto max-w-6xl">
         <Link href="/projects" className="text-xs font-bold uppercase tracking-widest text-text-muted transition-colors hover:text-foreground">
           Back to projects

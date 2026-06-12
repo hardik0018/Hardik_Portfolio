@@ -103,15 +103,27 @@ export default function WorkListing({ initialData }: { initialData?: SanityProje
                       <p className="reveal-text mt-4 max-w-[320px] font-sans text-sm md:text-base leading-relaxed text-[#393936]">
                         {item.description}
                       </p>
-                      {item.github && <Link
-                        href={item.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="reveal-text mt-8 inline-flex items-center gap-3 font-sans text-xs md:text-sm font-bold uppercase transition-all duration-300 hover:text-[#00994a] hover:translate-x-1"
-                      >
-                        View Project
-                        <ArrowRight className="h-4 w-4" />
-                      </Link>}
+                      <div className="mt-8 flex flex-wrap items-center gap-6">
+                        {item.slug && (
+                          <Link
+                            href={`/projects/${item.slug}`}
+                            className="reveal-text inline-flex items-center gap-3 font-sans text-xs md:text-sm font-bold uppercase transition-all duration-300 hover:text-[#00994a] hover:translate-x-1"
+                          >
+                            Case Study
+                            <ArrowRight className="h-4 w-4" />
+                          </Link>
+                        )}
+                        {item.github && (
+                          <a
+                            href={item.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="reveal-text inline-flex items-center gap-3 font-sans text-xs md:text-sm font-bold uppercase transition-all duration-300 hover:text-[#00994a] text-[#8a8a82]"
+                          >
+                            GitHub
+                          </a>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>

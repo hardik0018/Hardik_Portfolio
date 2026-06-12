@@ -18,6 +18,7 @@ import {
 import { gsap } from "@/lib/gsap";
 import { Button } from "../ui/Button";
 import Logo from "../ui/Logo";
+import Magnetic from "../ui/Magnetic";
 
 interface ContactService {
   _key: string;
@@ -385,24 +386,30 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
         </div>
 
         <div className="contact-rise flex flex-col items-center gap-4 font-sans text-sm font-medium uppercase text-text-muted sm:flex-row sm:items-center sm:justify-between border-t border-border/40">
-          <Logo />
+          <Magnetic range={40} strength={0.3}>
+            <Logo />
+          </Magnetic>
           <div className="flex gap-6 items-center">
-            <a
-              href="https://github.com/hardikvatukiya"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-foreground transition-colors duration-200"
-            >
-              GitHub
-            </a>
-            <a
-              href="https://linkedin.com/in/hardikvatukiya"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-foreground transition-colors duration-200"
-            >
-              LinkedIn
-            </a>
+            <Magnetic range={40} strength={0.3}>
+              <a
+                href="https://github.com/hardikvatukiya"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-foreground transition-colors duration-200"
+              >
+                GitHub
+              </a>
+            </Magnetic>
+            <Magnetic range={40} strength={0.3}>
+              <a
+                href="https://linkedin.com/in/hardikvatukiya"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-foreground transition-colors duration-200"
+              >
+                LinkedIn
+              </a>
+            </Magnetic>
           </div>
           <p>© 2026 Hardik Vatukiya</p>
         </div>

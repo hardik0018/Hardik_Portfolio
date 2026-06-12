@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import ClientHome from "@/components/ClientHome";
 import { getHero, getAbout, getProjects, getJourney, getSkills, getContact, getFAQ } from "@/lib/sanity.loader";
 import { siteUrl } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
+import { getProfilePageSchema } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "Hardik Vatukiya — Full-Stack Developer | React, Next.js & Node.js Engineer",
@@ -47,14 +49,17 @@ export default async function Home() {
   ]);
 
   return (
-    <ClientHome
-      heroData={heroData}
-      aboutData={aboutData}
-      projectsData={projectsData}
-      journeyData={journeyData}
-      skillsData={skillsData}
-      contactData={contactData}
-      faqData={faqData}
-    />
+    <>
+      <JsonLd schema={getProfilePageSchema()} />
+      <ClientHome
+        heroData={heroData}
+        aboutData={aboutData}
+        projectsData={projectsData}
+        journeyData={journeyData}
+        skillsData={skillsData}
+        contactData={contactData}
+        faqData={faqData}
+      />
+    </>
   );
 }

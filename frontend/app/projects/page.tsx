@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import { getProjects } from "@/lib/sanity.loader";
 import type { Metadata } from "next";
 import { siteName, siteUrl } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
 
 const WorkListing = dynamic(() => import("@/components/sections/WorkListing"), { ssr: true });
 
@@ -64,12 +65,7 @@ export default async function ProjectsPage() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(schema).replace(/</g, "\\u003c").replace(/>/g, "\\u003e"),
-        }}
-      />
+      <JsonLd schema={schema} />
       <WorkListing initialData={projectsData} />
     </>
   );

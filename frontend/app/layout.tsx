@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Shadows_Into_Light, Marcellus, Fraunces, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -32,6 +32,12 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 })
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#008f51",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://hardikvatukiya.vercel.app"),
@@ -110,6 +116,8 @@ import { SanityLive } from "@/lib/sanity.live";
 import { getNavigation } from "@/lib/sanity.loader";
 import { GoogleAnalytics } from "@/components/google-analytics";
 import { draftMode } from "next/headers";
+import JsonLd from "@/components/JsonLd";
+import { getPersonSchema, getWebsiteSchema } from "@/lib/schema";
 
 export default async function RootLayout({
   children,
@@ -140,58 +148,10 @@ export default async function RootLayout({
             <meta name="google-site-verification" content="0qUCCjAYs5J-EAndlqTyH9iBe4NWV6a_FL3zUU7G6z0" />
           </>
         )}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@graph": [
-                {
-                  "@type": "Person",
-                  "@id": "https://hardikvatukiya.vercel.app/#person",
-                  "name": "Hardik Vatukiya",
-                  "jobTitle": "Full-Stack Developer",
-                  "url": "https://hardikvatukiya.vercel.app",
-                  "email": "hello@hardikvatukiya.dev",
-                  "description": "Hardik Vatukiya is a dedicated MERN Stack & Full-Stack Developer from Rajkot, India. He builds high-performance, accessible, and clean digital solutions at the intersection of design and engineering.",
-                  "sameAs": [
-                    "https://github.com/hardikvatukiya",
-                    "https://linkedin.com/in/hardikvatukiya"
-                  ],
-                  "knowsAbout": [
-                    "React",
-                    "Next.js",
-                    "Node.js",
-                    "Express",
-                    "MongoDB",
-                    "JavaScript",
-                    "TypeScript",
-                    "Tailwind CSS",
-                    "GSAP",
-                    "SEO",
-                    "AIO",
-                    "Web Accessibility (WCAG)",
-                    "MERN Stack",
-                    "Sanity CMS"
-                  ],
-                  "address": {
-                    "@type": "PostalAddress",
-                    "addressLocality": "Rajkot",
-                    "addressRegion": "Gujarat",
-                    "addressCountry": "IN"
-                  }
-                },
-                {
-                  "@type": "WebSite",
-                  "@id": "https://hardikvatukiya.vercel.app/#website",
-                  "url": "https://hardikvatukiya.vercel.app",
-                  "name": "Hardik Vatukiya — Full-Stack Developer",
-                  "publisher": {
-                    "@id": "https://hardikvatukiya.vercel.app/#person"
-                  }
-                }
-              ]
-            }),
+        <JsonLd
+          schema={{
+            "@context": "https://schema.org",
+            "@graph": [getPersonSchema(), getWebsiteSchema()],
           }}
         />
       </head>

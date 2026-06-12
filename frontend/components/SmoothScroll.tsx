@@ -14,16 +14,16 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
       window.history.scrollRestoration = "manual";
     }
 
-    // 2. Initialize Lenis with autoRaf: false, as we drive it via GSAP ticker
+    // 2. Initialize Lenis with autoRaf disabled to tick manually via GSAP
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 1.4,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 2,
-      autoRaf: false, // Prevents fighting between Lenis RAF and GSAP ticker
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.5,
+      autoRaf: false, // Sync manually via GSAP ticker
     });
 
     lenisRef.current = lenis;
@@ -34,23 +34,27 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     // Sync scroll events with ScrollTrigger
     lenis.on("scroll", ScrollTrigger.update);
 
-    // Sync Lenis with GSAP's ticker (converting seconds to ms)
-    const rafUpdate = (time: number) => lenis.raf(time * 1000);
-    gsap.ticker.add(rafUpdate);
+    // 3. Connect Lenis updates with GSAP ticker for perfect animation sync
+    const updateLenis = (time: number) => {
+      lenis.raf(time * 1000); // convert seconds to milliseconds
+    };
+    gsap.ticker.add(updateLenis);
+
+    // Prevent GSAP lagSmoothing jumps
     gsap.ticker.lagSmoothing(0);
 
-    // 3. Force scroll to top on initial page load / refresh
+    // Force scroll to top on initial page load / refresh
     window.scrollTo(0, 0);
     lenis.scrollTo(0, { immediate: true });
 
-    // 4. Full refresh after layout stabilizes — safe at scroll=0 since we just reset it
+    // 4. Full refresh after layout stabilizes
     const timer = setTimeout(() => {
       ScrollTrigger.refresh();
     }, 400);
 
     return () => {
+      gsap.ticker.remove(updateLenis);
       lenis.destroy();
-      gsap.ticker.remove(rafUpdate);
       clearTimeout(timer);
       lenisRef.current = null;
     };
@@ -62,7 +66,6 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
       window.scrollTo(0, 0);
       lenisRef.current.scrollTo(0, { immediate: true });
 
-      // After scroll reset, do a full refresh — position is already 0 so no snap
       const timer = setTimeout(() => {
         ScrollTrigger.refresh();
       }, 150);

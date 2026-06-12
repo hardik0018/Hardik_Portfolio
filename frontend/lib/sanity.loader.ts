@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { sanityFetch } from './sanity.live'
 import { client } from './sanity.client'
 import * as queries from './sanity.queries'
@@ -24,41 +25,40 @@ export interface GalleryData {
   }>;
 }
 
-
-export async function getHero(): Promise<HeroData | undefined> {
+export const getHero = cache(async (): Promise<HeroData | undefined> => {
   const { data } = await sanityFetch({ query: queries.heroQuery })
   return data as HeroData | undefined
-}
+})
 
-export async function getAbout(): Promise<AboutData | undefined> {
+export const getAbout = cache(async (): Promise<AboutData | undefined> => {
   const { data } = await sanityFetch({ query: queries.aboutQuery })
   return data as AboutData | undefined
-}
+})
 
-export async function getProjects(): Promise<SanityProject[] | undefined> {
+export const getProjects = cache(async (): Promise<SanityProject[] | undefined> => {
   const { data } = await sanityFetch({ query: queries.projectsQuery })
   return data as SanityProject[] | undefined
-}
+})
 
-export async function getGallery(): Promise<GalleryData | undefined> {
+export const getGallery = cache(async (): Promise<GalleryData | undefined> => {
   const { data } = await sanityFetch({ query: queries.galleryQuery })
   return data as GalleryData | undefined
-}
+})
 
-export async function getSkills(): Promise<SkillItem[] | undefined> {
+export const getSkills = cache(async (): Promise<SkillItem[] | undefined> => {
   const { data } = await sanityFetch({ query: queries.skillsQuery })
   return data as SkillItem[] | undefined
-}
+})
 
-export async function getJourney(): Promise<JourneyStage[] | undefined> {
+export const getJourney = cache(async (): Promise<JourneyStage[] | undefined> => {
   const { data } = await sanityFetch({ query: queries.journeyQuery })
   return data as JourneyStage[] | undefined
-}
+})
 
-export async function getContact(): Promise<ContactData | undefined> {
+export const getContact = cache(async (): Promise<ContactData | undefined> => {
   const { data } = await sanityFetch({ query: queries.contactQuery })
   return data as ContactData | undefined
-}
+})
 
 export interface FAQData {
   title?: string;
@@ -69,31 +69,29 @@ export interface FAQData {
   }>;
 }
 
-export async function getFAQ(): Promise<FAQData | undefined> {
+export const getFAQ = cache(async (): Promise<FAQData | undefined> => {
   const { data } = await sanityFetch({ query: queries.faqQuery })
   return data as FAQData | undefined
-}
+})
 
-export async function getNavigation(): Promise<NavigationData | undefined> {
+export const getNavigation = cache(async (): Promise<NavigationData | undefined> => {
   const { data } = await sanityFetch({ query: queries.navigationQuery })
   return data as NavigationData | undefined
-}
+})
 
 export interface DetailedSanityProject extends SanityProject {
   _updatedAt: string;
   slug: string;
 }
 
-export async function getProjectBySlug(slug: string): Promise<DetailedSanityProject | undefined> {
+export const getProjectBySlug = cache(async (slug: string): Promise<DetailedSanityProject | undefined> => {
   const { data } = await sanityFetch({
     query: queries.projectBySlugQuery,
     params: { slug },
   })
   return data as DetailedSanityProject | undefined
-}
+})
 
-export async function getProjectSlugs(): Promise<{ slug: string }[] | undefined> {
+export async function getProjectSlugs(): Promise<{ slug: string; _updatedAt?: string }[] | undefined> {
   return await client.fetch(queries.projectSlugsQuery)
 }
-
-
