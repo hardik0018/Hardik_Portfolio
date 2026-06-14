@@ -138,7 +138,7 @@ export default function WorkListing({ initialData }: { initialData?: SanityProje
                     transition={variant}
                     trigger="scroll"
                     className="object-cover grayscale transition duration-1000 group-hover:scale-105 group-hover:grayscale-0"
-                    wrapperClassName="w-full h-full"
+                    wrapperClassName="relative w-full h-full"
                   />}
                   <div className="absolute inset-0 bg-linear-to-r from-black/40 via-black/5 to-black/30 mix-blend-multiply pointer-events-none transition-opacity duration-700 group-hover:opacity-40" />
                 </div>

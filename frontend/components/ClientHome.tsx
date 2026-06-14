@@ -6,14 +6,12 @@ import HeroSection from "@/components/sections/Hero";
 
 import type { HeroData } from "@/components/sections/Hero";
 import type { AboutData } from "@/components/sections/About";
-import type { SanityProject } from "@/components/sections/Projects";
 import type { JourneyStage } from "@/components/sections/Journey";
 import type { SkillItem } from "@/components/sections/Skill";
 import type { ContactData } from "@/components/sections/Contact";
 import type { FAQData } from "@/lib/sanity.loader";
 
 import AboutSection from "@/components/sections/About";
-import Projects from "@/components/sections/Projects";
 import Journey from "@/components/sections/Journey";
 import Skill from "@/components/sections/Skill";
 import FAQ from "@/components/sections/FAQ";
@@ -22,7 +20,6 @@ import Contact from "@/components/sections/Contact";
 interface ClientHomeProps {
   heroData?: HeroData;
   aboutData?: AboutData;
-  projectsData?: SanityProject[];
   journeyData?: JourneyStage[];
   skillsData?: SkillItem[];
   contactData?: ContactData;
@@ -32,7 +29,6 @@ interface ClientHomeProps {
 export default function ClientHome({
   heroData,
   aboutData,
-  projectsData,
   journeyData,
   skillsData,
   contactData,
@@ -58,9 +54,7 @@ export default function ClientHome({
           <AboutSection initialData={aboutData} />
         </Suspense>
       </div>
-      <Suspense fallback={<div className="h-screen w-full bg-background animate-pulse" />}>
-        <Projects initialData={projectsData} />
-      </Suspense>
+
 
       <Suspense fallback={<div className="h-screen w-full bg-background animate-pulse" />}>
         <Journey initialData={journeyData} />

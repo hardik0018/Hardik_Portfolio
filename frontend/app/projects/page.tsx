@@ -1,10 +1,8 @@
-import dynamic from "next/dynamic";
 import { getProjects } from "@/lib/sanity.loader";
 import type { Metadata } from "next";
 import { siteName, siteUrl } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-
-const WorkListing = dynamic(() => import("@/components/sections/WorkListing"), { ssr: true });
+import ProjectsShowcase from "@/components/sections/ProjectsShowcase";
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
@@ -66,7 +64,7 @@ export default async function ProjectsPage() {
   return (
     <>
       <JsonLd schema={schema} />
-      <WorkListing initialData={projectsData} />
+      <ProjectsShowcase initialData={projectsData} />
     </>
   );
 }

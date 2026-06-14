@@ -185,7 +185,11 @@ const RevealImage = React.forwardRef<HTMLDivElement, RevealImageProps>(
         return (
             <div
                 ref={setRef}
-                className={cn("overflow-hidden", wrapperClassName)}
+                className={cn(
+                    "overflow-hidden",
+                    imageProps.fill && !/\b(relative|absolute|fixed)\b/.test(wrapperClassName || "") && "relative",
+                    wrapperClassName
+                )}
                 style={
                     isLoad
                         ? {

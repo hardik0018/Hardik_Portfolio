@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import ClientHome from "@/components/ClientHome";
-import { getHero, getAbout, getProjects, getJourney, getSkills, getContact, getFAQ } from "@/lib/sanity.loader";
+import { getHero, getAbout, getJourney, getSkills, getContact, getFAQ } from "@/lib/sanity.loader";
 import { siteUrl } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { getProfilePageSchema } from "@/lib/schema";
@@ -38,10 +38,9 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const [heroData, aboutData, projectsData, journeyData, skillsData, contactData, faqData] = await Promise.all([
+  const [heroData, aboutData, journeyData, skillsData, contactData, faqData] = await Promise.all([
     getHero(),
     getAbout(),
-    getProjects(),
     getJourney(),
     getSkills(),
     getContact(),
@@ -54,7 +53,6 @@ export default async function Home() {
       <ClientHome
         heroData={heroData}
         aboutData={aboutData}
-        projectsData={projectsData}
         journeyData={journeyData}
         skillsData={skillsData}
         contactData={contactData}
