@@ -36,35 +36,7 @@ function SceneHelpers() {
   );
 }
 
-// Helper component to smoothly rotate scroll progress in 3D cylinder
-function ScrollGroup({
-  children,
-  scrollProgress,
-  projectsCount,
-}: {
-  children: React.ReactNode;
-  scrollProgress: React.MutableRefObject<number>;
-  projectsCount: number;
-}) {
-  const groupRef = useRef<THREE.Group>(null);
 
-  useFrame(() => {
-    if (!groupRef.current || projectsCount <= 1) return;
-
-    // Exact scroll alignment:
-    // Scroll progress 0 maps to rotation 0 (Project 0 is at front)
-    // Scroll progress 1 maps to bringing the last project to the front.
-    // Last project is at angle = (projectsCount - 1) * (2 * Math.PI / projectsCount).
-    // To bring a card at angle theta to the front, group rotation must be -theta.
-    const totalAngle = ((projectsCount - 1) * 2 * Math.PI) / projectsCount;
-    const targetRotationY = -scrollProgress.current * totalAngle;
-
-    // Smooth lerp for rotation
-    groupRef.current.rotation.y += (targetRotationY - groupRef.current.rotation.y) * 0.085;
-  });
-
-  return <group ref={groupRef}>{children}</group>;
-}
 
 export default function ProjectsShowcase({ initialData }: { initialData?: SanityProject[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -182,29 +154,22 @@ export default function ProjectsShowcase({ initialData }: { initialData?: Sanity
             {/* Conditionally show axes and grid helpers */}
             {showHelpers && <SceneHelpers />}
 
-            {/* Cylinder Scroll group driven by R3F useFrame & scroll ref */}
-            <ScrollGroup scrollProgress={scrollProgress} projectsCount={projects.length}>
-              {projects.map((project, index) => {
-                const angle = index * ((2 * Math.PI) / projects.length);
-                const x = radius * Math.sin(angle);
-                const z = radius * Math.cos(angle);
-                return (
-                  <ProjectCard3D
-                    key={project._id}
-                    project={project}
-                    index={index}
-                    position={[x, 0.2, z]}
-                    rotation={[0, angle, 0]}
-                    radius={radius}
-                    wireframe={wireframe}
-                    frequencyX={frequencyX}
-                    frequencyY={frequencyY}
-                    amplitude={amplitude}
-                    windSpeed={windSpeed}
-                  />
-                );
-              })}
-            </ScrollGroup>
+            {/* Project cards dynamically positioning and bending between flat and cylinder layout */}
+            {projects.map((project, index) => (
+              <ProjectCard3D
+                key={project._id}
+                project={project}
+                index={index}
+                totalProjects={projects.length}
+                scrollProgress={scrollProgress}
+                radius={radius}
+                wireframe={wireframe}
+                frequencyX={frequencyX}
+                frequencyY={frequencyY}
+                amplitude={amplitude}
+                windSpeed={windSpeed}
+              />
+            ))}
           </Canvas>
         </div>
 

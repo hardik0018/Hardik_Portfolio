@@ -35,8 +35,8 @@ interface Project {
 interface ProjectCard3DProps {
   project: Project;
   index: number;
-  position: [number, number, number];
-  rotation: [number, number, number];
+  totalProjects: number;
+  scrollProgress: React.MutableRefObject<number>;
   radius: number;
   wireframe: boolean;
   frequencyX: number;
@@ -53,6 +53,9 @@ function CardMesh({
   amplitude,
   windSpeed,
   radius,
+  index,
+  totalProjects,
+  scrollProgress,
 }: {
   imageUrl: string;
   wireframe: boolean;
@@ -61,6 +64,9 @@ function CardMesh({
   amplitude: number;
   windSpeed: number;
   radius: number;
+  index: number;
+  totalProjects: number;
+  scrollProgress: React.MutableRefObject<number>;
 }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const materialRef = useRef<THREE.ShaderMaterial>(null);
@@ -83,6 +89,7 @@ function CardMesh({
   }, [texture, frequencyX, frequencyY, amplitude, windSpeed, radius]);
 
   const worldPosition = useRef(new THREE.Vector3());
+  const smoothProgress = useRef(0);
 
   // Update uniforms in animation loop
   useFrame((state) => {
@@ -94,7 +101,32 @@ function CardMesh({
     // Lerp shader uniforms based on debug config
     materialRef.current.uniforms.uFrequency.value.set(frequencyX, frequencyY);
     materialRef.current.uniforms.uWindSpeed.value = windSpeed;
-    materialRef.current.uniforms.uRadius.value = radius;
+
+    // Smoothly track scrollProgress
+    smoothProgress.current += (scrollProgress.current - smoothProgress.current) * 0.085;
+    const p = smoothProgress.current;
+
+    // Calculate transition progress t
+    const N = totalProjects;
+    const d = 0.35;
+    let start_i = 0;
+    let end_i = 1;
+    if (N > 1) {
+      const step = (1 - d) / (N - 1);
+      start_i = index * step;
+      end_i = start_i + d;
+    }
+
+    let t = (p - start_i) / (end_i - start_i);
+    t = Math.max(0, Math.min(1, t));
+    const easeT = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+    // Curvature interpolation: linear curvature change
+    const targetCurvature = 1.0 / radius;
+    const currentCurvature = THREE.MathUtils.lerp(0.0, targetCurvature, easeT);
+    const currentRadius = currentCurvature > 0.0001 ? 1.0 / currentCurvature : 1000.0;
+
+    materialRef.current.uniforms.uRadius.value = currentRadius;
 
     // React to hover: increase wave amplitude slightly and mesh scale
     const targetAmplitude = hovered ? amplitude * 1.5 : amplitude;
@@ -198,8 +230,8 @@ function CardMesh({
 export default function ProjectCard3D({
   project,
   index,
-  position,
-  rotation,
+  totalProjects,
+  scrollProgress,
   radius,
   wireframe,
   frequencyX,
@@ -216,18 +248,62 @@ export default function ProjectCard3D({
 
   const groupRef = useRef<THREE.Group>(null);
   const htmlContainerRef = useRef<HTMLDivElement>(null);
+  const smoothProgress = useRef(0);
 
   useFrame(() => {
     if (!groupRef.current || !htmlContainerRef.current) return;
 
+    // Smoothly track scrollProgress
+    smoothProgress.current += (scrollProgress.current - smoothProgress.current) * 0.085;
+    const p = smoothProgress.current;
+
+    const N = totalProjects;
+    const d = 0.35;
+    let start_i = 0;
+    let end_i = 1;
+    if (N > 1) {
+      const step = (1 - d) / (N - 1);
+      start_i = index * step;
+      end_i = start_i + d;
+    }
+
+    let t = (p - start_i) / (end_i - start_i);
+    t = Math.max(0, Math.min(1, t));
+    const easeT = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+    // 1. Flat layout position (moving right to left)
+    const spacing = 8.0;
+    const xFlat = (index - p * (N - 1)) * spacing;
+    const yFlat = 0.2;
+    const zFlat = radius;
+    const rotYFlat = 0;
+
+    // 2. Cylinder layout position (rotating cylinder)
+    const totalAngle = ((N - 1) * 2 * Math.PI) / N;
+    const groupRotationY = -p * totalAngle;
+    const angle_i = index * ((2 * Math.PI) / N);
+    const angleWorld = angle_i + groupRotationY;
+
+    const xCyl = radius * Math.sin(angleWorld);
+    const yCyl = 0.2;
+    const zCyl = radius * Math.cos(angleWorld);
+    const rotYCyl = angleWorld;
+
+    // 3. Lerp position and rotation
+    groupRef.current.position.x = THREE.MathUtils.lerp(xFlat, xCyl, easeT);
+    groupRef.current.position.y = THREE.MathUtils.lerp(yFlat, yCyl, easeT);
+    groupRef.current.position.z = THREE.MathUtils.lerp(zFlat, zCyl, easeT);
+
+    groupRef.current.rotation.x = 0;
+    groupRef.current.rotation.y = THREE.MathUtils.lerp(rotYFlat, rotYCyl, easeT);
+    groupRef.current.rotation.z = 0;
+
+    // Calculate world position to determine HTML details overlay visibility
     const worldPosition = new THREE.Vector3();
     groupRef.current.getWorldPosition(worldPosition);
 
-    // Calculate angle relative to front (using worldPosition.x and worldPosition.z)
-    // Angle ranges from -PI to PI
+    // Calculate angle relative to front
     const angleFromFront = Math.atan2(worldPosition.x, worldPosition.z);
-
-    // Only show HTML details when the card is close to the front
     const maxAngle = 0.7; // about 40 degrees
     const absAngle = Math.abs(angleFromFront);
 
@@ -235,9 +311,11 @@ export default function ProjectCard3D({
     if (absAngle < maxAngle) {
       // Smooth fade
       htmlOpacity = 1 - (absAngle / maxAngle);
-      // Use ease-in-out curve for smoother transition
       htmlOpacity = Math.sin(htmlOpacity * Math.PI * 0.5);
     }
+
+    // Hide HTML overlay completely while card is flat / transitioning
+    htmlOpacity = htmlOpacity * easeT;
 
     htmlContainerRef.current.style.opacity = htmlOpacity.toFixed(3);
 
@@ -260,8 +338,13 @@ export default function ProjectCard3D({
     }
   });
 
+  const spacing = 8.0;
+  const xFlatInit = index * spacing;
+  const zFlat = radius;
+  const yFlat = 0.2;
+
   return (
-    <group ref={groupRef} position={position} rotation={rotation}>
+    <group ref={groupRef} position={[xFlatInit, yFlat, zFlat]} rotation={[0, 0, 0]}>
       {/* 3D mesh rendering the waving flag */}
       <Suspense fallback={
         <mesh>
@@ -277,6 +360,9 @@ export default function ProjectCard3D({
           amplitude={amplitude}
           windSpeed={windSpeed}
           radius={radius}
+          index={index}
+          totalProjects={totalProjects}
+          scrollProgress={scrollProgress}
         />
       </Suspense>
 
