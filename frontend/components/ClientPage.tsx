@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
-import PageTransition from "@/components/ui/PageTransition";
 
 interface ClientPageProps {
   children: React.ReactNode;
@@ -71,7 +70,6 @@ export default function ClientPage({ children }: ClientPageProps) {
       ref={containerRef}
       className="relative min-h-screen bg-background text-foreground selection:bg-accent-primary selection:text-background overflow-x-hidden"
     >
-      <PageTransition />
       {children}
     </main>
   );

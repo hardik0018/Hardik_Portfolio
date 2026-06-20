@@ -112,6 +112,8 @@ export const metadata: Metadata = {
 import SmoothScroll from "@/components/SmoothScroll";
 import { WebVitals } from "@/components/WebVitals";
 import HeroHeader from "@/components/Header";
+import TransitionProvider from "@/components/TransitionProvider";
+import MainLoader from "@/components/MainLoader";
 import { SanityLive } from "@/lib/sanity.live";
 import { getNavigation } from "@/lib/sanity.loader";
 import { GoogleAnalytics } from "@/components/google-analytics";
@@ -162,8 +164,11 @@ export default async function RootLayout({
 
         <WebVitals />
         <SmoothScroll>
-          <HeroHeader initialData={navigation} />
-          {children}
+          <TransitionProvider>
+            <MainLoader />
+            <HeroHeader initialData={navigation} />
+            {children}
+          </TransitionProvider>
         </SmoothScroll>
         {isDraftMode && (
           <SanityLive refreshOnFocus={false} refreshOnReconnect={false} refreshOnMount={false} />

@@ -1,7 +1,7 @@
 "use client";
 
 import { RevealImage, type TransitionType } from "@/components/ui/RevealImage";
-import Link from "next/link";
+import TransitionLink from "@/components/ui/TransitionLink";
 import { useRef } from "react";
 import { ArrowRight } from "lucide-react";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -105,13 +105,13 @@ export default function WorkListing({ initialData }: { initialData?: SanityProje
                       </p>
                       <div className="mt-8 flex flex-wrap items-center gap-6">
                         {item.slug && (
-                          <Link
+                          <TransitionLink
                             href={`/projects/${item.slug}`}
                             className="reveal-text inline-flex items-center gap-3 font-sans text-xs md:text-sm font-bold uppercase transition-all duration-300 hover:text-[#00994a] hover:translate-x-1"
                           >
                             Case Study
                             <ArrowRight className="h-4 w-4" />
-                          </Link>
+                          </TransitionLink>
                         )}
                         {item.github && (
                           <a

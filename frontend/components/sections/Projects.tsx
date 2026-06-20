@@ -2,9 +2,9 @@
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { motion, AnimatePresence } from "motion/react";
 import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import TransitionLink from "@/components/ui/TransitionLink";
 import { useRef, useState, memo, forwardRef } from "react";
+import { useTransition } from "../TransitionProvider";
 import { ExternalLink } from "lucide-react";
 import { urlFor } from "@/lib/sanity.image";
 import { cn } from "@/lib/utils";
@@ -45,7 +45,7 @@ const ProjectRow = memo(
     onMouseLeave: () => void;
   }>(
     ({ project, index, isActive, onMouseEnter, onMouseLeave }, ref) => {
-      const router = useRouter();
+      const { triggerTransition } = useTransition();
       const imageUrl = project.src ? urlFor(project.src).width(1200).height(675).fit('crop').auto('format').url() : "";
 
       return (
@@ -56,7 +56,7 @@ const ProjectRow = memo(
           onClick={(e) => {
             if ((e.target as HTMLElement).closest("a")) return;
             if (project.slug) {
-              router.push(`/projects/${project.slug}`);
+              triggerTransition(`/projects/${project.slug}`);
             }
           }}
           className={cn(
@@ -95,9 +95,9 @@ const ProjectRow = memo(
                   <div className="flex flex-col md:flex-row md:items-baseline md:gap-6">
                     <h3 className="text-[1.4rem] md:text-[2.8rem] font-normal tracking-tighter font-display uppercase leading-tight md:leading-none">
                       {project.slug ? (
-                        <Link href={`/projects/${project.slug}`} className="hover:underline">
+                        <TransitionLink href={`/projects/${project.slug}`} className="hover:underline">
                           {project.title}
-                        </Link>
+                        </TransitionLink>
                       ) : (
                         project.title
                       )}

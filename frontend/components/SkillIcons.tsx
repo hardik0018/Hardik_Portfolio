@@ -145,7 +145,7 @@ export const SkillIcon = ({
 
     return (
         <div
-            className={`relative p-[1px] shrink-0 overflow-hidden flex items-center justify-center ${sizeClasses}`}
+            className={`relative p-px shrink-0 overflow-hidden flex items-center justify-center ${sizeClasses}`}
             style={{
                 background: `linear-gradient(135deg, ${color ?? 'rgba(255,255,255,0.2)'} 40%, transparent 100%)`,
                 boxShadow: `0 8px 24px color-mix(in srgb, ${color ?? 'rgba(255,255,255,0.2)'} 15%, transparent)`,

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Link from "next/link";
+import TransitionLink from "@/components/ui/TransitionLink";
 import { useGSAP } from "@gsap/react";
 import {
   ArrowRight,
@@ -374,14 +374,14 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
               })}
             </div>
 
-            <Link href="/projects">
+            <TransitionLink href="/projects">
               <Button
                 className="mt-4 inline-flex h-12 w-full items-center justify-center gap-3 rounded-[12px] font-sans text-sm font-bold uppercase transition-all"
               >
                 <ArrowRight className="h-4 w-4" />
                 View My Work
               </Button>
-            </Link>
+            </TransitionLink>
           </aside>}
         </div>
 

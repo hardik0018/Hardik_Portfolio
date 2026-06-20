@@ -1,317 +1,214 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import * as THREE from "three";
-import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
-import { SectionHeader } from "@/components/ui/SectionHeader";
-import ProjectCard3D from "./ProjectCard3D";
-import { SanityProject } from "./Projects";
-import { Settings, X, RotateCcw } from "lucide-react";
+import React from "react";
+import Image from "next/image";
+import TransitionLink from "@/components/ui/TransitionLink";
+import { ExternalLink } from "lucide-react";
+import FlowArt, { FlowSection } from "@/components/ui/story-scroll";
+import { Button } from "@/components/ui/Button";
+import { urlFor } from "@/lib/sanity.image";
+import type { SanityProject } from "./Projects";
 
-// Dynamic check for prefers-reduced-motion
-function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  });
+const GitHubIcon = ({ className }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className={className}
+  >
+    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+  </svg>
+);
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const listener = (e: MediaQueryListEvent) => setReduced(e.matches);
-    mediaQuery.addEventListener("change", listener);
-    return () => mediaQuery.removeEventListener("change", listener);
-  }, []);
-
-  return reduced;
-}
-
-// Scene helpers (3D grid and axes)
-function SceneHelpers() {
-  return (
-    <>
-      <gridHelper args={[30, 30, "#008f51", "#222222"]} position={[0, -2, 0]} />
-      <axesHelper args={[5]} />
-    </>
-  );
-}
-
-
-
-export default function ProjectsShowcase({ initialData }: { initialData?: SanityProject[] }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const stickyRef = useRef<HTMLDivElement>(null);
-  const prefersReducedMotion = usePrefersReducedMotion();
-
-  // Hydration safety: only activate WebGL Canvas client-side
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    const handle = requestAnimationFrame(() => setMounted(true));
-    return () => cancelAnimationFrame(handle);
-  }, []);
-
-  // Screen size tracking for responsive 3D layout spacing
-  const [isMobile, setIsMobile] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return window.innerWidth < 1024;
-  });
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  const radius = isMobile ? 3.5 : 4.8;
-  const cameraZ = radius + (isMobile ? 5.5 : 6.2);
-  const cameraY = isMobile ? 0.25 : 0.05;
-
-  // Debug Panel States
-  const [debugOpen, setDebugOpen] = useState(true);
-  const [wireframe, setWireframe] = useState(false);
-  const [showHelpers, setShowHelpers] = useState(false);
-  const [frequencyX, setFrequencyX] = useState(2.2);
-  const [frequencyY, setFrequencyY] = useState(1.6);
-  const [amplitude, setAmplitude] = useState(0.14);
-  const [windSpeed, setWindSpeed] = useState(2.4);
-
-  const resetDebugSettings = () => {
-    setWireframe(false);
-    setShowHelpers(false);
-    setFrequencyX(2.2);
-    setFrequencyY(1.6);
-    setAmplitude(0.14);
-    setWindSpeed(2.4);
-  };
-
+export default function ProjectsShowcase({
+  initialData,
+}: {
+  initialData?: SanityProject[];
+}) {
   const projects = initialData || [];
 
-  // Shared scroll progress ref (prevents React render loops on frame updates)
-  const scrollProgress = useRef(0);
-
-  // GSAP Pinning and Horizontal Scroll Animation
-  useGSAP(
-    () => {
-      if (!mounted || prefersReducedMotion || projects.length === 0) return;
-
-      // Register ScrollTrigger to update our scroll progress ref
-      const trigger = ScrollTrigger.create({
-        trigger: containerRef.current,
-        start: "top top",
-        end: "bottom bottom",
-        markers: true,
-        scrub: 1.0,
-        onUpdate: (self) => {
-          scrollProgress.current = self.progress;
-        },
-      });
-
-      // Force recalculation of page metrics on mount
-      ScrollTrigger.refresh();
-
-      return () => {
-        trigger.kill();
-      };
-    },
-    { scope: containerRef, dependencies: [mounted, projects, prefersReducedMotion] }
-  );
+  // Theme-aligned color palettes mapping to overall design
+  const themePalettes = [
+    { bg: "var(--foreground)", text: "var(--background)", border: "border-white/20" },
+    { bg: "var(--background)", text: "var(--foreground)", border: "border-black/10" },
+    { bg: "var(--accent-primary)", text: "var(--background)", border: "border-white/20" },
+    { bg: "var(--bg-secondary)", text: "var(--foreground)", border: "border-black/10" },
+    { bg: "var(--accent-secondary)", text: "var(--background)", border: "border-white/20" },
+  ];
 
   return (
-    <main
-      ref={containerRef}
-      id="projects"
-      className="relative z-30 bg-background w-full h-[350vh] overflow-visible"
-    >
-      {/* Hidden for search crawlers / SEO compliance */}
-      <h1 className="sr-only">Projects Portfolio Showcase by Hardik Vatukiya — Waving Flags WebGL Animation</h1>
-
-      {/* Sticky view holds title, canvas, and layout overlays */}
-      <div
-        ref={stickyRef}
-        className="sticky top-0 h-screen w-full flex flex-col justify-between overflow-hidden bg-background"
-      >
-        {/* Section Header */}
-        <div className="w-full bg-background border-b border-border z-30 pt-6 md:pt-8 pb-3 px-6 md:px-12">
-          <SectionHeader title="Projects" />
+    <div className="bg-background">
+      <div className="px-6 md:px-12 py-10 md:py-16">
+        <div className="font-display font-normal uppercase tracking-tight leading-none text-foreground">
+          <span className="text-[3.5rem] sm:text-[5rem] md:text-[6.5rem] lg:text-[8rem] block">
+            Projects
+          </span>
         </div>
+      </div>
+      <FlowArt aria-label="Projects Showcase">
+        {projects.map((project, index) => {
+          const imageUrl = project.src
+            ? urlFor(project.src).width(1200).height(800).fit("crop").auto("format").url()
+            : "";
 
-        {/* 3D WebGL Canvas container */}
-        <div className="relative w-full h-[60vh] md:h-[65vh] flex-1 overflow-hidden select-none">
-          <Canvas
-            shadows
-            camera={{ fov: 45, position: [0, cameraY, cameraZ] }}
-            gl={{ antialias: true, alpha: true }}
-          >
-            <ambientLight intensity={0.65} />
-            <directionalLight
-              position={[5, 10, 5]}
-              intensity={2.0}
-              castShadow
-              shadow-mapSize-width={1024}
-              shadow-mapSize-height={1024}
-            />
+          const palette = themePalettes[index % themePalettes.length];
+          const isDark = index % 2 === 0;
 
-            {/* Conditionally show axes and grid helpers */}
-            {showHelpers && <SceneHelpers />}
+          // Ambient blob colors matching each card's aesthetic
+          const blobGradients = [
+            "from-purple-500/20 to-emerald-500/10",
+            "from-blue-500/10 to-orange-500/10",
+            "from-emerald-500/20 to-lime-500/10",
+            "from-rose-500/10 to-cyan-500/10",
+            "from-indigo-500/20 to-pink-500/10",
+          ];
 
-            {/* Project cards dynamically positioning and bending between flat and cylinder layout */}
-            {projects.map((project, index) => (
-              <ProjectCard3D
-                key={project._id}
-                project={project}
-                index={index}
-                totalProjects={projects.length}
-                scrollProgress={scrollProgress}
-                radius={radius}
-                wireframe={wireframe}
-                frequencyX={frequencyX}
-                frequencyY={frequencyY}
-                amplitude={amplitude}
-                windSpeed={windSpeed}
-              />
-            ))}
-          </Canvas>
-        </div>
-
-        {/* Scroll indicator bar at bottom */}
-        <div className="w-full border-t border-border bg-background py-4 px-6 md:px-12 flex justify-between items-center text-[10px] font-mono text-text-muted uppercase tracking-widest z-30">
-          <span>Scroll to slide projects</span>
-          <div className="flex items-center gap-4">
-            <span>01 — 0{projects.length}</span>
-            <button
-              onClick={() => setDebugOpen(!debugOpen)}
-              className="flex items-center gap-1.5 px-3 py-1.5 border border-border hover:border-accent-primary hover:text-foreground rounded-lg transition-all"
+          return (
+            <FlowSection
+              key={project._id}
+              aria-label={project.title}
+              style={{
+                backgroundColor: palette.bg,
+                color: palette.text,
+                // Store colors as local variables to dynamically reference in children
+                "--local-bg": palette.bg,
+                "--local-fg": palette.text,
+              } as React.CSSProperties}
             >
-              <Settings className="w-3.5 h-3.5" />
-              Playground
-            </button>
-          </div>
-        </div>
-      </div>
+              {/* Premium Background Ambient Blobs */}
+              <div
+                className={`absolute top-[10%] left-[10%] w-[50vw] h-[50vw] rounded-full bg-linear-to-tr ${blobGradients[index % blobGradients.length]} blur-[100px] pointer-events-none opacity-50`}
+                aria-hidden="true"
+              />
+              <div
+                className={`absolute bottom-[10%] right-[10%] w-[40vw] h-[40vw] rounded-full bg-linear-to-br ${blobGradients[(index + 1) % blobGradients.length]} blur-[120px] pointer-events-none opacity-40`}
+                aria-hidden="true"
+              />
 
-      {/* Interactive WebGL Playground Control Panel (Debug Mode) */}
-      <div
-        className={`fixed bottom-20 right-6 z-100 max-w-[300px] w-full bg-card-bg/95 border border-border/80 p-5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] backdrop-blur-md transition-all duration-300 font-sans ${debugOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
-          }`}
-      >
-        <div className="flex items-center justify-between pb-3 border-b border-border/60 mb-4">
-          <div>
-            <h4 className="font-display font-bold text-sm text-foreground uppercase tracking-tight flex items-center gap-1.5">
-              Shader Playground
-            </h4>
-            <p className="text-[9px] font-mono text-text-muted uppercase tracking-widest">
-              Interactive WebGL Controls
-            </p>
-          </div>
-          <button
-            onClick={() => setDebugOpen(false)}
-            className="p-1 rounded-lg hover:bg-bg-secondary text-text-muted hover:text-foreground transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
+              {/* Header metadata row */}
+              <div className="flex justify-between items-center w-full z-10 relative">
+                <span className="font-mono text-[9px] uppercase tracking-[0.25em] opacity-50 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
+                  Project — {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="font-mono text-[10px] uppercase tracking-[0.25em] opacity-50">
+                  {project.year}
+                </span>
+              </div>
 
-        <div className="space-y-4">
-          {/* Wireframe toggle */}
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-mono text-foreground font-semibold">Wireframe Mode</span>
-            <input
-              type="checkbox"
-              checked={wireframe}
-              onChange={(e) => setWireframe(e.target.checked)}
-              className="accent-accent-primary w-4 h-4 cursor-pointer"
-            />
-          </div>
+              {/* Main asymmetric grid split */}
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 md:gap-10 lg:gap-16 items-center w-full my-auto z-10 relative">
 
-          {/* Helpers toggle */}
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-mono text-foreground font-semibold">Scene Helpers</span>
-            <input
-              type="checkbox"
-              checked={showHelpers}
-              onChange={(e) => setShowHelpers(e.target.checked)}
-              className="accent-accent-primary w-4 h-4 cursor-pointer"
-            />
-          </div>
+                {/* Left Side: Typography wrapped in a glassmorphism card */}
+                <div
+                  className={`md:col-span-7 flex flex-col gap-4 sm:gap-6 ${isDark
+                      ? "bg-white/2 border border-white/10 shadow-[0_24px_80px_rgba(0,0,0,0.3)]"
+                      : "bg-black/1 border border-black/5 shadow-[0_24px_80px_rgba(0,0,0,0.04)]"
+                    } backdrop-blur-xl rounded-3xl p-4 sm:p-6 md:p-8 xl:p-12 transition-all duration-500`}
+                >
+                  <div className="space-y-2">
+                    <h2 className="font-display font-light text-[clamp(2rem,4.5vw,4.5rem)] leading-[0.9] uppercase tracking-tight">
+                      {project.slug ? (
+                        <TransitionLink
+                          href={`/projects/${project.slug}`}
+                          className="hover:opacity-75 transition-opacity inline-block"
+                        >
+                          {project.title}
+                        </TransitionLink>
+                      ) : (
+                        project.title
+                      )}
+                    </h2>
+                    <div className="h-[2px] w-16 bg-current opacity-30 mt-2" />
+                  </div>
 
-          {/* Wave Amplitude */}
-          <div>
-            <div className="flex justify-between text-[10px] font-mono text-text-muted mb-1">
-              <span>Wave Height</span>
-              <span>{amplitude.toFixed(2)}m</span>
-            </div>
-            <input
-              type="range"
-              min="0.02"
-              max="0.35"
-              step="0.01"
-              value={amplitude}
-              onChange={(e) => setAmplitude(parseFloat(e.target.value))}
-              className="w-full accent-accent-primary h-1 bg-bg-secondary rounded-lg appearance-none cursor-pointer"
-            />
-          </div>
+                  <p className="font-sans text-[clamp(0.9rem,1.1vw,1.2rem)] font-light leading-relaxed opacity-85 max-w-[48ch]">
+                    {project.description}
+                  </p>
 
-          {/* Wind Speed */}
-          <div>
-            <div className="flex justify-between text-[10px] font-mono text-text-muted mb-1">
-              <span>Wind Speed</span>
-              <span>{windSpeed.toFixed(1)}x</span>
-            </div>
-            <input
-              type="range"
-              min="0.5"
-              max="5.0"
-              step="0.1"
-              value={windSpeed}
-              onChange={(e) => setWindSpeed(parseFloat(e.target.value))}
-              className="w-full accent-accent-primary h-1 bg-bg-secondary rounded-lg appearance-none cursor-pointer"
-            />
-          </div>
+                  {/* Tech Stack Tags */}
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {project.tags?.map((tag) => (
+                      <span
+                        key={tag}
+                        className={`text-[9px] font-mono border ${palette.border} px-2.5 py-0.5 rounded-full uppercase tracking-wider bg-current/3 backdrop-blur-sm hover:bg-current/10 hover:scale-105 transition-all duration-300`}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
 
-          {/* Frequency X */}
-          <div>
-            <div className="flex justify-between text-[10px] font-mono text-text-muted mb-1">
-              <span>Horizontal Waves</span>
-              <span>{frequencyX.toFixed(1)}</span>
-            </div>
-            <input
-              type="range"
-              min="0.5"
-              max="4.0"
-              step="0.1"
-              value={frequencyX}
-              onChange={(e) => setFrequencyX(parseFloat(e.target.value))}
-              className="w-full accent-accent-primary h-1 bg-bg-secondary rounded-lg appearance-none cursor-pointer"
-            />
-          </div>
+                {/* Right Side: Mockup Image with Browser Frame & 3D Tilt Hover */}
+                <div className="md:col-span-5 relative w-full max-w-[360px] md:max-w-none mx-auto group perspective-[1000px]">
+                  {imageUrl && (
+                    <div
+                      className={`relative w-full aspect-4/3 rounded-2xl overflow-hidden shadow-2xl border ${palette.border} bg-current/3 transition-all duration-700 ease-out transform-3d group-hover:transform-[rotateY(-6deg)_rotateX(4deg)]`}
+                    >
+                      {/* Browser header bar */}
+                      <div className={`h-6 w-full border-b ${palette.border} flex items-center gap-1.5 px-3 bg-current/2 z-20 relative`}>
+                        <div className="w-1.5 h-1.5 rounded-full bg-red-500/80" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-yellow-500/80" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-green-500/80" />
+                        <div className="mx-auto w-2/5 h-3.5 rounded bg-current/4 flex items-center justify-center">
+                          <span className="text-[6.5px] font-mono opacity-30 truncate">
+                            https://{project.title.toLowerCase().replace(/\s+/g, "")}.dev
+                          </span>
+                        </div>
+                      </div>
 
-          {/* Frequency Y */}
-          <div>
-            <div className="flex justify-between text-[10px] font-mono text-text-muted mb-1">
-              <span>Vertical Ripples</span>
-              <span>{frequencyY.toFixed(1)}</span>
-            </div>
-            <input
-              type="range"
-              min="0.5"
-              max="4.0"
-              step="0.1"
-              value={frequencyY}
-              onChange={(e) => setFrequencyY(parseFloat(e.target.value))}
-              className="w-full accent-accent-primary h-1 bg-bg-secondary rounded-lg appearance-none cursor-pointer"
-            />
-          </div>
+                      {/* Browser content body */}
+                      <div className="relative w-full h-[calc(100%-1.5rem)] z-10">
+                        <Image
+                          src={imageUrl}
+                          alt={project.title}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 1024px) 100vw, 40vw"
+                          priority={index === 0}
+                        />
+                      </div>
 
-          {/* Buttons */}
-          <button
-            onClick={resetDebugSettings}
-            className="w-full mt-2 flex items-center justify-center gap-1.5 py-2 border border-border hover:border-accent-primary hover:text-foreground text-xs font-mono text-text-muted rounded-xl transition-all"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            Reset Shader Physics
-          </button>
-        </div>
-      </div>
-    </main>
+                      {/* Interactive glass sheen overlay */}
+                      <div className="absolute inset-0 bg-linear-to-tr from-transparent via-white/5 to-white/10 mix-blend-overlay z-20 pointer-events-none" />
+                    </div>
+                  )}
+                </div>
+
+              </div>
+
+              {/* Bottom Row: Actions */}
+              <div className="flex flex-wrap items-center justify-between border-t border-current/15 pt-4 mt-auto gap-4 z-10 relative">
+                <span className="font-mono text-[9px] uppercase tracking-[0.2em] opacity-40">
+                  © Hardik Vatukiya — Creative Dev
+                </span>
+                <div className="flex flex-wrap gap-3">
+                  {project.github && (
+                    <Button
+                      variant="outline"
+                      onClick={() => window.open(project.github, "_blank", "noopener,noreferrer")}
+                      className="group gap-2 border-current/20! text-current! hover:bg-current! hover:text-(--local-bg)! font-bold uppercase tracking-widest text-[9px] px-4 py-2 rounded-full shadow-sm"
+                    >
+                      <GitHubIcon className="w-3 h-3 group-hover:rotate-12 transition-transform duration-300" />
+                      GitHub
+                    </Button>
+                  )}
+                  {project.url && (
+                    <Button
+                      variant="primary"
+                      onClick={() => window.open(project.url, "_blank", "noopener,noreferrer")}
+                      className="group gap-2 font-bold uppercase tracking-widest text-[9px] px-4 py-2 rounded-full shadow-sm"
+                    >
+                      <ExternalLink className="w-3 h-3 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform duration-300" />
+                      View Live
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </FlowSection>
+          );
+        })}
+      </FlowArt>
+    </div>
   );
 }

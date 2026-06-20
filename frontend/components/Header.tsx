@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import TransitionLink from "@/components/ui/TransitionLink";
 import { ArrowUpRight } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -47,15 +47,12 @@ const NavLink = ({ href, children, isActive, hasDot, onClick }: { href: string, 
         } else if (targetElement) {
           targetElement.scrollIntoView({ behavior: "smooth" });
         }
-      } else {
-        e.preventDefault();
-        window.location.href = href;
       }
     }
   };
 
   return (
-    <Link
+    <TransitionLink
       href={href}
       onClick={handleClick}
       className={cn(
@@ -70,7 +67,7 @@ const NavLink = ({ href, children, isActive, hasDot, onClick }: { href: string, 
       {!isActive && (
         <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-[1.5px] bg-foreground transition-all duration-300 group-hover/link:w-1/3" />
       )}
-    </Link>
+    </TransitionLink>
   );
 };
 
@@ -146,9 +143,9 @@ const HeroHeader = ({ initialData }: { initialData?: NavigationData }) => {
         {/* Logo Section */}
         <div className="flex items-center pl-4 pr-6">
           <Magnetic range={40} strength={0.3}>
-            <Link href="/" className="transition-all duration-300 hover:scale-110 active:scale-95 group">
+            <TransitionLink href="/" className="transition-all duration-300 hover:scale-110 active:scale-95 group">
               <Logo text={initialData?.title || "HV"} />
-            </Link>
+            </TransitionLink>
           </Magnetic>
         </div>
         {/* Navigation Links */}
@@ -191,14 +188,14 @@ const HeroHeader = ({ initialData }: { initialData?: NavigationData }) => {
         {/* Action Button */}
         <div className="pr-2">
           <Magnetic range={50} strength={0.35}>
-            <Link href={actionButton.url} onClick={handleActionClick}>
+            <TransitionLink href={actionButton.url} onClick={handleActionClick}>
               <Button className="flex items-center gap-3 px-4 py-1 rounded-full bg-accent-primary text-background text-[10px] font-bold uppercase tracking-[0.15em] transition-all duration-500 hover:opacity-90 hover:shadow-[0_12px_24px] hover:shadow-accent-primary/30 hover:-translate-y-0.5 active:scale-95 group/btn">
                 {actionButton.title}
                 <div className="relative flex items-center justify-center">
                   <ArrowUpRight className="w-4 h-4 transition-transform duration-500 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
                 </div>
               </Button>
-            </Link>
+            </TransitionLink>
           </Magnetic>
         </div>
       </nav>

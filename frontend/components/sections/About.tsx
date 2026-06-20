@@ -25,7 +25,6 @@ export interface AboutData {
 const defaultBio = "A dedicated MERN Stack Developer with a passion for building full-stack applications that are fast, accessible, and designed to solve real-world problems.";
 const defaultExperience = [
   { mark: "TR", title: "Trionn®", role: "2024–Present" },
-  { mark: "spark", title: "Freelance", role: "2023–Present" },
 ];
 
 function SplitLine({ text }: { text: string }) {
@@ -77,7 +76,6 @@ export default function AboutSection({ initialData }: { initialData?: AboutData 
   const exp = initialData?.experience || defaultExperience;
   const name = initialData?.name || "Hardik Vatukiya";
   const tagline = initialData?.tagline || "Hey, I'm";
-  const philosophy = initialData?.philosophy || "I believe clean code is more than syntax—it's a commitment to users. I build digital products that are thoughtful, resilient, and made to scale, turning ideas into real impact.";
 
   useGSAP(
     () => {
@@ -319,29 +317,6 @@ export default function AboutSection({ initialData }: { initialData?: AboutData 
                   </div>
                 </div>
               ))}
-            </div>
-
-            {/* Philosophy / Quote Section */}
-            <div className="about-reveal mt-12 rounded-2xl border border-background/10 bg-linear-to-br from-background/3 to-transparent p-8 sm:p-10">
-              <div className="flex items-start gap-6">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center text-background/30">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="h-10 w-10 opacity-60"
-                  >
-                    <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.75-2-2-2H4c-1.25 0-2 .75-2 2v7c0 1.25.75 2 2 2h4c0 2.5-1 4-4 4" />
-                    <path d="M14 21c3 0 7-1 7-8V5c0-1.25-.75-2-2-2h-4c-1.25 0-2 .75-2 2v7c0 1.25.75 2 2 2h4c0 2.5-1 4-4 4" />
-                  </svg>
-                </div>
-                <p className="font-body text-lg italic leading-relaxed text-background/70 sm:text-xl">
-                  {philosophy}
-                </p>
-              </div>
             </div>
           </div>
         </div>
