@@ -260,6 +260,12 @@ html.lenis {
   background-color: var(--foreground); /* Skill is dark */
 }
 
+.faq-container {
+  position: relative;
+  z-index: 45;
+  background-color: var(--background);
+}
+
 .contact-container {
   position: relative;
   z-index: 5; /* Lower than skill to allow reveal effect from behind */
