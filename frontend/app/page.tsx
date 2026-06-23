@@ -3,7 +3,7 @@ import ClientHome from "@/components/ClientHome";
 import { getHero, getAbout, getJourney, getSkills, getContact, getFAQ } from "@/lib/sanity.loader";
 import { siteUrl } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import { getProfilePageSchema } from "@/lib/schema";
+import { getProfilePageSchema, getFaqSchema } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "Hardik Vatukiya — Full-Stack Developer | React, Next.js & Node.js Engineer",
@@ -47,9 +47,17 @@ export default async function Home() {
     getFAQ()
   ]);
 
+  const profileSchema = getProfilePageSchema();
+  const faqSchema = getFaqSchema(faqData?.items || []);
+
+  const schemaGraph = {
+    "@context": "https://schema.org",
+    "@graph": [profileSchema, ...(faqSchema ? [faqSchema] : [])],
+  };
+
   return (
     <>
-      <JsonLd schema={getProfilePageSchema()} />
+      <JsonLd schema={schemaGraph} />
       <ClientHome
         heroData={heroData}
         aboutData={aboutData}

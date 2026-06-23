@@ -59,6 +59,31 @@ export default function MainLoader() {
     };
   }, []);
 
+  // ── Lock scrolling while loader is visible ────────────────────────────────
+  useEffect(() => {
+    if (visible && !hasLoadedOnce) {
+      document.body.style.overflow = "hidden";
+      const checkLenis = setInterval(() => {
+        if ((window as any).lenis) {
+          (window as any).lenis.stop();
+          clearInterval(checkLenis);
+        }
+      }, 50);
+      return () => {
+        clearInterval(checkLenis);
+        document.body.style.overflow = "";
+        if ((window as any).lenis) {
+          (window as any).lenis.start();
+        }
+      };
+    } else {
+      document.body.style.overflow = "";
+      if ((window as any).lenis) {
+        (window as any).lenis.start();
+      }
+    }
+  }, [visible]);
+
   // ── Loading progress + entrance ───────────────────────────────────────────
   useGSAP(
     () => {

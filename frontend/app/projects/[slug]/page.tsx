@@ -7,7 +7,7 @@ import { getProjectBySlug, getProjectSlugs } from "@/lib/sanity.loader";
 import { urlFor } from "@/lib/sanity.image";
 import { projectsOgImage, siteName, siteUrl, twitterCreator } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import { getProjectSchema, getBreadcrumbSchema } from "@/lib/schema";
+import { getProjectSchema, getBreadcrumbSchema, getArticleSchema } from "@/lib/schema";
 
 export const revalidate = 60;
 
@@ -98,9 +98,19 @@ export default async function ProjectDetailPage({ params }: PageProps) {
     { name: project.title, item: `/projects/${slug}` },
   ]);
 
+  const articleSchema = getArticleSchema({
+    title: project.title,
+    description: project.description || `Case study on ${project.title}`,
+    image,
+    url: `${siteUrl}/projects/${slug}`,
+    datePublished: project._updatedAt,
+    dateModified: project._updatedAt,
+    authorName: siteName,
+  });
+
   const schemaGraph = {
     "@context": "https://schema.org",
-    "@graph": [projectSchema, breadcrumbsSchema],
+    "@graph": [projectSchema, breadcrumbsSchema, articleSchema],
   };
 
   return (

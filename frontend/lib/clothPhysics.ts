@@ -134,34 +134,14 @@ export function drawCloth(
         light = Math.max(0.65, Math.min(1.35, nz / area * 0.4 + 0.85));
       }
 
-      // Base light color
-      let cr = 250, cg = 250, cb = 250;
-
-      // C_GREEN is --accent-primary #008f51 -> rgb(0, 143, 81)
-      const greenR = 0, greenG = 143, greenB = 81;
-      
-      // Top-Left Green Gradient (smooth falloff)
-      const dTL = Math.hypot(u, v);
-      const iTL = Math.pow(Math.max(0, 1 - dTL * 1.1), 2) * 0.55; 
-      
-      // Bottom-Right Green Gradient
-      const dBR = Math.hypot(1 - u, 1 - v);
-      const iBR = Math.pow(Math.max(0, 1 - dBR * 1.1), 2) * 0.45;
-      
-      // Mix primary green into the cloth
-      cr = cr * (1 - iTL) + greenR * iTL;
-      cg = cg * (1 - iTL) + greenG * iTL;
-      cb = cb * (1 - iTL) + greenB * iTL;
-      
-      cr = cr * (1 - iBR) + greenR * iBR;
-      cg = cg * (1 - iBR) + greenG * iBR;
-      cb = cb * (1 - iBR) + greenB * iBR;
+      // Base background color (matches --background: #fdfdfd)
+      let cr = 253, cg = 253, cb = 253;
 
       // Add a subtle diagonal specular sheen
-      const sheen = Math.max(0, 1 - Math.abs(u - v) * 2.5) * 0.08;
+      const sheen = Math.max(0, 1 - Math.abs(u - v) * 2.5) * 0.05;
       cr += sheen * 255; cg += sheen * 255; cb += sheen * 255;
 
-      // Apply lighting
+      // Apply lighting (cloth folds effect)
       cr = Math.min(255, Math.floor(cr * light));
       cg = Math.min(255, Math.floor(cg * light));
       cb = Math.min(255, Math.floor(cb * light));
@@ -285,7 +265,6 @@ export function animateClothWhisk(
 
     if (clothGone(state, H)) {
       cancelAnimationFrame(state.rafId);
-      if (contentEl) contentEl.style.transform = "none";
       onComplete();
     } else {
       state.rafId = requestAnimationFrame(tick);

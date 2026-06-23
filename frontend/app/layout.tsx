@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     template: "%s | Hardik Vatukiya — Full-Stack Developer",
   },
   description:
-    "Hardik Vatukiya is a Full-Stack Developer from Rajkot, India specializing in React, Next.js, and Node.js. Building fast, accessible, and visually stunning web applications. Available for freelance & contract work worldwide.",
+    "Hardik Vatukiya is a Full-Stack Developer from Rajkot, India specializing in React, Next.js, and Node.js. Building fast, accessible, and visually stunning web applications. Available for freelance & contract work worldwide. Explore case studies, projects, and insights on modern web development.",
   keywords: [
     "Hardik Vatukiya",
     "Full-Stack Developer",
@@ -68,7 +68,12 @@ export const metadata: Metadata = {
     "freelance web developer India",
     "GSAP animation developer",
     "Sanity CMS developer",
-    "web developer Rajkot Gujarat"
+    "web developer Rajkot Gujarat",
+    "hire freelance React developer in India",
+    "expert MERN stack developer",
+    "Next.js performance optimization expert",
+    "Custom web application development services",
+    "React developer for contract work"
   ],
   authors: [{ name: "Hardik Vatukiya", url: "https://hardikvatukiya.vercel.app" }],
   creator: "Hardik Vatukiya",

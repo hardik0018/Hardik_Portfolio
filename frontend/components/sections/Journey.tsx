@@ -141,58 +141,63 @@ const WaypointCard = ({
             <div
                 ref={cardRef}
                 className={cn(
-                    "js-card-content bg-[color-mix(in_srgb,var(--background),transparent_60%)] backdrop-blur-[20px] border-[color-mix(in_srgb,var(--foreground),transparent_90%)] shadow-[inset_0_0_20px_0_color-mix(in_srgb,var(--background),transparent_90%)] md:backdrop-blur-3xl flex-1 w-full p-6 md:p-10 rounded-4xl md:rounded-[2.5rem] border transition-all duration-200 relative overflow-hidden cursor-default",
+                    "js-card-content flex-1 w-full p-6 md:p-10 rounded-4xl md:rounded-[2.5rem] relative overflow-hidden cursor-default transition-all duration-500",
+                    "backdrop-blur-xl bg-background/60 border border-foreground/5 shadow-[0_8px_32px_rgba(0,0,0,0.04)]",
                     isActive
                         ? isCurrent
-                            ? "ring-1 ring-primary/30 shadow-xl grayscale-0"
-                            : "ring-1 ring-border grayscale-0"
-                        : "ring-1 ring-border/50 grayscale-[0.5]"
+                            ? "ring-1 ring-accent-primary/30 shadow-2xl shadow-accent-primary/10 grayscale-0"
+                            : "grayscale-0 opacity-90"
+                        : "opacity-40 grayscale-[0.5] scale-[0.98]"
                 )}
             >
                 <div className={cn(
-                    "js-icon absolute top-0 right-0 p-6 md:p-8 text-accent-primary pointer-events-none transition-all duration-100",
-                    isCurrent ? "opacity-40 scale-110" : "opacity-20 scale-100"
+                    "js-icon absolute top-6 right-6 md:top-8 md:right-8 flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-full transition-all duration-500",
+                    "bg-foreground/5 backdrop-blur-md border border-foreground/10",
+                    isCurrent ? "text-accent-primary shadow-[0_0_20px_var(--accent-primary)] scale-110" : "text-foreground/30 scale-100"
                 )}>
-                    {ICON_MAP[stage.icon] || <Sparkles className="h-8 w-8" />}
+                    {ICON_MAP[stage.icon] || <Sparkles className="h-6 w-6 md:h-8 md:w-8" />}
                 </div>
 
                 <div className="space-y-4 md:space-y-6 relative z-10">
                     <div className={cn(
-                        "js-badge inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-1.5 rounded-full transition-colors duration-100 font-mono text-[9px] md:text-[10px] tracking-widest uppercase",
-                        isCurrent ? "bg-accent-primary/20 border border-accent-primary/40 text-accent-primary" : "bg-bg-secondary border border-border text-text-muted"
+                        "js-badge inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-1.5 rounded-full transition-all duration-500 font-mono text-[9px] md:text-[10px] tracking-widest uppercase",
+                        isCurrent 
+                            ? "bg-accent-primary/10 border border-accent-primary/30 text-accent-primary drop-shadow-[0_0_8px_var(--accent-primary)]" 
+                            : "bg-foreground/5 border border-foreground/10 text-foreground/50"
                     )}>
                         <Sparkles className="h-3 w-3" /> {stage.date}
                     </div>
 
                     <div className="space-y-2">
                         <h3 className={cn(
-                            "js-heading text-xl md:text-3xl font-display font-bold uppercase tracking-tight transition-colors duration-100",
-                            isCurrent ? "text-foreground" : "text-text-muted"
+                            "js-heading text-2xl md:text-4xl font-display font-bold uppercase tracking-tight transition-colors duration-500",
+                            isCurrent ? "text-foreground drop-shadow-sm" : "text-foreground/50"
                         )}>
                             {stage.title}
                         </h3>
-                        <p className="js-sub text-[10px] md:text-sm font-mono text-text-muted uppercase tracking-[0.2em] flex items-center gap-2">
-                            <span className={cn("h-px w-4 transition-all duration-300", isCurrent ? "bg-accent-primary w-8" : "bg-accent-primary/30")} /> {stage.subtitle}
+                        <p className={cn("js-sub text-[10px] md:text-sm font-mono uppercase tracking-[0.2em] flex items-center gap-3 transition-colors duration-500",
+                           isCurrent ? "text-foreground/80" : "text-foreground/40"
+                        )}>
+                            <span className={cn("h-[2px] rounded-full transition-all duration-500", isCurrent ? "bg-accent-primary w-12 shadow-[0_0_8px_var(--accent-primary)]" : "bg-foreground/20 w-6")} /> 
+                            {stage.subtitle}
                         </p>
                     </div>
 
                     <p className={cn(
-                        "js-body leading-relaxed text-sm md:text-base transition-colors duration-200 max-w-xl",
-                        isCurrent ? "text-foreground/80" : "text-text-muted/70"
+                        "js-body leading-relaxed text-sm md:text-base transition-colors duration-500 max-w-xl",
+                        isCurrent ? "text-foreground/80" : "text-foreground/40"
                     )}>
                         {stage.description}
                     </p>
-
-                    <div className="js-cta pt-2 md:pt-4 flex items-center gap-3 text-[9px] md:text-[10px] font-mono uppercase tracking-[0.3em] text-accent-primary group cursor-pointer hover:text-accent-secondary transition-colors">
-                        View Details
-                        <span className="w-6 md:w-8 h-px bg-accent-primary/30 group-hover:w-12 group-hover:bg-accent-secondary transition-all duration-200" />
-                        <ArrowRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
-                    </div>
                 </div>
 
                 <div className={cn(
-                    "absolute -bottom-12 -left-12 w-32 h-32 rounded-full blur-xl md:blur-3xl pointer-events-none transition-all duration-300",
-                    isCurrent ? "bg-accent-primary/20 opacity-100 scale-150" : isActive ? "bg-accent-primary/10 opacity-50" : "bg-accent-primary/5 opacity-0"
+                    "absolute -bottom-24 -left-24 w-64 h-64 rounded-full blur-[80px] pointer-events-none transition-all duration-700",
+                    isCurrent ? "bg-accent-primary/20 opacity-100 scale-100" : isActive ? "bg-accent-primary/10 opacity-30 scale-75" : "bg-transparent opacity-0"
+                )} />
+                <div className={cn(
+                    "absolute -top-24 -right-24 w-64 h-64 rounded-full blur-[80px] pointer-events-none transition-all duration-700 delay-100",
+                    isCurrent ? "bg-accent-secondary/15 opacity-100 scale-100" : "bg-transparent opacity-0"
                 )} />
             </div>
 
@@ -208,8 +213,11 @@ export default function Journey({ initialData }: { initialData?: JourneyStage[] 
     const sectionRef = useRef<HTMLElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const svgRef = useRef<SVGSVGElement>(null);
-    const pathRefs = useRef<(SVGPathElement | null)[]>([]);
-    const headRef = useRef<SVGGElement>(null);
+    const pathRefs = useRef<Array<{
+        main: SVGPathElement | null;
+        fiber1: SVGPathElement | null;
+        fiber2: SVGPathElement | null;
+    }>>([]);
     const headerRef = useRef<HTMLDivElement>(null);
     const bgRef = useRef<HTMLDivElement>(null);
     const [activeStages, setActiveStages] = React.useState<Set<number>>(new Set([0]));
@@ -281,13 +289,15 @@ export default function Journey({ initialData }: { initialData?: JourneyStage[] 
 
                     const cardRects = Array.from(cardElements).map(card => card.getBoundingClientRect());
 
-                    pathRefs.current.forEach((pathEl, i) => {
-                        if (!pathEl || i >= cardRects.length - 1) return;
+                    pathRefs.current.forEach((refs, i) => {
+                        if (!refs || !refs.main || i >= cardRects.length - 1) return;
 
                         const fr = cardRects[i];
                         const tr = cardRects[i + 1];
 
-                        let d = "";
+                        let dMain = "";
+                        let dFiber1 = "";
+                        let dFiber2 = "";
 
                         if (isDesktop) {
                             const isEven = i % 2 === 0;
@@ -304,7 +314,19 @@ export default function Journey({ initialData }: { initialData?: JourneyStage[] 
                             const cp2x = x2;
                             const cp2y = y2 - topOffset;
 
-                            d = `M ${x1} ${y1} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${x2} ${y2}`;
+                            dMain = `M ${x1} ${y1} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${x2} ${y2}`;
+
+                            const f1_cp1x = x1 + (isEven ? curveOffset * 1.5 : -curveOffset * 1.5);
+                            const f1_cp1y = y1 - 100;
+                            const f1_cp2x = x2 + (isEven ? 80 : -80);
+                            const f1_cp2y = y2 - topOffset * 1.2;
+                            dFiber1 = `M ${x1} ${y1} C ${f1_cp1x} ${f1_cp1y}, ${f1_cp2x} ${f1_cp2y}, ${x2} ${y2}`;
+
+                            const f2_cp1x = x1 + (isEven ? curveOffset * 0.5 : -curveOffset * 0.5);
+                            const f2_cp1y = y1 + 100;
+                            const f2_cp2x = x2 - (isEven ? 80 : -80);
+                            const f2_cp2y = y2 - topOffset * 0.8;
+                            dFiber2 = `M ${x1} ${y1} C ${f2_cp1x} ${f2_cp1y}, ${f2_cp2x} ${f2_cp2y}, ${x2} ${y2}`;
                         } else {
                             const x1 = fr.left + fr.width / 2 - containerRect.left;
                             const y1 = fr.bottom - containerRect.top;
@@ -312,15 +334,29 @@ export default function Journey({ initialData }: { initialData?: JourneyStage[] 
                             const y2 = tr.top - containerRect.top;
 
                             const midY = (y1 + y2) / 2;
-                            d = `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`;
+                            dMain = `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`;
+                            dFiber1 = `M ${x1} ${y1} C ${x1 - 60} ${midY}, ${x2 - 60} ${midY}, ${x2} ${y2}`;
+                            dFiber2 = `M ${x1} ${y1} C ${x1 + 60} ${midY}, ${x2 + 60} ${midY}, ${x2} ${y2}`;
                         }
 
-                        pathEl.setAttribute("d", d);
-                        const length = pathEl.getTotalLength();
-                        pathData.set(i, { length, path: pathEl });
+                        refs.main.setAttribute("d", dMain);
+                        const length = refs.main.getTotalLength();
+                        pathData.set(i, { length, path: refs.main });
+                        refs.main.style.strokeDasharray = String(length);
+                        refs.main.style.strokeDashoffset = String(length);
 
-                        pathEl.style.strokeDasharray = String(length);
-                        pathEl.style.strokeDashoffset = String(length);
+                        if (refs.fiber1) {
+                            refs.fiber1.setAttribute("d", dFiber1);
+                            const l1 = refs.fiber1.getTotalLength();
+                            refs.fiber1.style.strokeDasharray = String(l1);
+                            refs.fiber1.style.strokeDashoffset = String(l1);
+                        }
+                        if (refs.fiber2) {
+                            refs.fiber2.setAttribute("d", dFiber2);
+                            const l2 = refs.fiber2.getTotalLength();
+                            refs.fiber2.style.strokeDasharray = String(l2);
+                            refs.fiber2.style.strokeDashoffset = String(l2);
+                        }
                     });
 
                     // refresh(true) does NOT adjust scroll position — safe to call mid-scroll
@@ -365,36 +401,35 @@ export default function Journey({ initialData }: { initialData?: JourneyStage[] 
                     },
                 });
 
-                pathRefs.current.forEach((pathEl, i) => {
-                    if (!pathEl) return;
+                pathRefs.current.forEach((refs, i) => {
+                    if (!refs || !refs.main) return;
                     const data = pathData.get(i);
                     if (!data) return;
 
                     const totalConnectors = stages.length - 1;
                     const startTime = i / totalConnectors;
+                    const duration = 1 / totalConnectors;
 
-                    mainTimeline.to(pathEl, {
+                    mainTimeline.to(refs.main, {
                         strokeDashoffset: 0,
-                        duration: 1 / totalConnectors,
-                        ease: "none",
-                        onUpdate: function () {
-                            if (!headRef.current) return;
-                            const progress = this.progress();
-                            if (progress > 0 && progress < 1) {
-                                try {
-                                    const point = pathEl.getPointAtLength(data.length * progress);
-                                    gsap.set(headRef.current, {
-                                        x: point.x,
-                                        y: point.y,
-                                        autoAlpha: 1,
-                                        overwrite: "auto"
-                                    });
-                                } catch { }
-                            } else if (progress <= 0 || progress >= 1) {
-                                gsap.set(headRef.current, { autoAlpha: 0 });
-                            }
-                        }
+                        duration: duration,
+                        ease: "power1.inOut",
                     }, startTime);
+
+                    if (refs.fiber1) {
+                        mainTimeline.to(refs.fiber1, {
+                            strokeDashoffset: 0,
+                            duration: duration * 1.1,
+                            ease: "power2.inOut",
+                        }, startTime);
+                    }
+                    if (refs.fiber2) {
+                        mainTimeline.to(refs.fiber2, {
+                            strokeDashoffset: 0,
+                            duration: duration * 0.9,
+                            ease: "power1.out",
+                        }, startTime);
+                    }
                 });
 
                 const cards = containerRef.current?.querySelectorAll(".js-card-content");
@@ -650,20 +685,36 @@ export default function Journey({ initialData }: { initialData?: JourneyStage[] 
                                 </linearGradient>
                             </defs>
 
-                            {stages.length > 1 && stages.slice(0, -1).map((_, i) => (
-                                <path
-                                    key={i}
-                                    ref={(el) => { pathRefs.current[i] = el; }}
-                                    stroke="var(--foreground)"
-                                    strokeWidth="1.5"
-                                    strokeLinecap="round"
-                                />
-                            ))}
-
-                            <g ref={headRef} style={{ opacity: 0 }}>
-                                <circle r="6" fill="var(--foreground)" className="drop-shadow-[0_0_15px_var(--accent-primary)]" />
-                                <circle r="12" fill="none" stroke="var(--foreground)" strokeWidth="1" className="animate-pulse opacity-80" />
-                            </g>
+                            {stages.length > 1 && stages.slice(0, -1).map((_, i) => {
+                                if (!pathRefs.current[i]) {
+                                    pathRefs.current[i] = { main: null, fiber1: null, fiber2: null };
+                                }
+                                return (
+                                <g key={i}>
+                                    <path
+                                        ref={(el) => { pathRefs.current[i].fiber1 = el; }}
+                                        stroke="url(#journey-gradient)"
+                                        strokeWidth="1"
+                                        strokeLinecap="round"
+                                        className="opacity-40"
+                                    />
+                                    <path
+                                        ref={(el) => { pathRefs.current[i].fiber2 = el; }}
+                                        stroke="url(#journey-gradient)"
+                                        strokeWidth="1.5"
+                                        strokeLinecap="round"
+                                        className="opacity-60 drop-shadow-[0_0_4px_var(--accent-secondary)]"
+                                    />
+                                    <path
+                                        ref={(el) => { pathRefs.current[i].main = el; }}
+                                        stroke="url(#journey-gradient)"
+                                        strokeWidth="2.5"
+                                        strokeLinecap="round"
+                                        className="drop-shadow-[0_0_12px_var(--accent-primary)]"
+                                    />
+                                </g>
+                                );
+                            })}
                         </svg>
                     </div>
 

@@ -127,7 +127,8 @@ export interface FaqItem {
   answer: string;
 }
 
-export function getFaqSchema(items: FaqItem[]) {
+export function getFaqSchema(items?: FaqItem[]) {
+  if (!items || items.length === 0) return null;
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage" as const,
@@ -139,5 +140,37 @@ export function getFaqSchema(items: FaqItem[]) {
         text: item.answer,
       },
     })),
+  };
+}
+
+export interface ArticleSchemaProps {
+  title: string;
+  description: string;
+  image: string;
+  url: string;
+  datePublished: string;
+  dateModified: string;
+  authorName: string;
+}
+
+export function getArticleSchema(props: ArticleSchemaProps) {
+  return {
+    "@type": "TechArticle" as const,
+    "@id": `${props.url}#article`,
+    headline: props.title,
+    description: props.description,
+    image: props.image,
+    datePublished: props.datePublished,
+    dateModified: props.dateModified,
+    author: {
+      "@id": `${siteUrl}/#person`,
+    },
+    publisher: {
+      "@id": `${siteUrl}/#person`,
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": props.url,
+    },
   };
 }
