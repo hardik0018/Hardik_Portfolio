@@ -122,6 +122,8 @@ import MainLoader from "@/components/MainLoader";
 import { SanityLive } from "@/lib/sanity.live";
 import { getNavigation } from "@/lib/sanity.loader";
 import { GoogleAnalytics } from "@/components/google-analytics";
+import { PostHogProvider } from "@/components/PostHogProvider";
+import { Analytics } from "@vercel/analytics/react";
 import { draftMode } from "next/headers";
 import JsonLd from "@/components/JsonLd";
 import { getPersonSchema, getWebsiteSchema } from "@/lib/schema";
@@ -168,13 +170,16 @@ export default async function RootLayout({
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID!} />
 
         <WebVitals />
-        <SmoothScroll>
-          <TransitionProvider>
-            <MainLoader />
-            <HeroHeader initialData={navigation} />
-            {children}
-          </TransitionProvider>
-        </SmoothScroll>
+        <PostHogProvider>
+          <SmoothScroll>
+            <TransitionProvider>
+              <MainLoader />
+              <HeroHeader initialData={navigation} />
+              {children}
+            </TransitionProvider>
+          </SmoothScroll>
+        </PostHogProvider>
+        <Analytics />
         {isDraftMode && (
           <SanityLive refreshOnFocus={false} refreshOnReconnect={false} refreshOnMount={false} />
         )}

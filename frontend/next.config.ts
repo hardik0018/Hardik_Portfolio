@@ -34,7 +34,7 @@ const nextConfig: NextConfig = {
   async headers() {
     const cspHeader = `
       default-src 'self';
-      script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com;
+      script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://us-assets.i.posthog.com https://eu-assets.i.posthog.com;
       style-src 'self' 'unsafe-inline';
       img-src 'self' blob: data: https://images.unsplash.com https://cdn.sanity.io https://www.google-analytics.com;
       font-src 'self' data:;
@@ -42,7 +42,7 @@ const nextConfig: NextConfig = {
       base-uri 'self';
       form-action 'self';
       frame-ancestors 'none';
-      connect-src 'self' https://*.sanity.io https://*.api.sanity.io wss://*.api.sanity.io https://www.google-analytics.com https://region1.google-analytics.com;
+      connect-src 'self' https://*.sanity.io https://*.api.sanity.io wss://*.api.sanity.io https://www.google-analytics.com https://region1.google-analytics.com https://us.i.posthog.com https://eu.i.posthog.com https://us-assets.i.posthog.com https://eu-assets.i.posthog.com;
       upgrade-insecure-requests;
     `.replace(/\s{2,}/g, " ").trim();
 

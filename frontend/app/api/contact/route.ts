@@ -58,11 +58,39 @@ export async function POST(request: Request) {
       );
     }
 
+    const forwardedFor = request.headers.get("x-forwarded-for");
+    const realIp = request.headers.get("x-real-ip");
+    const ip = forwardedFor ? forwardedFor.split(",")[0].trim() : realIp || "Unknown IP";
+
+    let location = "Unknown Location";
+    const vercelCity = request.headers.get("x-vercel-ip-city");
+    const vercelCountry = request.headers.get("x-vercel-ip-country");
+    
+    if (vercelCity && vercelCountry) {
+      location = decodeURIComponent(`${vercelCity}, ${vercelCountry}`);
+    } else if (vercelCountry) {
+      location = decodeURIComponent(vercelCountry);
+    } else if (ip !== "Unknown IP" && ip !== "::1" && ip !== "127.0.0.1") {
+      try {
+        const geoResponse = await fetch(`http://ip-api.com/json/${ip}`, { next: { revalidate: 3600 } });
+        if (geoResponse.ok) {
+          const geoData = await geoResponse.json();
+          if (geoData.status === "success") {
+            location = `${geoData.city}, ${geoData.country}`;
+          }
+        }
+      } catch (error) {
+        console.error("Geolocation fetch error:", error);
+      }
+    }
+
     // HTML escape variables to prevent HTML/XSS injection in email clients
     const safeName = escapeHtml(name);
     const safeEmail = escapeHtml(email);
     const safeProjectType = escapeHtml(projectType || "Not specified");
     const safeMessage = escapeHtml(message);
+    const safeIp = escapeHtml(ip);
+    const safeLocation = escapeHtml(location);
 
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -80,6 +108,8 @@ export async function POST(request: Request) {
             <p><strong>Name:</strong> ${safeName}</p>
             <p><strong>Email:</strong> ${safeEmail}</p>
             <p><strong>Project Type:</strong> ${safeProjectType}</p>
+            <p><strong>IP Address:</strong> ${safeIp}</p>
+            <p><strong>Location:</strong> ${safeLocation}</p>
             <p><strong>Message:</strong></p>
             <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; font-family: monospace; white-space: pre-wrap;">${safeMessage}</div>
           </div>
