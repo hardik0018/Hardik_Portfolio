@@ -95,19 +95,27 @@ const HeroHeader = ({ initialData }: { initialData?: NavigationData }) => {
   const pathname = usePathname();
   const [activeHash, setActiveHash] = useState<string>("");
 
-  const menuItems = initialData?.menuItems || DEFAULT_MENU;
-  const actionButton = initialData?.actionButton || { title: "Let's Connect", url: "/#contact" };
+  const menuItems = (initialData?.menuItems || DEFAULT_MENU).map(item => {
+    let url = item.url;
+    if (url.startsWith("#")) {
+      url = "/" + url;
+    }
+    return { ...item, url };
+  });
+
+  const rawActionButton = initialData?.actionButton || { title: "Let's Connect", url: "/#contact" };
+  let actionButtonUrl = rawActionButton.url;
+  if (actionButtonUrl.startsWith("#")) {
+    actionButtonUrl = "/" + actionButtonUrl;
+  }
+  const actionButton = { ...rawActionButton, url: actionButtonUrl };
 
   useEffect(() => {
     const handleHash = () => {
-      if (pathname !== "/") {
-        setActiveHash("");
+      if (typeof window !== "undefined" && window.location.hash) {
+        setActiveHash(window.location.hash);
       } else {
-        if (typeof window !== "undefined" && window.location.hash) {
-          setActiveHash(window.location.hash);
-        } else {
-          setActiveHash("");
-        }
+        setActiveHash("");
       }
     };
     const id = requestAnimationFrame(handleHash);
@@ -117,20 +125,20 @@ const HeroHeader = ({ initialData }: { initialData?: NavigationData }) => {
   const handleActionClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     const url = actionButton.url;
     if (url.startsWith("/#")) {
-      const hash = url.substring(1);
-      setActiveHash(hash);
+      const hashId = url.substring(1);
+      setActiveHash("#" + hashId);
       if (pathname === "/") {
         e.preventDefault();
         const globalLenis = window.lenis as unknown as LenisScrollable | undefined;
         if (globalLenis) {
-          if (hash === "#contact") {
+          if (hashId === "contact") {
             globalLenis.scrollTo(document.body.scrollHeight);
           } else {
-            const target = document.querySelector(hash);
+            const target = document.querySelector("#" + hashId);
             if (target) globalLenis.scrollTo(target);
           }
         } else {
-          const target = document.querySelector(hash);
+          const target = document.querySelector("#" + hashId);
           if (target) target.scrollIntoView({ behavior: "smooth" });
         }
       }
@@ -158,8 +166,13 @@ const HeroHeader = ({ initialData }: { initialData?: NavigationData }) => {
             if (url === "/") {
               isActive = pathname === "/" && activeHash === "";
             } else if (url.startsWith("/#")) {
-              const hash = url.substring(1);
-              isActive = activeHash === hash;
+              const hashId = url.substring(1);
+              isActive = activeHash === `#${hashId}`;
+            } else if (url.includes("#")) {
+              const hashIndex = url.indexOf("#");
+              const basePath = url.substring(0, hashIndex);
+              const hash = url.substring(hashIndex);
+              isActive = pathname.startsWith(basePath) && activeHash === hash;
             } else {
               isActive = pathname === url;
               hasDot = pathname === url;
@@ -173,7 +186,9 @@ const HeroHeader = ({ initialData }: { initialData?: NavigationData }) => {
                   hasDot={hasDot}
                   onClick={() => {
                     if (url.startsWith("/#")) {
-                      setActiveHash(url.substring(1));
+                      setActiveHash("#" + url.substring(1));
+                    } else if (url.includes("#")) {
+                      setActiveHash(url.substring(url.indexOf("#")));
                     } else if (url === "/") {
                       setActiveHash("");
                     }

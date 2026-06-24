@@ -64,22 +64,25 @@ export default function MainLoader() {
     if (visible && !hasLoadedOnce) {
       document.body.style.overflow = "hidden";
       const checkLenis = setInterval(() => {
-        if ((window as any).lenis) {
-          (window as any).lenis.stop();
+        const w = window as unknown as { lenis?: { start: () => void; stop: () => void } };
+        if (w.lenis) {
+          w.lenis.stop();
           clearInterval(checkLenis);
         }
       }, 50);
       return () => {
         clearInterval(checkLenis);
         document.body.style.overflow = "";
-        if ((window as any).lenis) {
-          (window as any).lenis.start();
+        const w = window as unknown as { lenis?: { start: () => void; stop: () => void } };
+        if (w.lenis) {
+          w.lenis.start();
         }
       };
     } else {
       document.body.style.overflow = "";
-      if ((window as any).lenis) {
-        (window as any).lenis.start();
+      const w = window as unknown as { lenis?: { start: () => void; stop: () => void } };
+      if (w.lenis) {
+        w.lenis.start();
       }
     }
   }, [visible]);

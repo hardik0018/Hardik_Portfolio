@@ -80,7 +80,7 @@ function ContactInput({
         required={required}
         placeholder={placeholder}
         onChange={(event) => onChange(event.target.value)}
-        className="h-12 w-full rounded-[12px] border border-border bg-background px-5 font-sans text-[0.95rem] text-foreground outline-none transition-all placeholder:text-text-muted focus:border-accent-primary focus:shadow-[0_0_0_4px_--theme(--color-accent-primary/9%)]"
+        className="h-12 w-full rounded-[12px] border border-border bg-background px-5 font-sans text-[0.95rem] text-foreground outline-none transition-all placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2 focus:ring-offset-background"
       />
     </label>
   );
@@ -298,7 +298,7 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
                 value={projectType}
                 required
                 onChange={(event) => setProjectType(event.target.value)}
-                className="h-12 w-full appearance-none rounded-[12px] border border-border bg-background px-5 font-sans text-[0.95rem] text-text-muted outline-none transition-all focus:border-accent-primary focus:shadow-[0_0_0_4px_--theme(--color-accent-primary/9%)]"
+                className="h-12 w-full appearance-none rounded-[12px] border border-border bg-background px-5 font-sans text-[0.95rem] text-text-muted outline-none transition-all focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2 focus:ring-offset-background"
               >
                 <option value="">Select a type</option>
                 {projectTypes.map((item) => (
@@ -316,7 +316,7 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
                 rows={2}
                 placeholder="Tell me about your project..."
                 onChange={(event) => setMessage(event.target.value)}
-                className="w-full resize-none rounded-[12px] border border-border bg-background p-5 font-sans text-[0.95rem] leading-relaxed text-foreground outline-none transition-all placeholder:text-text-muted focus:border-accent-primary focus:shadow-[0_0_0_4px_--theme(--color-accent-primary/9%)]"
+                className="w-full resize-none rounded-[12px] border border-border bg-background p-5 font-sans text-[0.95rem] leading-relaxed text-foreground outline-none transition-all placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2 focus:ring-offset-background"
               />
             </label>
 

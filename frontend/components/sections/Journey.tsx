@@ -3,7 +3,7 @@
 import React, { useRef } from "react";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
-import { GraduationCap, Briefcase, Rocket, Sparkles, ArrowRight } from "lucide-react";
+import { GraduationCap, Briefcase, Rocket, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { SectionHeader } from "../ui/SectionHeader";
 
@@ -218,6 +218,10 @@ export default function Journey({ initialData }: { initialData?: JourneyStage[] 
         fiber1: SVGPathElement | null;
         fiber2: SVGPathElement | null;
     }>>([]);
+    const setPathRef = (i: number, type: 'main' | 'fiber1' | 'fiber2') => (el: SVGPathElement | null) => {
+        if (!pathRefs.current[i]) pathRefs.current[i] = { main: null, fiber1: null, fiber2: null };
+        pathRefs.current[i][type] = el;
+    };
     const headerRef = useRef<HTMLDivElement>(null);
     const bgRef = useRef<HTMLDivElement>(null);
     const [activeStages, setActiveStages] = React.useState<Set<number>>(new Set([0]));
@@ -685,36 +689,31 @@ export default function Journey({ initialData }: { initialData?: JourneyStage[] 
                                 </linearGradient>
                             </defs>
 
-                            {stages.length > 1 && stages.slice(0, -1).map((_, i) => {
-                                if (!pathRefs.current[i]) {
-                                    pathRefs.current[i] = { main: null, fiber1: null, fiber2: null };
-                                }
-                                return (
+                            {stages.length > 1 && stages.slice(0, -1).map((_, i) => (
                                 <g key={i}>
                                     <path
-                                        ref={(el) => { pathRefs.current[i].fiber1 = el; }}
+                                        ref={setPathRef(i, 'fiber1')}
                                         stroke="url(#journey-gradient)"
                                         strokeWidth="1"
                                         strokeLinecap="round"
                                         className="opacity-40"
                                     />
                                     <path
-                                        ref={(el) => { pathRefs.current[i].fiber2 = el; }}
+                                        ref={setPathRef(i, 'fiber2')}
                                         stroke="url(#journey-gradient)"
                                         strokeWidth="1.5"
                                         strokeLinecap="round"
                                         className="opacity-60 drop-shadow-[0_0_4px_var(--accent-secondary)]"
                                     />
                                     <path
-                                        ref={(el) => { pathRefs.current[i].main = el; }}
+                                        ref={setPathRef(i, 'main')}
                                         stroke="url(#journey-gradient)"
                                         strokeWidth="2.5"
                                         strokeLinecap="round"
                                         className="drop-shadow-[0_0_12px_var(--accent-primary)]"
                                     />
                                 </g>
-                                );
-                            })}
+                            ))}
                         </svg>
                     </div>
 

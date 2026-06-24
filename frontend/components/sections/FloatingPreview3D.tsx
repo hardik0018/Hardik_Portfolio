@@ -211,9 +211,9 @@ export default function FloatingPreview3D({
   // Reading/writing refs during render is a React Compiler violation — state is correct.
   const [imageToRender, setImageToRender] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (activeImage) setImageToRender(activeImage);
-  }, [activeImage]);
+  if (activeImage && activeImage !== imageToRender) {
+    setImageToRender(activeImage);
+  }
 
   return (
     /*
