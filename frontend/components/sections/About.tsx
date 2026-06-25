@@ -172,38 +172,42 @@ export default function AboutSection({ initialData }: { initialData?: AboutData 
           }
         );
 
-        // Floating animation for globe badge
-        gsap.to(".about-globe", {
-          y: -8,
-          duration: 3,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut"
-        });
+        // Globe badge float & Parallax — scoped to desktop only to save battery/performance on mobile
+        const mm = gsap.matchMedia();
+        mm.add("(min-width: 1024px)", () => {
+          // Floating animation for globe badge
+          gsap.to(".about-globe", {
+            y: -8,
+            duration: 3,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut"
+          });
 
-        // Parallax — scoped to the About section's pin window.
-        // Since About is pinned (top top → bottom+=100% top), we use
-        // start:"top top" so the parallax is active while About is in view.
-        gsap.to(".about-left", {
-          yPercent: -3,
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top top",
-            end: "bottom+=80% top",
-            scrub: 1.4,
-          },
-        });
+          // Parallax — scoped to the About section's pin window.
+          // Since About is pinned (top top → bottom+=100% top), we use
+          // start:"top top" so the parallax is active while About is in view.
+          gsap.to(".about-left", {
+            yPercent: -3,
+            ease: "none",
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: "top top",
+              end: "bottom+=80% top",
+              scrub: 1.4,
+            },
+          });
 
-        gsap.to(".about-right", {
-          yPercent: 2,
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top top",
-            end: "bottom+=80% top",
-            scrub: 1.4,
-          },
+          gsap.to(".about-right", {
+            yPercent: 2,
+            ease: "none",
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: "top top",
+              end: "bottom+=80% top",
+              scrub: 1.4,
+            },
+          });
         });
       }, sectionRef);
 

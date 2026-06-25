@@ -36,7 +36,21 @@ const getHexColor = (color: string | SanityColor | null | undefined): string => 
 };
 
 function useCardTilt(ref: React.RefObject<HTMLDivElement | null>) {
+    // QuickTo for high performance mouse tracking without creating new tweens per frame
+    const rotateXTo = useRef<gsap.QuickToFunc>();
+    const rotateYTo = useRef<gsap.QuickToFunc>();
+
+    useGSAP(() => {
+        if (!ref.current) return;
+        rotateXTo.current = gsap.quickTo(ref.current, "rotateX", { duration: 0.4, ease: "power2.out" });
+        rotateYTo.current = gsap.quickTo(ref.current, "rotateY", { duration: 0.4, ease: "power2.out" });
+        gsap.set(ref.current, { transformPerspective: 900 });
+    }, { scope: ref });
+
     const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        // Guard for touch/mobile devices
+        if (typeof window !== "undefined" && !window.matchMedia("(hover: hover)").matches) return;
+        
         const el = ref.current;
         if (!el) return;
         const r = el.getBoundingClientRect();
@@ -44,17 +58,23 @@ function useCardTilt(ref: React.RefObject<HTMLDivElement | null>) {
         const my = e.clientY - r.top;
         el.style.setProperty("--mx", `${mx}px`);
         el.style.setProperty("--my", `${my}px`);
-        gsap.to(el, {
-            rotateX: -((my / r.height) - 0.5) * 6,
-            rotateY: ((mx / r.width) - 0.5) * 6,
-            duration: 0.4,
-            ease: "power2.out",
-            transformPerspective: 900,
-        });
+        
+        const tiltX = -((my / r.height) - 0.5) * 6;
+        const tiltY = ((mx / r.width) - 0.5) * 6;
+        
+        rotateXTo.current?.(tiltX);
+        rotateYTo.current?.(tiltY);
     };
+    
     const onMouseLeave = () => {
+        if (typeof window !== "undefined" && !window.matchMedia("(hover: hover)").matches) return;
         if (!ref.current) return;
-        gsap.to(ref.current, { rotateX: 0, rotateY: 0, duration: 0.55, ease: "power3.out" });
+        
+        rotateXTo.current?.(0);
+        rotateYTo.current?.(0);
+        
+        // Use a slow gsap.to for the reset animation to override the quickTo speed
+        gsap.to(ref.current, { rotateX: 0, rotateY: 0, duration: 0.55, ease: "power3.out", overwrite: "auto" });
     };
     return { onMouseMove, onMouseLeave };
 }

@@ -101,6 +101,7 @@ const HeroSection = ({ initialData }: { initialData?: HeroData }) => {
       <div 
         ref={marqueeRef}
         className="absolute inset-0 flex items-center pointer-events-none select-none overflow-hidden"
+        style={{ contain: 'layout paint' }}
       >
         <div className="flex whitespace-nowrap will-change-transform animate-marquee">
           <MarqueeItem text={name} isPrimary />

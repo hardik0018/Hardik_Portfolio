@@ -52,17 +52,24 @@ const WaypointCard = ({
             const cta = card.querySelector(".js-cta");
             const iconEl = card.querySelector(".js-icon");
 
+            const isMobile = window.innerWidth < 768;
+            if (isMobile) {
+                gsap.set(card, { autoAlpha: 1, x: 0, y: 0, scale: 1 });
+                gsap.set([badge, heading, sub, body, cta].filter(Boolean), { autoAlpha: 1, y: 0 });
+                gsap.set(iconEl, { autoAlpha: 0.2, scale: 1, rotate: 0 });
+                return;
+            }
+
             gsap.set([badge, heading, sub, body, cta].filter(Boolean), {
                 autoAlpha: 0,
                 y: 20,
             });
             gsap.set(iconEl, { autoAlpha: 0, scale: 0.5, rotate: -15 });
 
-            const isMobile = window.innerWidth < 768;
             gsap.set(card, {
                 autoAlpha: 0,
-                x: isMobile ? 0 : (isEven ? -50 : 50),
-                y: isMobile ? 30 : 0,
+                x: isEven ? -50 : 50,
+                y: 0,
                 scale: 0.98
             });
 
@@ -142,7 +149,8 @@ const WaypointCard = ({
                 ref={cardRef}
                 className={cn(
                     "js-card-content flex-1 w-full p-6 md:p-10 rounded-4xl md:rounded-[2.5rem] relative overflow-hidden cursor-default transition-all duration-500",
-                    "backdrop-blur-xl bg-background/60 border border-foreground/5 shadow-[0_8px_32px_rgba(0,0,0,0.04)]",
+                    // backdrop-blur disabled on mobile — GPU compositing cost per-card causes jank on low-end phones
+                    "max-md:backdrop-blur-none md:backdrop-blur-xl bg-background/60 border border-foreground/5 shadow-[0_8px_32px_rgba(0,0,0,0.04)]",
                     isActive
                         ? isCurrent
                             ? "ring-1 ring-accent-primary/30 shadow-2xl shadow-accent-primary/10 grayscale-0"
@@ -246,11 +254,23 @@ export default function Journey({ initialData }: { initialData?: JourneyStage[] 
                 isDesktop: "(min-width: 768px)",
                 isMobile: "(max-width: 767px)",
             }, (context) => {
-                const { isDesktop } = context.conditions as { isDesktop: boolean; isMobile: boolean };
+                const { isDesktop, isMobile } = context.conditions as { isDesktop: boolean; isMobile: boolean };
 
                 const eyebrow = headerRef.current?.querySelector(".js-eyebrow");
                 const headlines = headerRef.current?.querySelectorAll(".js-headline");
                 const headlineArr = headlines ? Array.from(headlines) : [];
+
+                if (isMobile) {
+                    // Mobile: static layout, no heavy animations, no SVG paths
+                    gsap.set([eyebrow, ...headlineArr].filter(Boolean), { autoAlpha: 1, y: 0 });
+                    gsap.set(svgRef.current, { display: "none" });
+                    
+                    const shape1Wrap = sectionRef.current?.querySelector(".js-bg-shape-1-wrap");
+                    const shape2Wrap = sectionRef.current?.querySelector(".js-bg-shape-2-wrap");
+                    gsap.set([shape1Wrap, shape2Wrap], { autoAlpha: 0.15, scale: 1 });
+                    
+                    return;
+                }
 
                 gsap.set([eyebrow, ...headlineArr].filter(Boolean), { autoAlpha: 0, y: 30 });
 
@@ -502,55 +522,57 @@ export default function Journey({ initialData }: { initialData?: JourneyStage[] 
                     };
                 }
 
-                const orbit1 = { t: 0, ox: 0, oy: 0 };
-                const orbit2 = { t: Math.PI / 2, ox: 0, oy: 0 };
+                // Desktop-only: orbit + mouse-tilt rAF loop for the background shapes.
+                // This entire block is skipped on mobile — no rAF, no mousemove listener.
+                let frame: number | undefined;
+                let cleanupDesktop: (() => void) | undefined;
 
-                const r1x = isDesktop ? 38 : 18;
-                const r1y = isDesktop ? 22 : 12;
-                const r2x = isDesktop ? 28 : 14;
-                const r2y = isDesktop ? 40 : 20;
+                if (isDesktop) {
+                    const orbit1 = { t: 0, ox: 0, oy: 0 };
+                    const orbit2 = { t: Math.PI / 2, ox: 0, oy: 0 };
 
-                const freq1x = 0.0004, freq1y = 0.00063;
-                const freq2x = 0.00055, freq2y = 0.00035;
+                    const r1x = 38, r1y = 22;
+                    const r2x = 28, r2y = 40;
 
-                const mouse = { x: 0.5, y: 0.5 };
-                const targetMouse = { x: 0.5, y: 0.5 };
+                    const freq1x = 0.0004, freq1y = 0.00063;
+                    const freq2x = 0.00055, freq2y = 0.00035;
 
-                let windowWidth = window.innerWidth;
-                let windowHeight = window.innerHeight;
+                    const mouse = { x: 0.5, y: 0.5 };
+                    const targetMouse = { x: 0.5, y: 0.5 };
 
-                const onMouseMove = (e: MouseEvent) => {
-                    targetMouse.x = e.clientX / windowWidth;
-                    targetMouse.y = e.clientY / windowHeight;
-                };
+                    let windowWidth = window.innerWidth;
+                    let windowHeight = window.innerHeight;
 
-                const updateWindowSize = () => {
-                    windowWidth = window.innerWidth;
-                    windowHeight = window.innerHeight;
-                };
+                    const onMouseMove = (e: MouseEvent) => {
+                        targetMouse.x = e.clientX / windowWidth;
+                        targetMouse.y = e.clientY / windowHeight;
+                    };
 
-                window.addEventListener("resize", updateWindowSize);
-                window.addEventListener("mousemove", onMouseMove);
+                    const updateWindowSize = () => {
+                        windowWidth = window.innerWidth;
+                        windowHeight = window.innerHeight;
+                    };
 
-                let frame: number;
-                let lastTs = 0;
+                    window.addEventListener("resize", updateWindowSize);
+                    window.addEventListener("mousemove", onMouseMove);
 
-                const tick = (ts: number) => {
-                    const dt = ts - lastTs;
-                    lastTs = ts;
+                    let lastTs = 0;
 
-                    orbit1.t += dt;
-                    orbit2.t += dt;
+                    const tick = (ts: number) => {
+                        const dt = ts - lastTs;
+                        lastTs = ts;
 
-                    orbit1.ox = Math.sin(orbit1.t * freq1x) * r1x;
-                    orbit1.oy = Math.sin(orbit1.t * freq1y + Math.PI / 4) * r1y;
-                    orbit2.ox = Math.sin(orbit2.t * freq2x + Math.PI / 3) * r2x;
-                    orbit2.oy = Math.sin(orbit2.t * freq2y) * r2y;
+                        orbit1.t += dt;
+                        orbit2.t += dt;
 
-                    mouse.x += (targetMouse.x - mouse.x) * 0.035;
-                    mouse.y += (targetMouse.y - mouse.y) * 0.035;
+                        orbit1.ox = Math.sin(orbit1.t * freq1x) * r1x;
+                        orbit1.oy = Math.sin(orbit1.t * freq1y + Math.PI / 4) * r1y;
+                        orbit2.ox = Math.sin(orbit2.t * freq2x + Math.PI / 3) * r2x;
+                        orbit2.oy = Math.sin(orbit2.t * freq2y) * r2y;
 
-                    if (isDesktop) {
+                        mouse.x += (targetMouse.x - mouse.x) * 0.035;
+                        mouse.y += (targetMouse.y - mouse.y) * 0.035;
+
                         const tiltX1 = (mouse.y - 0.5) * 18;
                         const tiltY1 = (mouse.x - 0.5) * -18;
                         const tiltX2 = (mouse.y - 0.5) * -24;
@@ -573,39 +595,45 @@ export default function Journey({ initialData }: { initialData?: JourneyStage[] 
                             overwrite: false,
                         });
                         frame = requestAnimationFrame(tick);
-                    }
-                };
+                    };
 
-                if (isDesktop) {
                     frame = requestAnimationFrame(tick);
+
+                    // Store cleanup so the outer return can call it
+                    cleanupDesktop = () => {
+                        window.removeEventListener("resize", updateWindowSize);
+                        window.removeEventListener("mousemove", onMouseMove);
+                    };
                 }
 
                 const shape1Rotate = sectionRef.current?.querySelector(".js-bg-shape-1-rotate") as HTMLElement | null;
                 const shape2Rotate = sectionRef.current?.querySelector(".js-bg-shape-2-rotate") as HTMLElement | null;
 
-                if (shape1Rotate) {
-                    gsap.to(shape1Rotate, {
-                        rotate: 360,
-                        duration: isDesktop ? 80 : 120,
-                        repeat: -1,
-                        ease: "none",
-                    });
-                }
+                // Slow-rotation tweens: desktop only — saves 2 infinite GSAP ticker entries on mobile
+                if (isDesktop) {
+                    if (shape1Rotate) {
+                        gsap.to(shape1Rotate, {
+                            rotate: 360,
+                            duration: 80,
+                            repeat: -1,
+                            ease: "none",
+                        });
+                    }
 
-                if (shape2Rotate) {
-                    gsap.to(shape2Rotate, {
-                        rotate: -360,
-                        duration: isDesktop ? 55 : 80,
-                        repeat: -1,
-                        ease: "none",
-                    });
+                    if (shape2Rotate) {
+                        gsap.to(shape2Rotate, {
+                            rotate: -360,
+                            duration: 55,
+                            repeat: -1,
+                            ease: "none",
+                        });
+                    }
                 }
 
                 return () => {
                     window.removeEventListener("resize", throttledUpdate);
-                    window.removeEventListener("resize", updateWindowSize);
-                    window.removeEventListener("mousemove", onMouseMove);
-                    cancelAnimationFrame(frame);
+                    cleanupDesktop?.();
+                    if (frame !== undefined) cancelAnimationFrame(frame);
                     cancelAnimationFrame(resizeTimer);
                 };
             });
@@ -636,14 +664,16 @@ export default function Journey({ initialData }: { initialData?: JourneyStage[] 
                 />
 
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <div className="js-bg-shape-1-wrap absolute top-[5%] left-[2%] pointer-events-none opacity-0 will-change-transform">
-                        <div className="js-bg-shape-1-rotate inline-block will-change-transform">
+                    {/* will-change removed — permanent compositor layers waste mobile VRAM. GSAP sets
+                        will-change on start and removes on complete automatically via its transform pipeline. */}
+                    <div className="js-bg-shape-1-wrap absolute top-[5%] left-[2%] pointer-events-none opacity-0">
+                        <div className="js-bg-shape-1-rotate inline-block">
                             <Image
                                 src="/flavor_1.svg"
                                 alt=""
-                                loading="eager"
+                                loading="lazy"
                                 aria-hidden="true"
-                                className="js-bg-shape-1 will-change-transform"
+                                className="js-bg-shape-1"
                                 style={{ transformStyle: "preserve-3d" }}
                                 width={500}
                                 height={500}
@@ -651,14 +681,14 @@ export default function Journey({ initialData }: { initialData?: JourneyStage[] 
                         </div>
                     </div>
 
-                    <div className="js-bg-shape-2-wrap absolute bottom-[5%] right-[2%] pointer-events-none opacity-0 will-change-transform">
-                        <div className="js-bg-shape-2-rotate inline-block will-change-transform">
+                    <div className="js-bg-shape-2-wrap absolute bottom-[5%] right-[2%] pointer-events-none opacity-0">
+                        <div className="js-bg-shape-2-rotate inline-block">
                             <Image
                                 src="/flavor.svg"
-                                loading="eager"
+                                loading="lazy"
                                 alt=""
                                 aria-hidden="true"
-                                className="js-bg-shape-2 will-change-transform"
+                                className="js-bg-shape-2"
                                 style={{ transformStyle: "preserve-3d" }}
                                 width={260}
                                 height={260}
