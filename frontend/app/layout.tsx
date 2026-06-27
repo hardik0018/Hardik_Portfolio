@@ -145,7 +145,7 @@ export default async function RootLayout({
               href="https://cdn.sanity.io"
               crossOrigin="anonymous"
             />
-            <meta name="google-site-verification" content="0qUCCjAYs5J-EAndlqTyH9iBe4NWV6a_FL3zUU7G6z0" />
+            <meta name="google-site-verification" content="NXqx9Mubdf9p3ZNpGiZFdewhaTS7DNck5oE3_Vw92Kg" />
           </>
         )}
         <JsonLd
