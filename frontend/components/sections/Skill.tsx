@@ -37,8 +37,8 @@ const getHexColor = (color: string | SanityColor | null | undefined): string => 
 
 function useCardTilt(ref: React.RefObject<HTMLDivElement | null>) {
     // QuickTo for high performance mouse tracking without creating new tweens per frame
-    const rotateXTo = useRef<gsap.QuickToFunc>();
-    const rotateYTo = useRef<gsap.QuickToFunc>();
+    const rotateXTo = useRef<any>(null);
+    const rotateYTo = useRef<any>(null);
 
     useGSAP(() => {
         if (!ref.current) return;

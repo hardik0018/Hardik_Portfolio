@@ -18,14 +18,6 @@ export const metadata: Metadata = {
       "Hardik Vatukiya is a Full-Stack Developer from Rajkot, India specializing in React, Next.js, and Node.js. Available for freelance & contract work worldwide.",
     url: siteUrl,
     type: "website",
-    images: [
-      {
-        url: "/opengraph-image",
-        width: 1200,
-        height: 630,
-        alt: "Hardik Vatukiya — Full-Stack Developer specializing in React, Next.js and Node.js",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -33,7 +25,6 @@ export const metadata: Metadata = {
     description:
       "Full-Stack Developer from Rajkot, India. React, Next.js, Node.js. Available for freelance work.",
     creator: "@hardikvatukiya",
-    images: ["/opengraph-image"],
   },
 };
 

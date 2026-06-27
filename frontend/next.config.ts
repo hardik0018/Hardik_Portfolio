@@ -84,7 +84,7 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  allowedDevOrigins: ["10.150.162.105"],
+  allowedDevOrigins: ["10.150.162.105",'172.23.18.105','duh-ethanol-scone.ngrok-free.dev'],
   experimental: {
     optimizePackageImports: ["lucide-react"],
   },

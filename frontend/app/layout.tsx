@@ -85,21 +85,12 @@ export const metadata: Metadata = {
     siteName: "Hardik Vatukiya",
     locale: "en_IN",
     type: "website",
-    images: [
-      {
-        url: "/opengraph-image",
-        width: 1200,
-        height: 630,
-        alt: "Hardik Vatukiya — Full-Stack Developer specializing in React, Next.js and Node.js",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Hardik Vatukiya — Full-Stack Developer",
     description: "Full-Stack Developer from Rajkot, India. React, Next.js, Node.js. Available for freelance work.",
     creator: "@hardikvatukiya",
-    images: ["/opengraph-image"],
   },
   robots: {
     index: true,
