@@ -392,7 +392,7 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
           <div className="flex gap-6 items-center">
             <Magnetic range={40} strength={0.3}>
               <a
-                href="https://github.com/hardikvatukiya"
+                href="https://github.com/hardik0018"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-foreground transition-colors duration-200"
@@ -402,7 +402,7 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
             </Magnetic>
             <Magnetic range={40} strength={0.3}>
               <a
-                href="https://linkedin.com/in/hardikvatukiya"
+                href="https://www.linkedin.com/in/hardik-vatukiya"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-foreground transition-colors duration-200"
