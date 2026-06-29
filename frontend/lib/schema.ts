@@ -64,6 +64,9 @@ export function getProfilePageSchema() {
     url: siteUrl,
     name: `${siteName} — Full-Stack Developer & MERN Stack Portfolio`,
     description: defaultDescription,
+    mainEntity: {
+      "@id": `${siteUrl}/#person`,
+    },
     about: {
       "@id": `${siteUrl}/#person`,
     },
