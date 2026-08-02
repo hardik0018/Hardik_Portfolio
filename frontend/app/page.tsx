@@ -5,6 +5,8 @@ import { siteUrl } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { getProfilePageSchema, getFaqSchema } from "@/lib/schema";
 
+export const revalidate = 60; // Revalidate page every 60 seconds
+
 export const metadata: Metadata = {
   title: "Hardik Vatukiya — Full-Stack Developer | React, Next.js & Node.js Engineer",
   description:

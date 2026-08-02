@@ -181,29 +181,29 @@ export default function MainLoader() {
       role="status"
       aria-live="polite"
       aria-label="Loading portfolio"
-      className="fixed inset-0 z-[9999] min-h-screen overflow-hidden"
+      className="fixed inset-0 z-9999 min-h-screen overflow-hidden"
     >
       {/*
        * LAYER ORDER (bottom → top):
-       *   z-[1] canvas cloth  — dark opaque fabric, provides loading background
-       *   z-[2] loading content — floats above the cloth
+       *   z-1 canvas cloth  — dark opaque fabric, provides loading background
+       *   z-2 loading content — floats above the cloth
        *
        * This way the orbital animation is VISIBLE on the dark cloth background.
        * When cloth flies away, transparent canvas holes reveal the page below.
        */}
 
-      {/* ── z-[0]: Initial solid cover to prevent FOUC ──────────────────── */}
-      <div ref={initialCoverRef} className="absolute inset-0 z-[0] bg-background" />
+      {/* ── z-0: Initial solid cover to prevent FOUC ──────────────────── */}
+      <div ref={initialCoverRef} className="absolute inset-0 z-0 bg-background" />
 
-      {/* ── z-[1]: Canvas cloth ──────────────────────────────────────────── */}
+      {/* ── z-1: Canvas cloth ──────────────────────────────────────────── */}
       <canvas
         ref={canvasRef}
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-[1]"
+        className="pointer-events-none absolute inset-0 z-1"
       />
 
-      {/* ── z-[2]: Loading content ───────────────────────────────────────── */}
-      <div ref={contentRef} className="absolute inset-0 z-[2]">
+      {/* ── z-2: Loading content ───────────────────────────────────────── */}
+      <div ref={contentRef} className="absolute inset-0 z-2">
 
         {/* Decorative ambient rings (subtle on dark cloth) */}
         <div className="absolute left-[-20vw] top-[15vh] h-[52vw] w-[52vw] max-w-[720px] rounded-full border border-foreground/8" />

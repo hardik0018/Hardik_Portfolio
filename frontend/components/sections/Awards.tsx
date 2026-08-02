@@ -35,13 +35,13 @@ const AwardCard = ({ award }: { award: AwardItem }) => {
       ref={cardRef}
       className="js-award-card block opacity-0 translate-y-12 scale-95 transform-gpu w-full outline-none group"
     >
-      <div className="relative flex flex-col lg:flex-row items-center gap-10 lg:gap-16 py-2 px-4 lg:py-4 lg:px-8 rounded-[2rem] bg-white border border-black/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-700 overflow-hidden">
+      <div className="relative flex flex-col lg:flex-row items-center gap-10 lg:gap-16 py-2 px-4 lg:py-4 lg:px-8 rounded-4xl bg-white border border-black/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-700 overflow-hidden">
         
         {/* Shine effect on hover */}
-        <div className="absolute inset-0 -translate-x-[150%] skew-x-[-20deg] bg-gradient-to-r from-transparent via-white/60 to-transparent group-hover:animate-[shine_1.5s_ease-in-out_forwards] pointer-events-none z-20" />
+        <div className="absolute inset-0 translate-x-[-150%] skew-x-[-20deg] bg-linear-to-r from-transparent via-white/60 to-transparent group-hover:animate-[shine_1.5s_ease-in-out_forwards] pointer-events-none z-20" />
 
         {/* Image Side */}
-        <div className="relative z-10 w-full lg:w-[480px] shrink-0 rounded-2xl overflow-hidden bg-[#f5f5f5]">
+        <div className="relative z-10 w-full lg:w-120 shrink-0 rounded-2xl overflow-hidden bg-[#f5f5f5]">
           {award.awardImage ? (
             <div className="relative w-full aspect-[1.414]">
               <Image
@@ -54,7 +54,7 @@ const AwardCard = ({ award }: { award: AwardItem }) => {
               <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.05)] pointer-events-none rounded-2xl" />
             </div>
           ) : (
-            <div className="relative w-full aspect-[1.414] flex flex-col items-center justify-center bg-gradient-to-br from-[#ffffff] to-[#f0f0f0]">
+            <div className="relative w-full aspect-[1.414] flex flex-col items-center justify-center bg-linear-to-br from-[#ffffff] to-[#f0f0f0]">
               <div className="flex bg-[#222222] rounded-lg overflow-hidden scale-110 shadow-lg">
                 <div className="bg-[#9c9c9c] text-white font-bold text-xl px-4 py-2">&lt;</div>
                 <div className="bg-[#c1ff4a] text-black font-bold text-xl px-4 py-2">AA</div>
@@ -176,8 +176,8 @@ export default function Awards({ initialData }: { initialData?: AwardsData }) {
     >
       {/* Background Ambience */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-[80vw] h-[80vw] md:w-[50vw] md:h-[50vw] rounded-full bg-[radial-gradient(circle,var(--accent-lime)/0.08)_0%,transparent_70%)] blur-[100px] translate-x-1/3 -translate-y-1/3" />
-        <div className="absolute bottom-0 left-0 w-[60vw] h-[60vw] md:w-[40vw] md:h-[40vw] rounded-full bg-[radial-gradient(circle,var(--accent-lime)/0.05)_0%,transparent_70%)] blur-[80px] -translate-x-1/3 translate-y-1/3" />
+        <div className="absolute top-0 right-0 w-[80vw] h-[80vw] md:w-[50vw] md:h-[50vw] rounded-full bg-[radial-gradient(circle,var(--accent-lime)/0.08)_0%,] blur-[100px] translate-x-1/3 -translate-y-1/3" />
+        <div className="absolute bottom-0 left-0 w-[60vw] h-[60vw] md:w-[40vw] md:h-[40vw] rounded-full bg-[radial-gradient(circle,var(--accent-lime)/0.05)_0%,] blur-[80px] -translate-x-1/3 translate-y-1/3" />
       </div>
 
       <div className="w-full relative z-10 flex-1 flex flex-col justify-center">

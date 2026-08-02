@@ -84,7 +84,7 @@ export default function TransitionProvider({ children }: { children: ReactNode }
       */}
       <canvas
         ref={canvasRef}
-        className="fixed inset-0 z-[99999] pointer-events-none"
+        className="fixed inset-0 z-99999 pointer-events-none"
       />
     </TransitionContext.Provider>
   );

@@ -213,7 +213,7 @@ function BentoCard({
       {isFeatured && (
         <div
           aria-hidden="true"
-          className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#c1ff4a] to-transparent z-10"
+          className="absolute top-0 inset-x-0 h-[2px] bg-linear-to-r from-transparent via-[#c1ff4a] to-transparent z-10"
         />
       )}
 
@@ -262,7 +262,7 @@ function BentoCard({
           <div
             className={cn(
               "h-px mt-auto",
-              isFeatured ? "bg-white/[0.08]" : "bg-border"
+              isFeatured ? "bg-white/8" : "bg-border"
             )}
           />
         )}

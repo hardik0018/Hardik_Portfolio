@@ -119,6 +119,8 @@ import { draftMode } from "next/headers";
 import JsonLd from "@/components/JsonLd";
 import { getPersonSchema, getWebsiteSchema } from "@/lib/schema";
 
+export const revalidate = 60; // Revalidate layout every 60 seconds
+
 export default async function RootLayout({
   children,
 }: Readonly<{
