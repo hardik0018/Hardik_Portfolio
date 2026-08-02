@@ -3,6 +3,7 @@
 import { Suspense } from "react";
 import ClientPage from "@/components/ClientPage";
 import HeroSection from "@/components/sections/Hero";
+import AwardsSection, { type AwardsData } from "@/components/sections/Awards";
 
 import type { HeroData } from "@/components/sections/Hero";
 import type { AboutData } from "@/components/sections/About";
@@ -24,6 +25,7 @@ interface ClientHomeProps {
   skillsData?: SkillItem[];
   contactData?: ContactData;
   faqData?: FAQData;
+  awardsData?: AwardsData;
 }
 
 export default function ClientHome({
@@ -33,6 +35,7 @@ export default function ClientHome({
   skillsData,
   contactData,
   faqData,
+  awardsData,
 }: ClientHomeProps) {
   return (
     <ClientPage>
@@ -58,6 +61,10 @@ export default function ClientHome({
 
       <Suspense fallback={<div className="h-screen w-full bg-background animate-pulse" />}>
         <Journey initialData={journeyData} />
+      </Suspense>
+
+      <Suspense fallback={<div className="w-full bg-foreground animate-pulse" />}>
+        <AwardsSection initialData={awardsData} />
       </Suspense>
 
       <Suspense fallback={<div className="h-screen w-full bg-foreground animate-pulse" />}>

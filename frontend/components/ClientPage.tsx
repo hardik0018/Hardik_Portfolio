@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 
 interface ClientPageProps {
   children: React.ReactNode;
@@ -10,60 +10,62 @@ interface ClientPageProps {
 export default function ClientPage({ children }: ClientPageProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
+  useGSAP(() => {
+    const heroElement = containerRef.current?.querySelector(".hero-container");
+    const aboutElement = containerRef.current?.querySelector(".about-container");
+    const contactElement = containerRef.current?.querySelector(".contact-container");
 
-      const heroElement = containerRef.current?.querySelector(".hero-container");
-      const aboutElement = containerRef.current?.querySelector(".about-container");
-      const contactElement = containerRef.current?.querySelector(".contact-container");
+    const mm = gsap.matchMedia();
 
-      const mm = gsap.matchMedia();
+    mm.add("(min-width: 1024px)", () => {
+      if (heroElement) {
+        ScrollTrigger.create({
+          trigger: heroElement,
+          start: "top top",
+          end: "bottom+=100% top",
+          pin: true,
+          pinSpacing: false,
+          invalidateOnRefresh: true,
+        });
+      }
 
-      mm.add("(min-width: 1024px)", () => {
-        if (heroElement) {
-          ScrollTrigger.create({
-            trigger: heroElement,
-            start: "top top",
-            end: "bottom+=100% top",
-            pin: true,
-            pinSpacing: false,
+      if (aboutElement) {
+        ScrollTrigger.create({
+          trigger: aboutElement,
+          start: "top top",
+          end: "bottom+=100% top",
+          pin: true,
+          pinSpacing: false,
+          invalidateOnRefresh: true,
+        });
+      }
+
+      // Contact section "Reveal" from behind
+      const faqContainerElement = containerRef.current?.querySelector(".faq-container");
+      if (contactElement && faqContainerElement) {
+        gsap.set(contactElement, { yPercent: -100 });
+
+        gsap.to(contactElement, {
+          yPercent: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: faqContainerElement,
+            start: "bottom bottom",
+            end: () => `+=${(contactElement as HTMLElement).offsetHeight}`,
+            scrub: true,
             invalidateOnRefresh: true,
-          });
-        }
+            // Lower refresh priority so it gets calculated AFTER any pins above it (like Awards)
+            refreshPriority: -1,
+          },
+        });
+      }
+    });
 
-        if (aboutElement) {
-          ScrollTrigger.create({
-            trigger: aboutElement,
-            start: "top top",
-            end: "bottom+=100% top",
-            pin: true,
-            pinSpacing: false,
-            invalidateOnRefresh: true,
-          });
-        }
-
-        // Contact section "Reveal" from behind
-        const faqContainerElement = containerRef.current?.querySelector(".faq-container");
-        if (contactElement && faqContainerElement) {
-          gsap.set(contactElement, { yPercent: -100 });
-
-          gsap.to(contactElement, {
-            yPercent: 0,
-            ease: "none",
-            scrollTrigger: {
-              trigger: faqContainerElement,
-              start: "bottom bottom",
-              end: () => `+=${(contactElement as HTMLElement).offsetHeight}`,
-              scrub: true,
-              invalidateOnRefresh: true,
-            },
-          });
-        }
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
+    // Ensure ScrollTrigger correctly measures everything after initial render
+    requestAnimationFrame(() => {
+      ScrollTrigger.refresh();
+    });
+  }, { scope: containerRef });
 
   return (
     <main

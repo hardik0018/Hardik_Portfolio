@@ -128,3 +128,13 @@ export const faqQuery = groq`*[_type == "faq"][0]{
   }
 }`;
 
+export const awardsQuery = groq`*[_type == "awards"][0]{
+  title,
+  awardsList[]{
+    awardName,
+    awardCategory,
+    projectName,
+    awardUrl,
+    awardImage
+  }
+}`;
