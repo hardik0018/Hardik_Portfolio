@@ -196,10 +196,10 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
     <section
       ref={sectionRef}
       id="contact"
-      className="relative overflow-hidden bg-background px-5 pt-12 text-foreground sm:px-6 lg:px-8 lg:pt-[74px] pb-2 sm:pb-0"
+      className="relative overflow-hidden bg-background px-5 pt-12 text-foreground sm:px-6 lg:px-8 lg:pt-[74px] pb-2 sm:pb-0 min-h-[100vh] flex flex-col justify-center"
       style={{ backgroundImage: "url(./hero_bg.svg)", backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center" }}
     >
-      <div className="relative z-10 mx-auto">
+      <div className="relative z-10 mx-auto w-full">
         <div className="relative mb-10 text-center">
           <span className="contact-rise absolute left-[27%] -top-3 hidden h-7 w-7 border-l-2 border-t-2 border-accent-primary lg:block" />
           <span className="contact-rise absolute -bottom-3 right-[19%] hidden h-7 w-7 border-b-2 border-r-2 border-accent-primary lg:block" />

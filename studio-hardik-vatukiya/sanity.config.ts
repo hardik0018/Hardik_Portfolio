@@ -42,6 +42,10 @@ export default defineConfig({
                 .title('Contact Section')
                 .id('contact')
                 .child(S.document().schemaType('contact').documentId('contact')),
+              S.listItem()
+                .title('Awards Section')
+                .id('awards')
+                .child(S.document().schemaType('awards').documentId('awards')),
             S.divider(),
             // Collections
             S.documentTypeListItem('skill').title('Skills'),
@@ -56,7 +60,7 @@ export default defineConfig({
   document: {
     // For singleton types, filter out actions that are not relevant
     actions: (prev, {schemaType}) => {
-      if (['navigation', 'hero', 'about', 'contact'].includes(schemaType)) {
+      if (['navigation', 'hero', 'about', 'contact', 'awards'].includes(schemaType)) {
         return prev.filter(({action}) => action && ['publish', 'discardChanges', 'restore'].includes(action))
       }
       return prev

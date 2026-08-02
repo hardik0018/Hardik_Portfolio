@@ -9,6 +9,7 @@ import type { SanityProject } from '@/components/sections/Projects'
 import type { SkillItem } from '@/components/sections/Skill'
 import type { JourneyStage } from '@/components/sections/Journey'
 import type { ContactData } from '@/components/sections/Contact'
+import type { AwardsData } from '@/components/sections/Awards'
 
 export interface GalleryData {
   enabled?: boolean;
@@ -72,6 +73,11 @@ export interface FAQData {
 export const getFAQ = cache(async (): Promise<FAQData | undefined> => {
   const { data } = await sanityFetch({ query: queries.faqQuery })
   return data as FAQData | undefined
+})
+
+export const getAwards = cache(async (): Promise<AwardsData | undefined> => {
+  const { data } = await sanityFetch({ query: queries.awardsQuery })
+  return data as AwardsData | undefined
 })
 
 export const getNavigation = cache(async (): Promise<NavigationData | undefined> => {
