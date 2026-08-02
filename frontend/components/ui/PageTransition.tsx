@@ -109,7 +109,7 @@ export default function PageTransition() {
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-[9999] overflow-hidden"
+      className="fixed inset-0 z-9999 overflow-hidden"
       aria-hidden="true"
     >
       {/* ── CLOTH STRIPS (sit behind the card, cover full screen) ─────────── */}

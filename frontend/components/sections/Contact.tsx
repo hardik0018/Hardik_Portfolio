@@ -80,7 +80,7 @@ function ContactInput({
         required={required}
         placeholder={placeholder}
         onChange={(event) => onChange(event.target.value)}
-        className="h-12 w-full rounded-[12px] border border-border bg-background px-5 font-sans text-[0.95rem] text-foreground outline-none transition-all placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2 focus:ring-offset-background"
+        className="h-12 w-full rounded-xl border border-border bg-background px-5 font-sans text-[0.95rem] text-foreground outline-none transition-all placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2 focus:ring-offset-background"
       />
     </label>
   );
@@ -196,7 +196,7 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
     <section
       ref={sectionRef}
       id="contact"
-      className="relative overflow-hidden bg-background px-5 pt-12 text-foreground sm:px-6 lg:px-8 lg:pt-[74px] pb-2 sm:pb-0 min-h-[100vh] flex flex-col justify-center"
+      className="relative overflow-hidden bg-background px-5 pt-12 text-foreground sm:px-6 lg:px-8 lg:pt-[74px] pb-2 sm:pb-0 min-h-screen flex flex-col justify-center"
       style={{ backgroundImage: "url(./hero_bg.svg)", backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center" }}
     >
       <div className="relative z-10 mx-auto w-full">
