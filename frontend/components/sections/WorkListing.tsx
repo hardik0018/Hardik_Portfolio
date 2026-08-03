@@ -8,6 +8,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { SanityProject } from "./Projects";
 import { urlFor } from "@/lib/sanity.image";
+import Link from "next/link";
 
 const variants: TransitionType[] = ["iris", "top-down", "center-h", "diagonal-tr", "bottom-up"];
 
@@ -114,14 +115,14 @@ export default function WorkListing({ initialData }: { initialData?: SanityProje
                           </TransitionLink>
                         )}
                         {item.github && (
-                          <a
+                          <Link
                             href={item.github}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="reveal-text inline-flex items-center gap-3 font-sans text-xs md:text-sm font-bold uppercase transition-all duration-300 hover:text-[#00994a] text-[#8a8a82]"
                           >
                             GitHub
-                          </a>
+                          </Link>
                         )}
                       </div>
                     </div>

@@ -6,6 +6,7 @@ import { useTexture, Html } from "@react-three/drei";
 import * as THREE from "three";
 import { ExternalLink } from "lucide-react";
 import { urlFor } from "@/lib/sanity.image";
+import Link from "next/link";
 
 // Simple custom GitHub Icon since lucide-react doesn't have a solid one in standard exports
 const GitHubIcon = () => (
@@ -412,7 +413,7 @@ export default function ProjectCard3D({
           {/* Clicks */}
           <div className="flex items-center justify-between gap-3 mt-4 pt-3 border-t border-border/40">
             {project.github && (
-              <a
+              <Link
                 href={project.github}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -420,11 +421,11 @@ export default function ProjectCard3D({
               >
                 <GitHubIcon />
                 Code
-              </a>
+              </Link>
             )}
 
             {project.url && (
-              <a
+              <Link
                 href={project.url}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -432,7 +433,7 @@ export default function ProjectCard3D({
               >
                 <ExternalLink className="w-3 h-3" />
                 Live
-              </a>
+              </Link>
             )}
           </div>
         </div>

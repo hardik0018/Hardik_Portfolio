@@ -32,9 +32,9 @@ const DEFAULT_ITEMS: FAQItem[] = [
       "Yes — selectively. I work with startups and product teams to build polished digital products. Reach out through the contact section with your project idea and we'll figure out the fit.",
   },
   {
-    question: "What does your development process look like?",
+    question: "What inspired you to focus on high-end interactive portfolios and UI development?",
     answer:
-      "Research → Wireframe → Prototype → Build → Polish. I prefer async collaboration via Notion and Figma with weekly milestone check-ins so there are no surprises at the end.",
+      "I've always believed that the web shouldn't be boring. Static templates miss the chance to tell a story or build a memorable brand. I love bridging the gap between design and engineering to create interfaces that respond dynamically to user interaction, making the web feel alive and engaging.",
   },
   {
     question: "What is your primary tech stack?",
@@ -157,7 +157,10 @@ function BentoCard({
           opacity: 1,
           duration: 0.44,
           ease: "power3.out",
-          onComplete: () => gsap.set(el, { height: "auto" }),
+          onComplete: () => {
+            gsap.set(el, { height: "auto" });
+            ScrollTrigger.refresh();
+          },
         }
       );
     } else {
@@ -166,7 +169,10 @@ function BentoCard({
         opacity: 0,
         duration: 0.3,
         ease: "power3.in",
-        onComplete: () => gsap.set(el, { visibility: "hidden" }),
+        onComplete: () => {
+          gsap.set(el, { visibility: "hidden" });
+          ScrollTrigger.refresh();
+        },
       });
     }
     setOpen((p) => !p);
@@ -286,13 +292,6 @@ function BentoCard({
           >
             {item.answer}
           </p>
-
-          {isFeatured && (
-            <div className="mt-5 inline-flex items-center gap-2 text-[#c1ff4a] text-xs font-semibold font-sans">
-              <HelpCircle size={11} />
-              Have more questions? Let&apos;s chat →
-            </div>
-          )}
         </div>
       </div>
     </div>
@@ -366,7 +365,7 @@ export default function FAQ({ initialData }: Props) {
       ref={sectionRef}
       id="faq"
       aria-label="Frequently Asked Questions"
-      className="relative w-full overflow-hidden bg-background py-10 sm:py-14"
+      className="relative z-20 w-full overflow-hidden bg-background py-10 sm:py-14"
     >
       {/* Subtle dot-grid background */}
       <div

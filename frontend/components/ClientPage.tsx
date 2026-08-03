@@ -40,25 +40,9 @@ export default function ClientPage({ children }: ClientPageProps) {
         });
       }
 
-      // Contact section "Reveal" from behind
-      const faqContainerElement = containerRef.current?.querySelector(".faq-container");
-      if (contactElement && faqContainerElement) {
-        gsap.set(contactElement, { yPercent: -100 });
-
-        gsap.to(contactElement, {
-          yPercent: 0,
-          ease: "none",
-          scrollTrigger: {
-            trigger: faqContainerElement,
-            start: "bottom bottom",
-            end: () => `+=${(contactElement as HTMLElement).offsetHeight}`,
-            scrub: true,
-            invalidateOnRefresh: true,
-            // Lower refresh priority so it gets calculated AFTER any pins above it (like Awards)
-            refreshPriority: -1,
-          },
-        });
-      }
+      // Contact section "Reveal" from behind effect is removed to prevent layout jumps 
+      // when the FAQ section dynamically changes height above it.
+      // The contact section will now scroll normally.
     });
 
     // Ensure ScrollTrigger correctly measures everything after initial render

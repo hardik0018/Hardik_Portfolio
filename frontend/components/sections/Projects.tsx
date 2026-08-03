@@ -9,6 +9,7 @@ import { ExternalLink } from "lucide-react";
 import { urlFor } from "@/lib/sanity.image";
 import { cn } from "@/lib/utils";
 import { SectionHeader } from "../ui/SectionHeader";
+import Link from "next/link";
 
 export interface SanityProject {
   _id: string;
@@ -124,7 +125,7 @@ const ProjectRow = memo(
               {/* Desktop Actions */}
               <div className="hidden lg:flex items-center gap-4 shrink-0">
                 {project.github && (
-                  <a
+                  <Link
                     href={project.github}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -137,11 +138,11 @@ const ProjectRow = memo(
                     )}
                   >
                     <GitHubIcon className="w-4 h-4" />
-                  </a>
+                  </Link>
                 )}
 
                 {project.url && (
-                  <a
+                  <Link
                     href={project.url}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -155,7 +156,7 @@ const ProjectRow = memo(
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
                     View Live
-                  </a>
+                  </Link>
                 )}
               </div>
             </div>
@@ -199,7 +200,7 @@ const ProjectRow = memo(
                   {/* Mobile Actions */}
                   <div className="flex items-center gap-3">
                     {project.github && (
-                      <a
+                      <Link
                         href={project.github}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -207,10 +208,10 @@ const ProjectRow = memo(
                       >
                         <GitHubIcon className="w-4 h-4" />
                         GitHub
-                      </a>
+                      </Link>
                     )}
                     {project.url && (
-                      <a
+                      <Link
                         href={project.url}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -218,7 +219,7 @@ const ProjectRow = memo(
                       >
                         <ExternalLink className="w-4 h-4" />
                         View Project
-                      </a>
+                      </Link>
                     )}
                   </div>
                 </motion.div>

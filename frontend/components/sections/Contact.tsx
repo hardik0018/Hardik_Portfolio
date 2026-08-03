@@ -46,6 +46,7 @@ const projectTypes = [
 ];
 
 import { LucideIcon } from "lucide-react";
+import Link from "next/link";
 
 const ICON_MAP: Record<string, LucideIcon> = {
   MonitorCheck: MonitorCheck,
@@ -196,7 +197,7 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
     <section
       ref={sectionRef}
       id="contact"
-      className="relative overflow-hidden bg-background px-5 pt-12 text-foreground sm:px-6 lg:px-8 lg:pt-[74px] pb-2 sm:pb-0 min-h-screen flex flex-col justify-center"
+      className="relative z-10 overflow-hidden bg-background px-5 pt-12 text-foreground sm:px-6 lg:px-8 lg:pt-[74px] pb-2 sm:pb-0 min-h-screen flex flex-col justify-center"
       style={{ backgroundImage: "url(./hero_bg.svg)", backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center" }}
     >
       <div className="relative z-10 mx-auto w-full">
@@ -240,10 +241,10 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
             <div className="my-3 h-px bg-border" />
 
             <div className="space-y-6 font-sans text-sm text-foreground/90">
-              <a href={`mailto:${data.email}`} className="flex items-center gap-5 transition-colors hover:text-accent-primary">
+              <Link href={`mailto:${data.email}`} className="flex items-center gap-5 transition-colors hover:text-accent-primary">
                 <Mail className="h-5 w-5" />
                 {data.email}
-              </a>
+              </Link>
               <p className="flex items-center gap-5">
                 <Timer className="h-5 w-5" />
                 {data.timing}
@@ -254,14 +255,14 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
               </p>
             </div>
 
-            <a href={`mailto:${data.email}?subject=${encodeURIComponent("Book a project call")}`}>
+            <Link href={`mailto:${data.email}?subject=${encodeURIComponent("Book a project call")}`}>
               <Button
                 className="mt-4 inline-flex h-12 w-full items-center justify-center gap-3 rounded-[12px] font-sans text-sm font-bold uppercase transition-all"
               >
                 <CalendarDays className="h-4 w-4" />
                 Book a Call
               </Button>
-            </a>
+            </Link>
           </aside>
 
           <form
@@ -391,24 +392,24 @@ export default function Contact({ initialData }: { initialData?: ContactData }) 
           </Magnetic>
           <div className="flex gap-6 items-center">
             <Magnetic range={40} strength={0.3}>
-              <a
+              <Link
                 href="https://github.com/hardik0018"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-foreground transition-colors duration-200"
               >
                 GitHub
-              </a>
+              </Link>
             </Magnetic>
             <Magnetic range={40} strength={0.3}>
-              <a
+              <Link
                 href="https://www.linkedin.com/in/hardik-vatukiya"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-foreground transition-colors duration-200"
               >
                 LinkedIn
-              </a>
+              </Link>
             </Magnetic>
           </div>
           <p>© 2026 Hardik Vatukiya</p>
