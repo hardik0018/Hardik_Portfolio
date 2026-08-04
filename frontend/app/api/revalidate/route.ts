@@ -1,7 +1,7 @@
 import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
-const allowedTags = new Set(["hero", "about", "projects", "skills", "journey", "contact", "navigation"]);
+const allowedTags = new Set(["hero", "about", "projects", "skills", "journey", "contact", "navigation", "gallery", "faq", "awards"]);
 
 export async function POST(request: Request) {
   const secret = request.headers.get("x-revalidate-secret");

@@ -517,20 +517,34 @@ export default function Skill({ initialData }: { initialData?: SkillItem[] }) {
     }
 
     // Row 4 and beyond (Slots 9+)
-    let colIndex = 0;
     let rowIndex = 4;
     while (normalSkills.length > 0) {
-        const skill = normalSkills.shift()!;
-        layoutSkills.push({
-            skill,
-            gridClass: `sm:col-start-${1 + colIndex * 3} sm:col-span-3 sm:row-start-${rowIndex}`,
-            Component: getCardComponent(skill.size),
-        });
-        colIndex++;
-        if (colIndex >= 4) {
-            colIndex = 0;
-            rowIndex++;
+        const itemsInRow = Math.min(normalSkills.length, 4);
+        
+        for (let i = 0; i < itemsInRow; i++) {
+            const skill = normalSkills.shift()!;
+            
+            let gridClass = "";
+            if (itemsInRow === 4) {
+                const starts = ["sm:col-start-1", "sm:col-start-4", "sm:col-start-7", "sm:col-start-10"];
+                gridClass = `${starts[i]} sm:col-span-3 sm:row-start-[${rowIndex}]`;
+            } else if (itemsInRow === 3) {
+                const starts = ["sm:col-start-1", "sm:col-start-5", "sm:col-start-9"];
+                gridClass = `${starts[i]} sm:col-span-4 sm:row-start-[${rowIndex}]`;
+            } else if (itemsInRow === 2) {
+                const starts = ["sm:col-start-1", "sm:col-start-7"];
+                gridClass = `${starts[i]} sm:col-span-6 sm:row-start-[${rowIndex}]`;
+            } else {
+                gridClass = `sm:col-start-1 sm:col-span-12 sm:row-start-[${rowIndex}]`;
+            }
+
+            layoutSkills.push({
+                skill,
+                gridClass,
+                Component: getCardComponent(skill.size),
+            });
         }
+        rowIndex++;
     }
 
     return (
